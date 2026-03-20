@@ -1,0 +1,718 @@
+{
+  "data": [],
+  "emails": [
+    {
+      "deleted": false,
+      "archived": false,
+      "id": "1",
+      "sender": "Bhavya jain",
+      "tag": "Social",
+      "tagColor": "bg-blue-100 text-blue-600",
+      "subject": "Enhance Your Brand Potential With Giant Advertising Blimps",
+      "time": "4:13 PM",
+      "checked": false,
+      "starred": false,
+      "unread": false
+    },
+    {
+      "deleted": false,
+      "archived": false,
+      "id": "2",
+      "sender": "Olga Hogan",
+      "tag": "Social",
+      "tagColor": "bg-blue-100 text-blue-600",
+      "subject": "Enhance Your Brand Potential With Giant Advertising Blimps",
+      "time": "4:13 PM",
+      "checked": false,
+      "starred": true,
+      "unread": false
+    },
+    {
+      "deleted": false,
+      "archived": false,
+      "id": "3",
+      "sender": "Olga Hogan",
+      "tag": "Social",
+      "tagColor": "bg-blue-100 text-blue-600",
+      "subject": "Enhance Your Brand Potential With Giant Advertising Blimps",
+      "time": "4:13 PM",
+      "checked": false,
+      "starred": true,
+      "unread": false
+    },
+    {
+      "deleted": false,
+      "archived": false,
+      "id": "4",
+      "sender": "Olga Hogan",
+      "tag": "Social",
+      "tagColor": "bg-blue-100 text-blue-600",
+      "subject": "Enhance Your Brand Potential With Giant Advertising Blimps",
+      "time": "4:13 PM",
+      "checked": false,
+      "starred": true,
+      "unread": false
+    },
+    {
+      "deleted": false,
+      "archived": false,
+      "id": "5",
+      "sender": "Olga Hogan",
+      "tag": "Social",
+      "tagColor": "bg-blue-100 text-blue-600",
+      "subject": "Enhance Your Brand Potential With Giant Advertising Blimps",
+      "time": "4:13 PM",
+      "checked": false,
+      "starred": true,
+      "unread": false
+    },
+    {
+      "deleted": false,
+      "archived": false,
+      "id": "6",
+      "sender": "Olga Hogan",
+      "tag": "Social",
+      "tagColor": "bg-blue-100 text-blue-600",
+      "subject": "Enhance Your Brand Potential With Giant Advertising Blimps",
+      "time": "4:13 PM",
+      "checked": false,
+      "starred": false,
+      "unread": false
+    },
+    {
+      "deleted": false,
+      "archived": false,
+      "id": "7",
+      "sender": "Olga Hogan",
+      "tag": "Social",
+      "tagColor": "bg-blue-100 text-blue-600",
+      "subject": "Enhance Your Brand Potential With Giant Advertising Blimps",
+      "time": "4:13 PM",
+      "checked": false,
+      "starred": false,
+      "unread": false
+    },
+    {
+      "id": "8",
+      "sender": "Olga Hogan",
+      "tag": "Social",
+      "tagColor": "bg-blue-100 text-blue-600",
+      "subject": "Enhance Your Brand Potential With Giant Advertising Blimps",
+      "time": "4:13 PM",
+      "checked": false,
+      "starred": false,
+      "unread": false,
+      "deleted": false,
+      "archived": false
+    },
+    {
+      "deleted": true,
+      "archived": true,
+      "id": "10",
+      "sender": "Olga Hogan",
+      "tag": "Social",
+      "tagColor": "bg-blue-100 text-blue-600",
+      "subject": "Enhance Your Brand Potential With Giant Advertising Blimps",
+      "time": "4:13 PM",
+      "checked": false,
+      "starred": true,
+      "unread": false
+    }
+  ],
+  "favourites": [
+    {
+      "id": "8748",
+      "productId": 2,
+      "name": "Apple Watch Series 5",
+      "price": 150,
+      "rating": 5,
+      "reviews": 98,
+      "images": [
+        "/images/watch.jpeg",
+        "/images/watch.jpeg"
+      ]
+    },
+    {
+      "id": "9004",
+      "productId": 1,
+      "name": "Apple Watch Series 4",
+      "price": 120,
+      "rating": 4,
+      "reviews": 131,
+      "images": [
+        "/images/watch.jpeg",
+        "/images/watch.jpeg"
+      ]
+    }
+  ],
+  "calendarEvents": [
+    {
+      "id": "1",
+      "title": "Design Conference",
+      "date": "2026-03-06",
+      "endDate": "2026-03-06",
+      "time": "2026-03-06",
+      "address": "56 Davion Mission Suite 157",
+      "city": "Meaghanberg",
+      "color": "#A78BFA",
+      "bgLight": "#EDE9FE",
+      "attendees": [],
+      "extraCount": 0
+    },
+    {
+      "id": "2",
+      "title": "Weekend Festival",
+      "date": "2026-03-16",
+      "endDate": "2026-03-18",
+      "time": "2026-03-16",
+      "address": "853 Moore Flats Suite 158",
+      "city": "Sweden",
+      "color": "#EC4899",
+      "bgLight": "#FCE7F3",
+      "attendees": [],
+      "extraCount": 0
+    },
+    {
+      "id": "3",
+      "title": "Glastonbury Festival",
+      "date": "2026-03-20",
+      "endDate": "2026-03-22",
+      "time": "2026-03-20",
+      "address": "646 Walter Road Apt. 571",
+      "city": "Turks and Caicos Islands",
+      "color": "#F97316",
+      "bgLight": "#FFEDD5",
+      "attendees": [],
+      "extraCount": 0
+    },
+    {
+      "id": "4",
+      "title": "Ultra Europe 2026",
+      "date": "2026-03-25",
+      "endDate": "2026-03-25",
+      "time": "2026-03-25",
+      "address": "506 Satterfield Tunnel Apt. 963",
+      "city": "San Marino",
+      "color": "#3B82F6",
+      "bgLight": "#DBEAFE",
+      "attendees": [],
+      "extraCount": 0
+    },
+    {
+      "id": "5",
+      "title": "Ultra Europe 2026",
+      "date": "2026-10-25",
+      "endDate": "2026-10-25",
+      "time": "2026-10-25",
+      "address": "506 Satterfield Tunnel Apt. 963",
+      "city": "San Marino",
+      "color": "#3B82F6",
+      "bgLight": "#DBEAFE",
+      "attendees": [],
+      "extraCount": 0
+    },
+    {
+      "id": "6",
+      "title": "Ultra Europe 2026",
+      "date": "2026-11-25",
+      "endDate": "2026-11-25",
+      "time": "2026-11-25",
+      "address": "506 Satterfield Tunnel Apt. 963",
+      "city": "San Marino",
+      "color": "#3B82F6",
+      "bgLight": "#DBEAFE",
+      "attendees": [],
+      "extraCount": 0
+    },
+    {
+      "id": "7",
+      "title": "Ultra Europe 2026",
+      "date": "2026-12-25",
+      "endDate": "2026-12-25",
+      "time": "2026-12-25",
+      "address": "506 Satterfield Tunnel Apt. 963",
+      "city": "San Marino",
+      "color": "#3B82F6",
+      "bgLight": "#DBEAFE",
+      "attendees": [],
+      "extraCount": 0
+    },
+    {
+      "id": "4",
+      "title": "Ultra Europe 2026",
+      "date": "2026-05-25",
+      "endDate": "2026-05-25",
+      "time": "2026-05-25",
+      "address": "506 Satterfield Tunnel Apt. 963",
+      "city": "San Marino",
+      "color": "#3B82F6",
+      "bgLight": "#DBEAFE",
+      "attendees": [],
+      "extraCount": 0
+    },
+    {
+      "id": "4",
+      "title": "Ultra Europe 2026",
+      "date": "2026-04-25",
+      "endDate": "2026-04-25",
+      "time": "2026-04-25",
+      "address": "506 Satterfield Tunnel Apt. 963",
+      "city": "San Marino",
+      "color": "#3B82F6",
+      "bgLight": "#DBEAFE",
+      "attendees": [],
+      "extraCount": 0
+    },
+    {
+      "id": "1773386871489",
+      "title": "dfsdfdsfsd",
+      "date": "2026-03-05",
+      "endDate": "2026-03-06",
+      "time": "March 5, 2026 - March 6, 2026 at 1:57 PM",
+      "address": "dzfsdfs",
+      "city": "sdfdsfsdd",
+      "color": "#EC4899",
+      "bgLight": "#FCE7F3",
+      "attendees": [],
+      "extraCount": 0
+    }
+  ],
+  "dashboard": [
+    {
+      "id": "c580",
+      "month": "January",
+      "chartData": [
+        {
+          "name": "5k",
+          "value": 44
+        },
+        {
+          "name": "10k",
+          "value": 69
+        },
+        {
+          "name": "15k",
+          "value": 87
+        },
+        {
+          "name": "20k",
+          "value": 74
+        },
+        {
+          "name": "25k",
+          "value": 25
+        },
+        {
+          "name": "30k",
+          "value": 46
+        },
+        {
+          "name": "35k",
+          "value": 59
+        },
+        {
+          "name": "40k",
+          "value": 71
+        },
+        {
+          "name": "45k",
+          "value": 37
+        },
+        {
+          "name": "50k",
+          "value": 30
+        },
+        {
+          "name": "55k",
+          "value": 75
+        },
+        {
+          "name": "60k",
+          "value": 84
+        }
+      ],
+      "tableData": [
+        {
+          "id": "bhavya99044",
+          "product": "Apple Watch",
+          "image": "/images/apple-watch.png",
+          "location": "6096 Marjolaine Landing",
+          "dateTime": "12.09.2026 - 12.53 PM",
+          "piece": 423,
+          "amount": "$34,295",
+          "status": "Delivered",
+          "statusClassName": "bg-emerald-500"
+        }
+      ]
+    },
+    {
+      "id": "ff13",
+      "month": "February",
+      "chartData": [
+        {
+          "name": "5k",
+          "value": 82
+        },
+        {
+          "name": "10k",
+          "value": 23
+        },
+        {
+          "name": "15k",
+          "value": 20
+        },
+        {
+          "name": "20k",
+          "value": 69
+        },
+        {
+          "name": "25k",
+          "value": 57
+        },
+        {
+          "name": "30k",
+          "value": 69
+        },
+        {
+          "name": "35k",
+          "value": 41
+        },
+        {
+          "name": "40k",
+          "value": 20
+        },
+        {
+          "name": "45k",
+          "value": 90
+        },
+        {
+          "name": "50k",
+          "value": 76
+        },
+        {
+          "name": "55k",
+          "value": 60
+        },
+        {
+          "name": "60k",
+          "value": 52
+        }
+      ],
+      "tableData": [
+        {
+          "id": "bhavya99044",
+          "product": "Apple Watch",
+          "image": "/images/apple-watch.png",
+          "location": "6096 Marjolaine Landing",
+          "dateTime": "12.09.2026 - 12.53 PM",
+          "piece": 423,
+          "amount": "$34,295",
+          "status": "Delivered",
+          "statusClassName": "bg-emerald-500"
+        }
+      ]
+    }
+  ],
+  "languages": [
+    {
+      "id": "1",
+      "name": "English",
+      "image": "uk-flag.png"
+    },
+    {
+      "id": "2",
+      "name": "Hindi",
+      "image": "uk-flag.png"
+    },
+    {
+      "id": "3",
+      "name": "Marathi",
+      "image": "uk-flag.png"
+    },
+    {
+      "id": "4",
+      "name": "Gujarat",
+      "image": "uk-flag.png"
+    },
+    {
+      "id": "5",
+      "name": "Hindi",
+      "image": "uk-flag.png"
+    }
+  ],
+  "users": [
+    {
+      "id": "1",
+      "name": "bhavya",
+      "email": "bhavya@gmail.com",
+      "password": "990441"
+    },
+    {
+      "id": "9ab8",
+      "name": "bhavya",
+      "email": "bhavya99044@gmail.com",
+      "password": "boss99044",
+      "purchasedPlans": [
+        {
+          "planId": "standard",
+          "name": "Standard",
+          "price": "24.99",
+          "billingLabel": "Monthly Charge",
+          "trialText": "14 Day Priority Trial Included",
+          "purchasedAt": "2026-03-20T09:37:51.050Z"
+        }
+      ]
+    },
+    {
+      "id": "e6f8",
+      "name": "the",
+      "email": "vimal@gmai.com",
+      "password": "990444"
+    },
+    {
+      "id": "b3a2",
+      "name": "ssss",
+      "email": "sssss",
+      "password": "sss"
+    },
+    {
+      "id": "b6a2",
+      "name": "n",
+      "email": "u",
+      "password": "s"
+    },
+    {
+      "id": "751c",
+      "name": "ss",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": "2c0a",
+      "name": "",
+      "email": "   ",
+      "password": "   "
+    },
+    {
+      "id": "31d6",
+      "name": "    ",
+      "email": "  fhgfggd",
+      "password": "dsadas"
+    },
+    {
+      "id": "ed37",
+      "name": "    sdfs",
+      "email": "hajasd adhjskdhsjk",
+      "password": ""
+    },
+    {
+      "id": "b1ab",
+      "name": "asdas",
+      "email": "asdas",
+      "password": "dsa"
+    },
+    {
+      "id": "adfd",
+      "name": "asda",
+      "email": "sda",
+      "password": "sadas"
+    },
+    {
+      "id": "9152",
+      "name": "x",
+      "email": "sd",
+      "password": ""
+    },
+    {
+      "id": "9e23",
+      "name": "fg",
+      "email": "dg",
+      "password": "dfg"
+    },
+    {
+      "id": "68f1",
+      "name": "bhavya",
+      "email": "bhavya99044@gmial.com",
+      "password": "sadsa"
+    },
+    {
+      "id": "9c81",
+      "name": "Bhavya Jain",
+      "email": "bhavya.jain@mindinventory.com",
+      "password": "",
+      "provider": "google",
+      "avatar": "https://lh3.googleusercontent.com/a/ACg8ocIhoiSIt8NfpdYsInKRRDbgm9hfNYjcUUtjO7l-hQqMusdJzA=s96-c"
+    }
+  ],
+  "productStock": [
+    {
+      "id": "3",
+      "name": "apple",
+      "category": "smartwatch",
+      "price": 1,
+      "piece": 1,
+      "image": "/images/watch.jpeg",
+      "colors": [
+        "#1F2937",
+        "#EC4899",
+        "#EAB308"
+      ]
+    },
+    {
+      "id": "5",
+      "name": "Noise ColorFit Pro",
+      "category": "watch",
+      "price": 220,
+      "piece": 71,
+      "image": "/images/watch.jpeg",
+      "colors": [
+        "#111827",
+        "#EF4444",
+        "#3B82F6"
+      ]
+    },
+    {
+      "id": "7",
+      "name": "Garmin Venu Sq",
+      "category": "Fitness",
+      "price": 499,
+      "piece": 11111,
+      "image": "/images/watch.jpeg",
+      "colors": [
+        "#020617",
+        "#A855F7",
+        "#FB7185"
+      ]
+    },
+    {
+      "id": "8",
+      "name": "Boat Wave Alpha",
+      "category": "Smart Watch",
+      "price": 180,
+      "piece": 96,
+      "image": "/images/apple-watch.png",
+      "colors": [
+        "#111827",
+        "#06B6D4",
+        "#84CC16"
+      ]
+    }
+  ],
+  "pricingPlans": [
+    {
+      "id": "basic",
+      "name": "Basic",
+      "billingLabel": "Monthly Charge",
+      "price": "14.99",
+      "ctaText": "Get Started",
+      "trialText": "Start Your 30 Day Free Trial",
+      "features": [
+        {
+          "label": "Free Setup",
+          "active": true
+        },
+        {
+          "label": "Bandwidth Limit 10 GB",
+          "active": true
+        },
+        {
+          "label": "20 User Connection",
+          "active": true
+        },
+        {
+          "label": "Analytics Report",
+          "active": false
+        },
+        {
+          "label": "Public API Access",
+          "active": false
+        },
+        {
+          "label": "Plugins Integration",
+          "active": false
+        },
+        {
+          "label": "Custom Content Management",
+          "active": false
+        }
+      ]
+    },
+    {
+      "id": "standard",
+      "name": "Standard",
+      "billingLabel": "Monthly Charge",
+      "price": "24.99",
+      "ctaText": "Get Started",
+      "trialText": "14 Day Priority Trial Included",
+      "features": [
+        {
+          "label": "Free Setup",
+          "active": true
+        },
+        {
+          "label": "Bandwidth Limit 10 GB",
+          "active": true
+        },
+        {
+          "label": "20 User Connection",
+          "active": true
+        },
+        {
+          "label": "Analytics Report",
+          "active": true
+        },
+        {
+          "label": "Public API Access",
+          "active": true
+        },
+        {
+          "label": "Plugins Integration",
+          "active": false
+        },
+        {
+          "label": "Custom Content Management",
+          "active": false
+        }
+      ]
+    },
+    {
+      "id": "premium",
+      "name": "Premium",
+      "billingLabel": "Monthly Charge",
+      "price": "39.99",
+      "ctaText": "Get Started",
+      "trialText": "Unlimited Access From Day One",
+      "features": [
+        {
+          "label": "Free Setup",
+          "active": true
+        },
+        {
+          "label": "Bandwidth Limit 10 GB",
+          "active": true
+        },
+        {
+          "label": "20 User Connection",
+          "active": true
+        },
+        {
+          "label": "Analytics Report",
+          "active": true
+        },
+        {
+          "label": "Public API Access",
+          "active": true
+        },
+        {
+          "label": "Plugins Integration",
+          "active": true
+        },
+        {
+          "label": "Custom Content Management",
+          "active": true
+        }
+      ]
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
