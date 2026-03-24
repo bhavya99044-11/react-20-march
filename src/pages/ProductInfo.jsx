@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { IoArrowBackCircleSharp } from "react-icons/io5";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -31,6 +31,9 @@ const ProductInfo = () => {
   const [selectedSize, setSelectedSize] = useState(sizeDefault);
   const [selectedColor, setSelectedColor] = useState(colorDefault);
   const [openSection, setOpenSection] = useState("materials");
+  const [cartAnimation, setCartAnimation] = useState(null);
+  const cartAnimationTimeoutRef = useRef(null);
+  const addToCartButtonRef = useRef(null);
 
   useEffect(() => {
     setSelectedImage(0);
@@ -39,6 +42,14 @@ const ProductInfo = () => {
     setSelectedColor(colorDefault);
     setOpenSection("materials");
   }, [sizeDefault, colorDefault]);
+
+  useEffect(() => {
+    return () => {
+      if (cartAnimationTimeoutRef.current) {
+        clearTimeout(cartAnimationTimeoutRef.current);
+      }
+    };
+  }, []);
 
   if (!product) {
     return (
@@ -63,18 +74,56 @@ const ProductInfo = () => {
   const mainImage = product.images[selectedImage] ?? product.images[0];
 
   const handleAddToCart = () => {
-    dispatch(
-      addToCart({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: mainImage,
-        quantity,
-        selectedColor,
-        selectedSize,
-      }),
-    );
-    successToast(`${product.name} added to cart`);
+    if (cartAnimation) {
+      return;
+    }
+
+    const buttonRect = addToCartButtonRef.current?.getBoundingClientRect();
+    const cartTargetRect = document
+      .querySelector('[data-cart-target="true"]')
+      ?.getBoundingClientRect();
+
+    const startX = buttonRect
+      ? buttonRect.left + buttonRect.width / 2
+      : window.innerWidth / 2;
+    const startY = buttonRect
+      ? buttonRect.top + buttonRect.height / 2
+      : window.innerHeight / 2;
+    const targetX = cartTargetRect
+      ? cartTargetRect.left + cartTargetRect.width / 2
+      : startX + 180;
+    const targetY = cartTargetRect
+      ? cartTargetRect.top + cartTargetRect.height / 2
+      : Math.max(48, startY - 220);
+
+    if (cartAnimationTimeoutRef.current) {
+      clearTimeout(cartAnimationTimeoutRef.current);
+    }
+
+    setCartAnimation({
+      image: mainImage,
+      startX,
+      startY,
+      deltaX: targetX - startX,
+      deltaY: targetY - startY,
+    });
+
+    cartAnimationTimeoutRef.current = setTimeout(() => {
+      setCartAnimation(null);
+      dispatch(
+        addToCart({
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          image: mainImage,
+          quantity,
+          selectedColor,
+          selectedSize,
+        }),
+      );
+      window.dispatchEvent(new CustomEvent("cart:receive"));
+      successToast(`${product.name} added to cart`);
+    }, 2350);
   };
 
   return (
@@ -200,11 +249,17 @@ const ProductInfo = () => {
                   </button>
                 </div>
 
-                <Button
-                  text="ADD TO CART"
-                  className="flex-1 !bg-[#4880FF] rounded-xl px-6 py-3 text-sm tracking-wide"
-                  onClick={handleAddToCart}
-                />
+                <div className="cart-action-wrap relative flex-1">
+                  <Button
+                    ref={addToCartButtonRef}
+                    text="ADD TO CART"
+                    disabled={Boolean(cartAnimation)}
+                    className={`w-full rounded-xl px-6 py-3 text-sm tracking-wide !bg-[#4880FF] ${
+                      cartAnimation ? "cart-button-pulse" : ""
+                    }`}
+                    onClick={handleAddToCart}
+                  />
+                </div>
               </div>
 
               <hr className="mt-8 border-gray-100 dark:border-slate-800" />
@@ -256,6 +311,24 @@ const ProductInfo = () => {
           </div>
         </div>
       </div>
+      {cartAnimation ? (
+        <div
+          className="cart-fly-image cart-fly-image-active"
+          aria-hidden="true"
+          style={{
+            left: `${cartAnimation.startX}px`,
+            top: `${cartAnimation.startY}px`,
+            "--cart-fly-x": `${cartAnimation.deltaX}px`,
+            "--cart-fly-y": `${cartAnimation.deltaY}px`,
+          }}
+        >
+          <img
+            src={cartAnimation.image}
+            alt=""
+            className="h-full w-full object-contain"
+          />
+        </div>
+      ) : null}
     </div>
   );
 };

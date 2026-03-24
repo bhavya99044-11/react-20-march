@@ -20,6 +20,7 @@ const Header = () => {
   const [languages, setLanguages] = useState([]);
   const [selectedLanguage, setSelectedLanguage] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isCartReceiving, setIsCartReceiving] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(
     () => localStorage.getItem(DARK_MODE_KEY) === "true",
   );
@@ -60,6 +61,24 @@ const Header = () => {
 
     document.addEventListener("mousedown", closeMenuOutside);
     return () => document.removeEventListener("mousedown", closeMenuOutside);
+  }, []);
+
+  useEffect(() => {
+    let cartReceiveTimeout;
+
+    const handleCartReceive = () => {
+      setIsCartReceiving(true);
+      window.clearTimeout(cartReceiveTimeout);
+      cartReceiveTimeout = window.setTimeout(() => {
+        setIsCartReceiving(false);
+      }, 550);
+    };
+
+    window.addEventListener("cart:receive", handleCartReceive);
+    return () => {
+      window.removeEventListener("cart:receive", handleCartReceive);
+      window.clearTimeout(cartReceiveTimeout);
+    };
   }, []);
 
   const changeLanguage = (selectedOption) => {
@@ -199,9 +218,20 @@ const Header = () => {
         {loading ? (
           <Skeleton width={30} height={30} />
         ) : (
-          <div className="relative mr-5 flex items-center justify-center">
+          <div
+            data-cart-target="true"
+            className={classNames(
+              "relative mr-5 flex items-center justify-center",
+              isCartReceiving && "cart-target-receive",
+            )}
+          >
             <HiOutlineShoppingCart className="h-6 w-6 cursor-pointer text-[color:var(--color-text-body)] dark:text-slate-100" />
-            <div className="absolute -top-[8px] -right-[8px] flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[#4880FF] px-1 text-[10px] font-bold text-white">
+            <div
+              className={classNames(
+                "absolute -top-[8px] -right-[8px] flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[#4880FF] px-1 text-[10px] font-bold text-white",
+                isCartReceiving && "cart-count-bump",
+              )}
+            >
               {cartCount}
             </div>
           </div>

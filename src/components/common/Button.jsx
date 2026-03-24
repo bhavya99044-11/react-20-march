@@ -8,7 +8,7 @@ const COLOR_CLASSES = {
   secondary:"bg-[#E9ECEF] text-[color:var(--color-text-light)] dark:bg-slate-800 dark:text-slate-200",
   black:"bg-[#E9ECEF] text-black dark:bg-slate-800 dark:text-slate-100"
 };
-const Button =(
+const Button = React.forwardRef(
   (
     {
       type = "button",
@@ -60,5 +60,6 @@ const Button =(
   }
 );
 
-export default Button;
+Button.displayName = "Button";
 
+export default Button;
