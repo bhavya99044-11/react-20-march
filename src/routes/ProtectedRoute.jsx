@@ -22,7 +22,6 @@ const ProtectedRoute = () => {
   const dispatch = useDispatch();
   const selector = useSelector((state) => state.token.value);
   const storedSession = useMemo(() => getStoredSession(), []);
-  const session = selector?.token ? selector : storedSession;
 
   useEffect(() => {
     if (!selector?.token && storedSession?.token) {

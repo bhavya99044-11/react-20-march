@@ -160,11 +160,11 @@ const Pricing = () => {
 
   return (
     <>
-      <div className="bg-theme-white dark:bg-slate-950 pt-[30px] pl-[30px] pr-[33px]">
+      <div className="flex h-full min-h-0 flex-col overflow-hidden bg-theme-white pt-[30px] pl-[30px] pr-[33px] dark:bg-slate-950">
         <h1 className="text-[32px] font-bold text-gray-900 dark:text-slate-100">
           Pricing
         </h1>
-        <div className="mt-[31px] grid grid-cols-1 gap-6 pb-8 lg:grid-cols-3">
+        <div className="mt-[31px] grid grid-cols-1 gap-6 pb-8 lg:min-h-0 lg:flex-1 lg:grid-cols-3 lg:pb-[30px]">
           {loading
             ? Array.from({ length: 3 }, (_, index) => (
                 <PricingCardSkeleton key={`pricing-skeleton-${index}`} />

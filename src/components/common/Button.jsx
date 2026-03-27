@@ -42,6 +42,7 @@ const Button = React.forwardRef(
         type={type}
         disabled={isDisabled}
         className={classNames(
+          "cursor-pointer",
           baseClasses,
           useColorClasses ? (disabled ? COLOR_CLASSES.secondary : COLOR_CLASSES[color]) : "",
           className,

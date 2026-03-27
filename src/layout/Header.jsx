@@ -5,28 +5,41 @@ import { IconComponent, Input, Select } from "@/components/common";
 import Skeleton from "react-loading-skeleton";
 import { api } from "../utils/api";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { clearCart } from "@/features/cartSlice";
 import { remove } from "@/features/tokenSlice";
 import { AUTH_SESSION_KEY, DARK_MODE_KEY } from "@/utils/constants";
 import classNames from "classnames";
 import { HiOutlineShoppingCart } from "react-icons/hi2";
 
+const productMenuItems = [
+  { label: "Men", query: "men" },
+  { label: "Women", query: "women" },
+  { label: "Kids", query: "kids" },
+  { label: "Shop", query: "shop" },
+];
+
 const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const menuRef = useRef(null);
   const [loading, setLoading] = useState(false);
-  const [languages, setLanguages] = useState([]);
-  const [selectedLanguage, setSelectedLanguage] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartReceiving, setIsCartReceiving] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(
     () => localStorage.getItem(DARK_MODE_KEY) === "true",
   );
-  const cartCount = useSelector((state) =>
-    state.cart.items.reduce((total, item) => total + item.quantity, 0),
+  const [searchFilters] = useSearchParams();
+  const [searchProduct, setSearchProduct] = useState(
+    searchFilters.get("product"),
   );
+  const [searchTerm, setSearchTerm] = useState(searchFilters.get("search") ?? "");
+  const cartCount = useSelector((state) => state.cart.items.length);
+
+  useEffect(() => {
+    setSearchProduct(searchFilters.get("product"));
+    setSearchTerm(searchFilters.get("search") ?? "");
+  }, [searchFilters]);
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", isDarkMode);
@@ -39,8 +52,6 @@ const Header = () => {
       const data = response.data.filter((item) => {
         return (item.image = UkFlag);
       });
-      setSelectedLanguage(data[0]);
-      setLanguages(data);
     } catch (e) {
       console.error(e);
     } finally {
@@ -71,7 +82,7 @@ const Header = () => {
       window.clearTimeout(cartReceiveTimeout);
       cartReceiveTimeout = window.setTimeout(() => {
         setIsCartReceiving(false);
-      }, 550);
+      }, 300);
     };
 
     window.addEventListener("cart:receive", handleCartReceive);
@@ -93,25 +104,79 @@ const Header = () => {
     navigate("/login", { replace: true });
   };
 
-  const onProfile = () =>{
+  const onProfile = () => {
     setIsMenuOpen(false);
-    navigate('/user-profile',{replace:true});
-  }
+    navigate("/user-profile", { replace: true });
+  };
+
+  const onProductMenuClick = (query) => {
+    const nextSearchParams = new URLSearchParams();
+    if (query !== "shop") {
+      nextSearchParams.set("product", query);
+    }
+    if (searchTerm.trim()) {
+      nextSearchParams.set("search", searchTerm.trim());
+    }
+
+    navigate(
+      nextSearchParams.toString()
+        ? `/products?${nextSearchParams.toString()}`
+        : "/products",
+    );
+  };
+
+  const handleSearchChange = (event) => {
+    const nextSearch = event.target.value;
+    setSearchTerm(nextSearch);
+
+    const nextSearchParams = new URLSearchParams();
+    const currentProduct = searchFilters.get("product");
+
+    if (currentProduct) {
+      nextSearchParams.set("product", currentProduct);
+    }
+    if (nextSearch.trim()) {
+      nextSearchParams.set("search", nextSearch.trim());
+    }
+
+    navigate(
+      nextSearchParams.toString()
+        ? `/products?${nextSearchParams.toString()}`
+        : "/products",
+    );
+  };
 
   return (
-    <div className="sticky top-0 z-30 flex bg-white justify-between shadow-md w-full dark:bg-slate-950 dark:border-b dark:border-slate-800 [--base-color:#e5e7eb] [--highlight-color:#f3f4f6] dark:[--base-color:#1f2937] dark:[--highlight-color:#334155]">
-      <div className="ml-[78px] my-2">
-        {loading ? (
-          <Skeleton width={388} height={30} />
-        ) : (
-          <Input
-            divClassName="h-[38px] !bg-[#F5F6FA] !border-[var(--orderlist-border-color)] !rounded-[19px] dark:!bg-slate-900 dark:!border-slate-700"
-            placeholder="Search"
-            startIcon="search"
-            className="w-[388px]"
-            inputClassName="dark:text-slate-100"
-          />
-        )}
+    <div className="sticky top-0 z-30 flex items-center bg-white justify-between shadow-md w-full dark:bg-slate-950 dark:border-b dark:border-slate-800 [--base-color:#e5e7eb] [--highlight-color:#f3f4f6] dark:[--base-color:#1f2937] dark:[--highlight-color:#334155]">
+      <div className="ml-[78px] flex items-center my-2">
+        <div className="flex gap-4 mr-4">
+          {productMenuItems.map((item) => (
+            <button
+              key={item.query}
+              type="button"
+              onClick={() => {
+                setSearchProduct(item.query);
+                onProductMenuClick(item.query);
+              }}
+              className={classNames(
+                "cursor-pointer text-sm capitalize font-semibold text-[color:var(--color-text-body)] transition hover:text-[#4880FF] dark:text-slate-100 dark:hover:text-blue-300",
+                searchProduct == item.query ? "!text-[#4880FF]" : null,
+              )}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+
+        <Input
+          divClassName="h-[38px] !bg-[#F5F6FA] !border-[var(--orderlist-border-color)] !rounded-[19px] dark:!bg-slate-900 dark:!border-slate-700"
+          placeholder="Search"
+          startIcon="search"
+          className="w-[388px]"
+          inputClassName="dark:text-slate-100"
+          value={searchTerm}
+          onChange={handleSearchChange}
+        />
       </div>
       <div className="mr-[31px] flex items-center py-[13px]">
         {loading ? (
@@ -174,13 +239,21 @@ const Header = () => {
             <div className="sky">
               <button
                 type="button"
-                title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+                title={
+                  isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"
+                }
                 aria-pressed={isDarkMode}
                 onClick={() => setIsDarkMode((prev) => !prev)}
-                className={classNames("switch", isDarkMode && "night", isDarkMode && "show-stars")}
+                className={classNames(
+                  "switch",
+                  isDarkMode && "night",
+                  isDarkMode && "show-stars",
+                )}
               >
                 <div className="track day">
-                  <div className={classNames("moon", isDarkMode && "moon-slide")}></div>
+                  <div
+                    className={classNames("moon", isDarkMode && "moon-slide")}
+                  ></div>
                 </div>
                 <div className="stars">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -219,12 +292,15 @@ const Header = () => {
           <Skeleton width={30} height={30} />
         ) : (
           <div
+          onClick={()=>navigate('/cart')}
             data-cart-target="true"
             className={classNames(
               "relative mr-5 flex items-center justify-center",
               isCartReceiving && "cart-target-receive",
             )}
           >
+            <span className="cart-target-glow" aria-hidden="true" />
+            <span className="cart-target-ring" aria-hidden="true" />
             <HiOutlineShoppingCart className="h-6 w-6 cursor-pointer text-[color:var(--color-text-body)] dark:text-slate-100" />
             <div
               className={classNames(
@@ -300,7 +376,7 @@ const Header = () => {
             <div
               className={`${isMenuOpen ? "opacity-100 pointer-events-auto translate-y-0" : "opacity-0 pointer-events-none -translate-y-1"} absolute right-0 mt-2 min-w-[220px] rounded-lg border border-[var(--color-border-subtle)] bg-white p-2 shadow-md transition-all duration-150 dark:bg-slate-900 dark:border-slate-700`}
             >
-               <div
+              <div
                 type="button"
                 onClick={onProfile}
                 className="mt-1 w-full cursor-pointer rounded-md px-3 py-2 hover:bg-blue-100 transition-colors ease-in-out duration-300 text-left text-sm"

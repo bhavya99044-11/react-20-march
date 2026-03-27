@@ -119,32 +119,7 @@
       "unread": false
     }
   ],
-  "favourites": [
-    {
-      "id": "8748",
-      "productId": 2,
-      "name": "Apple Watch Series 5",
-      "price": 150,
-      "rating": 5,
-      "reviews": 98,
-      "images": [
-        "/images/watch.jpeg",
-        "/images/watch.jpeg"
-      ]
-    },
-    {
-      "id": "9004",
-      "productId": 1,
-      "name": "Apple Watch Series 4",
-      "price": 120,
-      "rating": 4,
-      "reviews": 131,
-      "images": [
-        "/images/watch.jpeg",
-        "/images/watch.jpeg"
-      ]
-    }
-  ],
+  "favourites": [],
   "calendarEvents": [
     {
       "id": "1",
@@ -452,16 +427,7 @@
       "name": "bhavya",
       "email": "bhavya99044@gmail.com",
       "password": "boss99044",
-      "purchasedPlans": [
-        {
-          "planId": "standard",
-          "name": "Standard",
-          "price": "24.99",
-          "billingLabel": "Monthly Charge",
-          "trialText": "14 Day Priority Trial Included",
-          "purchasedAt": "2026-03-20T09:37:51.050Z"
-        }
-      ]
+      "purchasedPlans": []
     },
     {
       "id": "e6f8",

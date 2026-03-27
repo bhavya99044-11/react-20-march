@@ -17,6 +17,7 @@ const ProductCard = ({
   slidesPerView = 1.3,
   centerImages = false,
   actionText = "Edit Product",
+  showImageSlider = true,
 }) => {
   const id = useId().replace(/[:]/g, "");
   const prevClass = `product-prev-${id}`;
@@ -48,59 +49,71 @@ const ProductCard = ({
       aria-label={`Open details for ${name}`}
     >
       <div className="relative">
-        <Swiper
-          modules={[Navigation]}
-          navigation={{
-            prevEl: `.${prevClass}`,
-            nextEl: `.${nextClass}`,
-          }}
-          slidesPerView={slidesPerView}
-          loop={false}
-          onSwiper={(swiper) => {
-            swiperRef.current = swiper;
-            updateNavState(swiper);
-          }}
-          onSlideChange={updateNavState}
-          className="relative z-0"
-        >
-          {images.map((img, index) => (
-            <SwiperSlide key={index}>
-              <img
-                src={img}
-                alt={name}
-                className={`h-[317px] object-contain ${centerImages ? "mx-auto" : ""}`}
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        {showImageSlider ? (
+          <>
+            <Swiper
+              modules={[Navigation]}
+              navigation={{
+                prevEl: `.${prevClass}`,
+                nextEl: `.${nextClass}`,
+              }}
+              slidesPerView={slidesPerView}
+              loop={false}
+              onSwiper={(swiper) => {
+                swiperRef.current = swiper;
+                updateNavState(swiper);
+              }}
+              onSlideChange={updateNavState}
+              className="relative z-0"
+            >
+              {images.map((img, index) => (
+                <SwiperSlide key={index}>
+                  <img
+                    src={img}
+                    alt={name}
+                    className={`h-[317px] object-contain ${centerImages ? "mx-auto" : ""}`}
+                  />
+                </SwiperSlide>
+              ))}
+            </Swiper>
 
-        <Button
-          text="❮"
-          aria-label="Previous image"
-          onClick={(event) => {
-            event.stopPropagation();
-            swiperRef.current?.slidePrev();
-          }}
-          type="button"
-          variant="icon"
-          useColorClasses={false}
-          disabled={isBeginning}
-          className={`absolute z-10 ${prevClass} left-2 top-1/2 -translate-y-1/2 bg-gray-200 w-8 h-8 px-0 py-0 rounded-full text-gray-600 hover:bg-gray-300 transition pointer-events-auto dark:bg-slate-900/70 dark:text-slate-200 dark:hover:bg-slate-800`}
-        />
+            <Button
+              text="❮"
+              aria-label="Previous image"
+              onClick={(event) => {
+                event.stopPropagation();
+                swiperRef.current?.slidePrev();
+              }}
+              type="button"
+              variant="icon"
+              useColorClasses={false}
+              disabled={isBeginning}
+              className={`absolute z-10 ${prevClass} left-2 top-1/2 -translate-y-1/2 bg-gray-200 w-8 h-8 px-0 py-0 rounded-full text-gray-600 hover:bg-gray-300 transition pointer-events-auto dark:bg-slate-900/70 dark:text-slate-200 dark:hover:bg-slate-800`}
+            />
 
-        <Button
-          text="❯"
-          aria-label="Next image"
-          onClick={(event) => {
-            event.stopPropagation();
-            swiperRef.current?.slideNext();
-          }}
-          type="button"
-          variant="icon"
-          useColorClasses={false}
-          disabled={isEnd}
-          className={`absolute z-10 ${nextClass} right-2 top-1/2 -translate-y-1/2 bg-gray-200 w-8 h-8 px-0 py-0 rounded-full text-gray-600 hover:bg-gray-300 transition pointer-events-auto dark:bg-slate-900/70 dark:text-slate-200 dark:hover:bg-slate-800`}
-        />
+            <Button
+              text="❯"
+              aria-label="Next image"
+              onClick={(event) => {
+                event.stopPropagation();
+                swiperRef.current?.slideNext();
+              }}
+              type="button"
+              variant="icon"
+              useColorClasses={false}
+              disabled={isEnd}
+              className={`absolute z-10 ${nextClass} right-2 top-1/2 -translate-y-1/2 bg-gray-200 w-8 h-8 px-0 py-0 rounded-full text-gray-600 hover:bg-gray-300 transition pointer-events-auto dark:bg-slate-900/70 dark:text-slate-200 dark:hover:bg-slate-800`}
+            />
+          </>
+        ) : (
+          <div className="flex h-[317px] items-center justify-center px-4">
+            <img
+              src={images[0]}
+              alt={name}
+              className={`h-[317px] object-contain ${centerImages ? "mx-auto" : ""}`}
+            />
+          </div>
+        )}
       </div>
 
       <div className="mt-6 ml-6 pb-[23px] pr-4">

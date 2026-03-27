@@ -43,6 +43,11 @@ const mergeCartItem = (state, payload) => {
   });
 };
 
+const isSameVariant = (item, payload) =>
+  Number(item.id) === Number(payload.id) &&
+  item.selectedColor?.id === payload.selectedColor?.id &&
+  item.selectedSize?.id === payload.selectedSize?.id;
+
 const cartSlice = createSlice({
   name: "cart",
   initialState,
@@ -53,12 +58,40 @@ const cartSlice = createSlice({
     setCartItems: (state, action) => {
       state.items = action.payload ?? [];
     },
+    updateCartItemQuantity: (state, action) => {
+      const { quantity, ...itemIdentity } = action.payload;
+      const item = state.items.find((entry) => isSameVariant(entry, itemIdentity));
+
+      if (!item) {
+        return;
+      }
+
+      if (quantity <= 0) {
+        state.items = state.items.filter(
+          (entry) => !isSameVariant(entry, itemIdentity),
+        );
+        return;
+      }
+
+      item.quantity = quantity;
+    },
+    removeCartItem: (state, action) => {
+      state.items = state.items.filter(
+        (entry) => !isSameVariant(entry, action.payload),
+      );
+    },
     clearCart: (state) => {
       state.items = [];
     },
   }
 });
 
-export const { addToCart, setCartItems, clearCart } = cartSlice.actions;
+export const {
+  addToCart,
+  setCartItems,
+  updateCartItemQuantity,
+  removeCartItem,
+  clearCart,
+} = cartSlice.actions;
 
 export default cartSlice.reducer;

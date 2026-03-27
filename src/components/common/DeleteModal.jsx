@@ -21,9 +21,10 @@ const DeleteModal = ({
 }) => {
   const [isVisible, setIsVisible] = useState(open);
   const [isClosing, setIsClosing] = useState(false);
-
+  const [deleteMessage,setDeleteMessage] = useState(message)
   useEffect(() => {
     if (open) {
+      setDeleteMessage(message)
       setIsVisible(true);
       setIsClosing(false);
       return;
@@ -71,7 +72,7 @@ const DeleteModal = ({
           {title}
         </h3>
         <p className="mt-2 text-sm text-[color:var(--color-text-secondary)] dark:text-slate-400">
-          {message}
+          {deleteMessage}
         </p>
         <div className="mt-6 flex items-center justify-end gap-3">
           <Button

@@ -22,6 +22,7 @@ const Input = React.forwardRef(
       error = "",
       startIcon,
       endIcon,
+      ...rest
     },
     ref,
   ) => {
@@ -52,15 +53,15 @@ const Input = React.forwardRef(
         {label && (
           <div className="flex gap-1">
             <label
-              htmlFor={name}
+              htmlFor={id || name}
               className={classNames(
-                "mb-1 block  capitalize text-sm font-semibold text-[color:var(--color-text-input)]",
+                "mb-1 block capitalize text-sm font-semibold text-[color:var(--color-text-input)]",
                 labelClassName,
               )}
             >
               {label}
+              {required ? <span className="ml-1 text-red-500">*</span> : null}
             </label>
-            {required ? <span className="text-red-500">*</span> : ""}
           </div>
         )}
         <div className="relative overflow-hidden border border-gray-200 rounded-[19px]">
@@ -89,6 +90,8 @@ const Input = React.forwardRef(
               value={value}
               onChange={handleInputChange}
               required={required}
+              aria-required={required}
+              {...rest}
               className={classNames(
                 "w-[420px] bg-transparent text-sm text-[color:var(--color-text-input)] outline-none placeholder:text-sm placeholder:text-[color:var(--color-text-placeholder)] dark:text-slate-100",
                 inputClassName,

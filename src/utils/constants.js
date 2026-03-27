@@ -24,32 +24,32 @@ export const SIDEBAR_SECTIONS = [
       {
         key: "dashboard",
         label: "Dashboard",
-        path: "/dashboard",
+        path: ["/dashboard",'/'],
         icon: MdDashboard,
       },
       {
         key: "products",
         label: "Products",
-        path: "/products",
+        path: ["/products"],
         icon: MdInventory2,
       },
       {
         key: "favourites",
         label: "Favourites",
-        path: "/favourites",
+        path: ["/favourites"],
         icon: MdFavoriteBorder,
       },
-      { key: "inbox", label: "Inbox", path: "/inbox", icon: MdInbox },
+      { key: "inbox", label: "Inbox", path: ["/inbox"], icon: MdInbox },
       {
         key: "order-lists",
         label: "Order Lists",
-        path: "/order-lists",
+        path: ["/order-lists"],
         icon: MdListAlt,
       },
       {
         key: "product-stock",
         label: "Product Stock",
-        path: "/product-stock",
+        path: ["/product-stock"],
         icon: MdWarehouse,
       },
     ],
@@ -61,41 +61,41 @@ export const SIDEBAR_SECTIONS = [
       {
         key: "pricing",
         label: "Pricing",
-        path: "/pricing",
+        path: ["/pricing"],
         icon: MdAttachMoney,
       },
       {
         key: "calendar",
         label: "Calendar",
-        path: "/calendar",
+        path: ["/calendar"],
         icon: MdCalendarMonth,
       },
       {
         key: "to-do",
         label: "To-Do",
-        path: "/to-do",
+        path: ["/to-do"],
         icon: MdCheckCircleOutline,
       },
       {
         key: "contact",
         label: "Contact",
-        path: "/contact",
+        path: ["/contact"],
         icon: MdContactMail,
       },
       {
         key: "invoice",
         label: "Invoice",
-        path: "/invoice",
+        path: ["/invoice"],
         icon: MdReceiptLong,
       },
       {
         key: "ui-elements",
         label: "UI Elements",
-        path: "/ui-elements",
+        path: ["/ui-elements"],
         icon: MdWidgets,
       },
-      { key: "team", label: "Team", path: "/team", icon: MdGroup },
-      { key: "table", label: "Table", path: "/table", icon: MdTableChart },
+      { key: "team", label: "Team", path: ["/team"], icon: MdGroup },
+      { key: "table", label: "Table", path: ["/table"], icon: MdTableChart },
     ],
   },
   {
@@ -104,11 +104,9 @@ export const SIDEBAR_SECTIONS = [
       {
         key: "settings",
         label: "Settings",
-        path: "/settings",
+        path: ["/settings"],
         icon: MdSettings,
-      },
-      { key: "logout", label: "Logout", path: "/logout", icon: MdLogout },
-    ],
+      }    ],
   },
 ];
 
@@ -172,6 +170,7 @@ export const dashboardCard = [
 
 export const AUTH_SESSION_KEY = "auth_session";
 export const DARK_MODE_KEY = "dark_mode_enabled";
+export const SIDEBAR_COLLAPSED_KEY = "sidebar_collapsed";
 export const SELECTED_PRICING_PLAN_KEY = "selected_pricing_plan";
 const barData1 = [
   {

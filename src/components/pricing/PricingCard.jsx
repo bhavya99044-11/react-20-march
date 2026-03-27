@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "../common";
 import classNames from "classnames";
 import { FaCheckCircle } from "react-icons/fa";
+import { MdArrowOutward } from "react-icons/md";
 
 const PricingCard = ({
   plan,
@@ -15,6 +16,9 @@ const PricingCard = ({
       ? "Upgrade Plan"
       : plan.ctaText;
 
+  const activeFeatures = plan.features.filter((feature) => feature.active);
+  const inactiveFeatures = plan.features.filter((feature) => !feature.active);
+
   return (
     <div
       onClick={() => {
@@ -23,110 +27,203 @@ const PricingCard = ({
         }
       }}
       className={classNames(
-        "flex group relative transtion-colors ease-in-out duration-300 h-[calc(100vh-23.2vh)] relative flex-col overflow-y-auto rounded-[24px] bg-white text-[color:var(--color-text-body)] shadow-lg no-scrollbar dark:border dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100",
-        !isCurrentPlan && "cursor-pointer hover:bg-[#4880FF]",
-        isCurrentPlan && "!bg-[#4880FF]",
+        "group relative flex h-auto min-h-0 flex-col overflow-hidden rounded-[30px] border text-[color:var(--color-text-body)] shadow-[0_24px_60px_rgba(15,23,42,0.08)] transition-all duration-300 ease-out lg:h-full dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100",
+        isCurrentPlan
+          ? "border-transparent bg-[linear-gradient(180deg,#4880FF_0%,#245DDF_100%)]"
+          : "cursor-pointer border-[#E7ECF7] bg-white hover:-translate-y-1 hover:border-[#BFD0FF] hover:shadow-[0_28px_70px_rgba(72,128,255,0.18)] dark:border-slate-700 dark:hover:border-blue-500/60",
       )}
     >
       {isCurrentPlan && (
-        <div className={classNames("absolute top-2 right-2 z-40")}>
-          <FaCheckCircle size={20} color="white" />
+        <div className="absolute right-5 top-5 z-20 flex items-center gap-2 rounded-full bg-white/18 px-3 py-2 text-xs font-bold uppercase tracking-[0.2em] text-white backdrop-blur-sm">
+          <FaCheckCircle size={16} color="white" />
+          Active
         </div>
       )}
-      {/* <div className="absolute -top-14 -left-12 w-[600.5px]  ">
-        <img src="/images/pricing-bg.png" className="w-full"/>
-      </div> */}
+
       <div
         className={classNames(
-          "flex z-40 flex-col transition-colors ease-in-out mb-10 items-center mt-10 text-center",
+          "absolute inset-x-0 top-0 h-[220px] opacity-100 transition-opacity duration-300",
+          isCurrentPlan
+            ? "bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.24),transparent_58%)]"
+            : "bg-[radial-gradient(circle_at_top,rgba(72,128,255,0.18),transparent_60%)] group-hover:opacity-100",
+        )}
+      />
+
+      <div
+        className={classNames(
+          "relative z-10 flex flex-col px-6 pb-5 pt-6",
         )}
       >
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <div
+              className={classNames(
+                "inline-flex rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-[0.24em]",
+                isCurrentPlan
+                  ? "bg-white/16 text-white"
+                  : "bg-[#EDF4FF] text-[#356DFF] dark:bg-blue-500/15 dark:text-blue-300",
+              )}
+            >
+              {isCurrentPlan ? "Your plan" : isUpgrade ? "Recommended next" : "Starter choice"}
+            </div>
+            <span
+              className={classNames(
+                "mt-4 block text-[28px] font-[800] leading-[1.1]",
+                isCurrentPlan ? "text-white" : "text-[color:var(--color-text-primary)]",
+              )}
+            >
+              {plan.name}
+            </span>
+          </div>
+
+          {!isCurrentPlan ? (
+            <div className="rounded-full border border-[#DCE7FF] bg-white/80 p-2 text-[#356DFF] backdrop-blur-sm transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 dark:border-slate-700 dark:bg-slate-900/80 dark:text-blue-300">
+              <MdArrowOutward size={20} />
+            </div>
+          ) : null}
+        </div>
+
         <span
           className={classNames(
-            "text-[22px] group-hover:text-white transition-colors ease-in-out duration-400 leading-[1.4] font-[700]",
-            isCurrentPlan && "text-white",
-          )}
-        >
-          {plan.name}
-        </span>
-        <span
-          className={classNames(
-            "mt-[10px] text-[16px] group-hover:text-white transition-colors ease-in-out duration-400 leading-[1.4] text-[color:var(--color-text-secondary)]",
-            isCurrentPlan && "text-white",
+            "mt-4 text-[15px] leading-[1.6]",
+            isCurrentPlan
+              ? "text-white/80"
+              : "text-[color:var(--color-text-secondary)] dark:text-slate-300",
           )}
         >
           {plan.billingLabel}
         </span>
-        <h2
+
+        <div className="mt-6 flex items-end gap-2">
+          <h2
+            className={classNames(
+              "text-[48px] font-[900] leading-none",
+              isCurrentPlan ? "text-white" : "text-[#356DFF] dark:text-blue-300",
+            )}
+          >
+            ${plan.price}
+          </h2>
+          <span
+            className={classNames(
+              "pb-2 text-sm font-semibold",
+              isCurrentPlan ? "text-white/75" : "text-[color:var(--color-text-secondary)]",
+            )}
+          >
+            /month
+          </span>
+        </div>
+
+        <div
           className={classNames(
-            "mt-[10px] text-[46px] group-hover:text-white transition-colors ease-in-out duration-400 leading-[1.36] font-[800] text-[#4880FF] dark:text-blue-400",
-            isCurrentPlan && "text-white",
+            "mt-6 rounded-[22px] border p-4",
+            isCurrentPlan
+              ? "border-white/20 bg-white/10 backdrop-blur-sm"
+              : "border-[#E7ECF7] bg-[#F8FBFF] dark:border-slate-700 dark:bg-slate-950/60",
           )}
         >
-          ${plan.price}
-        </h2>
-      </div>
+          <div className="flex items-center justify-between gap-3">
+            <span
+              className={classNames(
+                "text-sm font-semibold",
+                isCurrentPlan ? "text-white/85" : "text-[color:var(--color-text-secondary)]",
+              )}
+            >
+              Includes
+            </span>
+            <span
+              className={classNames(
+                "rounded-full px-3 py-1 text-xs font-bold uppercase tracking-[0.2em]",
+                isCurrentPlan
+                  ? "bg-white/14 text-white"
+                  : "bg-white text-[#356DFF] shadow-sm dark:bg-slate-900 dark:text-blue-300",
+              )}
+            >
+              {activeFeatures.length} features
+            </span>
+          </div>
 
-      <div
-        className={classNames(
-          "mx-4 z-40 min-h-[2px] bg-[color:var(--color-border-light)] dark:bg-slate-700/80",
-          isCurrentPlan && "!bg-white/30",
-        )}
-      />
+          <p
+            className={classNames(
+              "mt-3 text-sm leading-6",
+              isCurrentPlan ? "text-white/80" : "text-[color:var(--color-text-secondary)]",
+            )}
+          >
+            {plan.trialText || "Built for teams that want cleaner workflows and faster daily ops."}
+          </p>
+        </div>
+      </div>
 
       <ul
         className={classNames(
-          "flex z-40 flex-1 flex-col gap-[15px] pt-10 items-center",
+          "relative z-10 flex max-h-[270px] overflow-y-auto no-scrollbar flex-1 flex-col gap-2.5 overflow-y-auto px-6 pb-5 pr-3",
           isCurrentPlan && "!text-white",
         )}
       >
-        {plan.features.map((feature) => (
+        {activeFeatures.map((feature) => (
           <li
             key={`${plan.id}-${feature.label}`}
-            className={classNames("w-full px-6", isCurrentPlan && "!text-white  transtion-colors ease-in-out duration-300")}
+            className={classNames(
+              "flex items-center gap-3  rounded-2xl px-4 py-3",
+              isCurrentPlan ? "bg-white/10" : "bg-[#F8FBFF] dark:bg-slate-950/60",
+            )}
           >
+            <FaCheckCircle
+              size={18}
+              className={classNames(
+                "shrink-0",
+                isCurrentPlan ? "text-white" : "text-[#356DFF] dark:text-blue-300",
+              )}
+            />
             <span
               className={classNames(
-                "block  transtion-colors ease-in-out duration-300 group-hover:text-white rounded-xl text-center text-lg font-semibold text-[color:var(--color-text-primary)] ",
-                !feature.active && "opacity-45",
-                 isCurrentPlan && "!text-white",
+                "text-[14px] font-semibold leading-5",
+                isCurrentPlan ? "text-white" : "text-[color:var(--color-text-primary)]",
               )}
             >
               {feature.label}
             </span>
           </li>
         ))}
+
+        {inactiveFeatures.length > 0 ? (
+          <li
+            className={classNames(
+              "mt-1 rounded-2xl border border-dashed px-4 py-4 text-sm leading-6",
+              isCurrentPlan
+                ? "border-white/20 text-white/70"
+                : "border-[#D7E3FC] text-[color:var(--color-text-secondary)] dark:border-slate-700 dark:text-slate-400",
+            )}
+          >
+            {inactiveFeatures.map((feature) => feature.label).join(" • ")}
+          </li>
+        ) : null}
       </ul>
-      <div
-        className={classNames(
-          "mx-4 z-40 mt-[39px] min-h-[2px] bg-[color:var(--color-border-light)] dark:bg-slate-700/80",
-          isCurrentPlan && "!bg-white/30",
-        )}
-      />
 
       <div
         className={classNames(
-          "mt-6 pb-4 z-40 flex w-full flex-col items-center",
+          "relative z-10 mt-auto pt-4 flex w-full flex-col px-6 pb-6",
         )}
       >
         <Button
           text={actionText}
           disabled={isCurrentPlan}
           className={classNames(
-            "!h-15 !w-[180px] !rounded-[30px] !border-[2px] !text-[16px] !font-bold dark:!bg-slate-900",
+            "!h-14 !w-full !rounded-[18px] !border-[2px] !text-[15px] !font-bold",
             isCurrentPlan
-              ? "!border-[#4880FF] !bg-white !text-[#4880FF]"
-              : "!border-[#4880FF] !bg-white !text-[#4880FF] dark:!bg-slate-800 dark:!text-blue-300",
+              ? "!border-white/20 !bg-white !text-[#356DFF]"
+              : "!border-[#356DFF] !bg-[#356DFF] !text-white hover:!bg-[#245DDF] dark:!border-blue-400 dark:!bg-blue-500 dark:hover:!bg-blue-600",
           )}
         />
-        <span
-          className={classNames(
-            "mt-6 group-hover:text-white transtion-colors duration-300 cursor-pointer text-center text-[15px] font-bold text-[color:var(--color-text-primary)] underline underline-offset-2",
-            isCurrentPlan && "text-white",
-          )}
-        >
-          Start Your 30 Day Free Trial
-        </span>
+        <div className="mt-4 flex items-center justify-between gap-3">
+          <span
+            className={classNames(
+              "text-sm font-semibold",
+              isCurrentPlan ? "text-white/75" : "text-[color:var(--color-text-secondary)]",
+            )}
+          >
+            Start with a 30 day free trial
+          </span>
+        </div>
       </div>
     </div>
   );
