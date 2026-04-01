@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import { Button, Input, LinkRef, PasswordInput } from "@/components/common";
 import { useNavigate } from "react-router-dom";
+import { AUTH_SESSION_KEY } from "@/utils/constants";
 import { checkButtonDisable, checkValidation } from "../../utils/helpers";
 import { registerRules } from "../../utils/validation";
 import { api } from "../../utils/api";
 import { decodeGoogleCredential } from "../../utils/helpers";
 import { errorToast, successToast } from "@/utils/toastMessage";
-import useGoogleAuthReady from "@/hooks/useGoogleAuthReady";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -23,7 +23,6 @@ const Register = () => {
   const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
   const [formData, setFormData] = useState(initialFormData);
   const [error, setError] = useState({});
-  const isGoogleReady = useGoogleAuthReady(Boolean(googleClientId));
 
   const onChangeValue = (e) => {
     setFormData((prev) => {
@@ -111,6 +110,18 @@ const Register = () => {
         currentUser = response.data;
       }
 
+      const authSession = {
+        token: currentUser.email,
+        userId: currentUser.id,
+        email: currentUser.email,
+        name: currentUser.name,
+        password: "",
+        time: new Date().toISOString(),
+        rememberMe: true,
+        provider: currentUser.provider || "google",
+      };
+
+      localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(authSession));
       successToast("Signed in with Google");
       navigate("/dashboard");
     } catch (eyy) {
@@ -189,9 +200,9 @@ const Register = () => {
         </div>
         {googleClientId ? (
           <div className="flex justify-center">
-            {!isGoogleReady || isGoogleSubmitting ? (
+            {isGoogleSubmitting ? (
               <Button
-                text={isGoogleSubmitting ? "Connecting Google..." : "Loading Google Sign-In..."}
+                text="Connecting Google..."
                 className="w-full"
                 color="black"
                 loading={true}

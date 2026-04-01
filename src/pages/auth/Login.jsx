@@ -8,7 +8,6 @@ import { decodeGoogleCredential } from "../../utils/helpers";
 import { errorToast, successToast } from "@/utils/toastMessage";
 import { checkButtonDisable, checkValidation } from "@/utils/helpers";
 import { Button, Checkbox, Input, LinkRef, PasswordInput } from "@/components/common";
-import useGoogleAuthReady from "@/hooks/useGoogleAuthReady";
 
 
 const Login = () => {
@@ -26,7 +25,6 @@ const Login = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [formData, setFormData] = useState(initialFormData);
   const [error, setError] = useState({});
-  const isGoogleReady = useGoogleAuthReady(Boolean(googleClientId));
 
   const onChangeValue = (e) => {
     setFormData((prev) => {
@@ -238,9 +236,9 @@ const Login = () => {
         </div>
         {googleClientId ? (
           <div className="flex justify-center">
-            {!isGoogleReady || isGoogleSubmitting ? (
+            {isGoogleSubmitting ? (
               <Button
-                text={isGoogleSubmitting ? "Connecting Google..." : "Loading Google Sign-In..."}
+                text="Connecting Google..."
                 className="w-full"
                 color="black"
                 loading={true}
