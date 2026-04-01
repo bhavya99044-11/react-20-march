@@ -89,8 +89,6 @@ const Input = React.forwardRef(
               placeholder={placeholder}
               value={value}
               onChange={handleInputChange}
-              required={required}
-              aria-required={required}
               {...rest}
               className={classNames(
                 "w-[420px] bg-transparent text-sm text-[color:var(--color-text-input)] outline-none placeholder:text-sm placeholder:text-[color:var(--color-text-placeholder)] dark:text-slate-100",

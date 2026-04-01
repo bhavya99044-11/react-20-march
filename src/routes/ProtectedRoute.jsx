@@ -1,22 +1,8 @@
 import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate, Outlet } from "react-router-dom";
-import { AUTH_SESSION_KEY } from "@/utils/constants";
+import { Outlet } from "react-router-dom";
 import { store } from "@/features/tokenSlice";
-
-const getStoredSession = () => {
-  const rawSession = localStorage.getItem(AUTH_SESSION_KEY);
-
-  if (!rawSession) {
-    return null;
-  }
-
-  try {
-    return JSON.parse(rawSession);
-  } catch {
-    return null;
-  }
-};
+import { getStoredSession } from "@/utils/authSession";
 
 const ProtectedRoute = () => {
   const dispatch = useDispatch();

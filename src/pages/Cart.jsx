@@ -25,10 +25,11 @@ import {
   buildOrderNumber,
   getCheckoutValidationRules,
 } from "../components/cart/cartUtils";
-import { AUTH_SESSION_KEY } from "../utils/constants";
+import { fetchCurrentUser, getStoredSession } from "../utils/authSession";
 import { checkValidation } from "../utils/helpers";
 import { errorToast, successToast } from "../utils/toastMessage";
 import CheckOutCart from "../components/cart/CheckOutCart";
+import classNames from "classnames";
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -63,22 +64,49 @@ const Cart = () => {
   const orderTotal = cartSubtotal + shippingCost + taxAmount;
 
   useEffect(() => {
-    const rawSession = localStorage.getItem(AUTH_SESSION_KEY);
+    let isMounted = true;
 
-    if (!rawSession) {
-      return;
-    }
+    const hydrateCheckoutUser = async () => {
+      const session = getStoredSession();
 
-    try {
-      const session = JSON.parse(rawSession);
-      setCheckoutForm((prev) => ({
-        ...prev,
-        fullName: session?.name || prev.fullName,
-        email: session?.email || prev.email,
-      }));
-    } catch (parseError) {
-      console.error("Failed to parse auth session for checkout:", parseError);
-    }
+      try {
+        const currentUser = await fetchCurrentUser();
+
+        if (!isMounted) {
+          return;
+        }
+
+        setCheckoutForm((prev) => ({
+          ...prev,
+          fullName: currentUser?.name || session?.name || prev.fullName,
+          email: currentUser?.email || session?.email || prev.email,
+          cardName:
+            prev.cardName ||
+            currentUser?.name ||
+            session?.name ||
+            "",
+        }));
+      } catch (error) {
+        console.error("Failed to load checkout user details:", error);
+
+        if (!isMounted) {
+          return;
+        }
+
+        setCheckoutForm((prev) => ({
+          ...prev,
+          fullName: session?.name || prev.fullName,
+          email: session?.email || prev.email,
+          cardName: prev.cardName || session?.name || "",
+        }));
+      }
+    };
+
+    hydrateCheckoutUser();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const handleQuantityChange = (item, nextQuantity) => {
@@ -117,8 +145,6 @@ const Cart = () => {
 
   const handleCheckoutFieldChange = (event) => {
     const { name, value } = event.target;
-    console.log(name);
-    console.log(value);
     let nextValue = value;
 
     if (name === "cardNumber") {
@@ -240,7 +266,6 @@ const Cart = () => {
       setIsProcessingCheckout(false);
     }
   };
-
   return (
     <div className="mt-4 px-4 pb-8 sm:mt-6 sm:px-6 lg:mt-[30px] lg:px-[30px] dark:bg-slate-950 [--base-color:#e5e7eb] [--highlight-color:#f3f4f6] dark:[--base-color:#1f2937] dark:[--highlight-color:#334155]">
       <CartHeader />

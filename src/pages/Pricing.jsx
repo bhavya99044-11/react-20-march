@@ -3,25 +3,8 @@ import PricingCard from "../components/pricing/PricingCard";
 import PricingCardSkeleton from "../components/pricing/PricingCardSkeleton";
 import PurchasePlanModal from "../components/pricing/PurchasePlanModal";
 import { api } from "../utils/api";
-import { AUTH_SESSION_KEY } from "../utils/constants";
+import { fetchCurrentUser, getCurrentUserEmail } from "../utils/authSession";
 import { errorToast, successToast } from "../utils/toastMessage";
-
-const FALLBACK_USER_EMAIL = "bhavya99044@gmail.com";
-
-const getStoredSession = () => {
-  const rawSession = localStorage.getItem(AUTH_SESSION_KEY);
-
-  if (!rawSession) {
-    return null;
-  }
-
-  try {
-    return JSON.parse(rawSession);
-  } catch (error) {
-    console.error("Failed to parse auth session:", error);
-    return null;
-  }
-};
 
 const toPlanPrice = (plan) => Number(plan?.price || 0);
 
@@ -45,24 +28,21 @@ const Pricing = () => {
 
   useEffect(() => {
     let isMounted = true;
-    const authSession = getStoredSession();
-    const currentEmail = authSession?.email || FALLBACK_USER_EMAIL;
+    const currentEmail = getCurrentUserEmail();
 
     const loadPricingData = async () => {
       setLoading(true);
       try {
-        const [plansResponse, userResponse] = await Promise.all([
+        const [plansResponse, currentUser] = await Promise.all([
           api.get("/pricingPlans"),
-          api.get("/users", {
-            params: { email: currentEmail },
-          }),
+          currentEmail ? fetchCurrentUser() : Promise.resolve(null),
         ]);
 
         if (isMounted) {
           setPlans(
             Array.isArray(plansResponse.data) ? plansResponse.data.slice(0, 3) : [],
           );
-          setCurrentUser(userResponse.data?.[0] || null);
+          setCurrentUser(currentUser);
         }
       } catch (error) {
         console.error(error);
@@ -99,11 +79,12 @@ const Pricing = () => {
     setIsPurchasing(true);
 
     try {
-      const response = await api.get("/users", {
-        params: { email: 'bhavya99044@gmail.com' },
-      });
+      const freshUser = await fetchCurrentUser();
 
-      const freshUser = response.data?.[0];
+      if (!freshUser) {
+        errorToast("Please log in to purchase a plan.");
+        return;
+      }
 
       const purchasedPlans = Array.isArray(freshUser.purchasedPlans)
         ? freshUser.purchasedPlans

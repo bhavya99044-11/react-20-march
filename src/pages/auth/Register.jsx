@@ -7,6 +7,7 @@ import { registerRules } from "../../utils/validation";
 import { api } from "../../utils/api";
 import { decodeGoogleCredential } from "../../utils/helpers";
 import { errorToast, successToast } from "@/utils/toastMessage";
+import useGoogleAuthReady from "@/hooks/useGoogleAuthReady";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ const Register = () => {
   const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
   const [formData, setFormData] = useState(initialFormData);
   const [error, setError] = useState({});
+  const isGoogleReady = useGoogleAuthReady(Boolean(googleClientId));
 
   const onChangeValue = (e) => {
     setFormData((prev) => {
@@ -187,9 +189,9 @@ const Register = () => {
         </div>
         {googleClientId ? (
           <div className="flex justify-center">
-            {isGoogleSubmitting ? (
+            {!isGoogleReady || isGoogleSubmitting ? (
               <Button
-                text="Connecting Google..."
+                text={isGoogleSubmitting ? "Connecting Google..." : "Loading Google Sign-In..."}
                 className="w-full"
                 color="black"
                 loading={true}

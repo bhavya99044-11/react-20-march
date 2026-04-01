@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { IoArrowBackCircleSharp } from "react-icons/io5";
 import { MdLocalShipping, MdOutlineReplay, MdSecurity } from "react-icons/md";
 import { useDispatch } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Button } from "../components/common";
 import { addToCart } from "../features/cartSlice";
 import { Rating } from "../components/products";
@@ -35,9 +35,33 @@ const featurePills = [
   },
 ];
 
+const withHexAlpha = (hex, alpha) => {
+  if (!hex) {
+    return hex;
+  }
+
+  const normalizedHex = hex.replace("#", "");
+
+  if (normalizedHex.length === 3) {
+    const expandedHex = normalizedHex
+      .split("")
+      .map((value) => value + value)
+      .join("");
+
+    return `#${expandedHex}${alpha}`;
+  }
+
+  if (normalizedHex.length === 6) {
+    return `#${normalizedHex}${alpha}`;
+  }
+
+  return hex;
+};
+
 const ProductInfo = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
   const product = getProductById(id);
 
@@ -89,6 +113,16 @@ node.style.setProperty(
       node.style.setProperty("--display", "0");
     });
   }, [imageHover]);
+
+  const handleBackToProducts = () => {
+    navigate("/products", {
+      state: {
+        restoreProductId: location.state?.restoreProductId ?? Number(id),
+        restoreScrollTop: location.state?.restoreScrollTop ?? 0,
+      },
+    });
+  };
+
   if (!product) {
     return (
       <div className="min-h-screen bg-[#F4F7FB] px-4 py-8 dark:bg-slate-950">
@@ -102,7 +136,7 @@ node.style.setProperty(
           <Button
             text="Back to Products"
             className="mt-6 px-6"
-            onClick={() => navigate("/products")}
+            onClick={handleBackToProducts}
           />
         </div>
       </div>
@@ -116,6 +150,15 @@ node.style.setProperty(
       ((product.originalPrice - product.price) / product.originalPrice) * 100,
     ),
   );
+  const imageBackdropStyle = selectedColor?.hex
+    ? {
+        background: selectedColor.hex      }
+    : undefined;
+  const imageFrameStyle = selectedColor?.hex
+    ? {
+        backgroundColor: withHexAlpha(selectedColor.hex, "1A"),
+      }
+    : undefined;
 
   const handleAddToCart = () => {
     if (cartAnimation) {
@@ -183,9 +226,8 @@ node.style.setProperty(
         <div className="mx-auto ">
           <button
             type="button"
-            onClick={() => navigate("/products")}
+            onClick={handleBackToProducts}
             className="inline-flex cursor-pointer items-center gap-3 rounded-full border border-white/70 bg-white/90 px-4 py-2 text-sm font-semibold text-[color:var(--color-text-primary)] shadow-sm backdrop-blur transition hover:-translate-x-1 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100"
-            aria-label="Back to products"
           >
             <IoArrowBackCircleSharp size={24} />
             Back to products
@@ -203,7 +245,7 @@ node.style.setProperty(
                         key={`${image}-${index}`}
                         type="button"
                         onClick={() => setSelectedImage(index)}
-                        className={`flex h-[92px] w-[92px] shrink-0 cursor-pointer items-center justify-center rounded-[24px] border transition-all duration-300 lg:h-[104px] lg:w-[104px] ${
+                        className={`flex h-[92px] w-[92px] shrink-0 cursor-pointer items-center justify-center rounded-[24px] border  lg:h-[104px] lg:w-[104px] ${
                           isActive
                             ? "border-[#4880FF] bg-[#EAF1FF] shadow-[0_14px_30px_rgba(72,128,255,0.18)] dark:bg-slate-800"
                             : "border-transparent bg-[#F5F8FD] hover:border-[#4880FF]/40 dark:bg-slate-950"
@@ -219,17 +261,23 @@ node.style.setProperty(
                   })}
                 </div>
 
-                <div className="order-1 overflow-hidden rounded-[30px] bg-[radial-gradient(circle_at_top,#E4F0FF_0%,#D8ECF6_30%,#F2F6FC_100%)] p-6 dark:bg-[radial-gradient(circle_at_top,#1E3A5F_0%,#111827_42%,#0F172A_100%)] lg:order-2 lg:p-8">
+                <div
+                  className="order-1 overflow-hidden rounded-[30px] p-6 transition-colors duration-300 dark:bg-[radial-gradient(circle_at_top,#1E3A5F_0%,#111827_42%,#0F172A_100%)] lg:order-2 lg:p-8"
+                  style={imageBackdropStyle}
+                >
                   <div className="flex items-center justify-between gap-3">
                     <span className="rounded-full bg-white/85 px-4 py-2 text-xs font-bold uppercase tracking-[0.24em] text-[#356DFF] shadow-sm dark:bg-slate-900/70 dark:text-blue-300">
                       New season
                     </span>
-                    <span className="rounded-full bg-[#111827] px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-white dark:bg-white dark:text-slate-900">
+                    <span className="rounded-full bg-[#111827] px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-white dark:bg-slate-100 dark:text-slate-900">
                       {discountPercent}% off
                     </span>
                   </div>
 
-                  <div className="mt-8 flex  items-center justify-center rounded-[28px] border border-white/60 bg-white/40 p-8 shadow-inner dark:border-slate-700/50 dark:bg-slate-900/30 lg:min-h-[520px]">
+                  <div
+                    className="mt-8 flex items-center justify-center rounded-[28px] border border-white/60 bg-white/40 p-8 shadow-inner transition-colors duration-300 dark:border-slate-700/50 dark:bg-slate-900/20 dark:shadow-none lg:min-h-[520px]"
+                    style={imageFrameStyle}
+                  >
                     <div
                       ref={imageHover}
                       className="zoom-image"
@@ -239,7 +287,7 @@ node.style.setProperty(
                         ref={mainImageRef}
                         src={mainImage}
                         alt={product.name}
-                        className="w-[450px] object-fit drop-shadow-[0_26px_45px_rgba(15,23,42,0.2)] h-[450px]"
+                        className="h-[450px] w-[450px] object-fit drop-shadow-[0_26px_45px_rgba(15,23,42,0.2)] dark:drop-shadow-none"
                       />
                     </div>
                   </div>
@@ -344,7 +392,7 @@ node.style.setProperty(
                             className="h-6 w-6 rounded-full border-2 border-white shadow-sm"
                             style={{ backgroundColor: color.hex }}
                           />
-                          <span className="text-sm font-semibold text-[color:text-primary)] dark:text-slate-100">
+                          <span className="text-sm font-semibold text-[color:var(--color-text-primary)] dark:text-slate-100">
                             {color.name}
                           </span>
                         </button>

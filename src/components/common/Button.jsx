@@ -30,9 +30,9 @@ const Button = React.forwardRef(
     const isDisabled = disabled || loading;
     const baseClasses =
       variant === "icon"
-        ? "inline-flex cursor-pointer items-center justify-center rounded-full transition focus:outline-none disabled:cursor-not-allowed"
+        ? "inline-flex cursor-pointer items-center justify-center rounded-full transition-colors focus:outline-none disabled:cursor-not-allowed"
         : variant === "custom"
-          ? "inline-flex cursor-pointer items-center justify-center transition focus:outline-none disabled:cursor-not-allowed"
+          ? "inline-flex cursor-pointer items-center justify-center transition-colors focus:outline-none disabled:cursor-not-allowed"
           : "inline-flex cursor-pointer items-center text-sm justify-center gap-2 py-[14px] rounded-lg font-semibold transition-colors focus:outline-none disabled:cursor-not-allowed";
 
     return (

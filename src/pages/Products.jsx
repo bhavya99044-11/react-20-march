@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Button } from "../components/common";
@@ -31,6 +31,7 @@ const discountOptions = [
 
 const INITIAL_BRAND_COUNT = 4;
 const PRODUCTS_BATCH_SIZE = 9;
+const MIN_PRICE_GAP = 30;
 const categoryQueryMap = {
   men: "male",
   women: "female",
@@ -40,6 +41,9 @@ const categoryQueryMap = {
 const getDiscountPercent = (product) =>
   Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
 
+const getProductsScrollContainer = () =>
+  document.querySelector('[data-app-scroll-container="true"]');
+
 const Products = () => {
   const [favourites, setFavourites] = useState([]);
   const [selectedBrands, setSelectedBrands] = useState([]);
@@ -47,9 +51,12 @@ const Products = () => {
   const [showAllBrands, setShowAllBrands] = useState(false);
   const [visibleCount, setVisibleCount] = useState(PRODUCTS_BATCH_SIZE);
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const loadMoreRef = useRef(null);
+  const hasRestoredPositionRef = useRef(false);
 
+  console.log(location)
   const minProductPrice = Math.min(...products.map((product) => product.price));
   const maxProductPrice = Math.max(...products.map((product) => product.price));
 
@@ -135,10 +142,38 @@ const Products = () => {
     () => filteredProducts.slice(0, visibleCount),
     [filteredProducts, visibleCount],
   );
+  const restoreProductId = Number(location.state?.restoreProductId);
+  const restoreScrollTop = location.state?.restoreScrollTop;
 
   useEffect(() => {
+    if (!restoreProductId || hasRestoredPositionRef.current) {
+      return;
+    }
+
+    const targetIndex = filteredProducts.findIndex(
+      (product) => Number(product.id) === restoreProductId,
+    );
+
+    if (targetIndex < 0) {
+      hasRestoredPositionRef.current = true;
+      return;
+    }
+
+    const requiredVisibleCount = Math.ceil((targetIndex + 1) / PRODUCTS_BATCH_SIZE)
+      * PRODUCTS_BATCH_SIZE;
+
+    if (visibleCount < requiredVisibleCount) {
+      setVisibleCount(requiredVisibleCount);
+    }
+  }, [filteredProducts, restoreProductId, visibleCount]);
+
+  useEffect(() => {
+    if (restoreProductId && !hasRestoredPositionRef.current) {
+      return;
+    }
+
     setVisibleCount(PRODUCTS_BATCH_SIZE);
-  }, [filteredProducts]);
+  }, [filteredProducts, restoreProductId]);
 
   useEffect(() => {
     const loadMoreNode = loadMoreRef.current;
@@ -164,12 +199,70 @@ const Products = () => {
       },
     );
 
+    const observerData = new IntersectionObserver(
+      (entries)=>{
+        const [entry] =entries;
+
+        if(!entry?.isIntersecting){
+          return ;
+        }
+        setVisibleCount((current)=>
+          Math.min(current+PRODUCTS_BATCH_SIZE,filteredProducts.length)
+        )
+      }
+    )
+
     observer.observe(loadMoreNode);
 
     return () => {
       observer.disconnect();
     };
   }, [filteredProducts.length, visibleProducts.length]);
+
+  useEffect(() => {
+    if (!restoreProductId || hasRestoredPositionRef.current) {
+      return;
+    }
+
+    const targetIndex = visibleProducts.findIndex(
+      (product) => Number(product.id) === restoreProductId,
+    );
+
+    if (targetIndex < 0) {
+      return;
+    }
+
+    const scrollContainer = getProductsScrollContainer();
+
+    requestAnimationFrame(() => {
+        scrollContainer.scrollTo({
+          top: restoreScrollTop,
+          behavior: "auto",
+        });
+      
+      hasRestoredPositionRef.current = true;
+    });
+  }, [restoreProductId, restoreScrollTop, visibleProducts]);
+
+  const handleOpenProduct = (product) => {
+    const scrollContainer = getProductsScrollContainer();
+
+    navigate(`/products/${product.id}`, {
+      state: {
+        restoreProductId: product.id,
+        restoreScrollTop: scrollContainer?.scrollTop ?? 0,
+      },
+    });
+
+      navigate(`/products/${product.id}`,{
+        state:{
+          restoreProductId:product.id,
+          restoreScrollTop:scrollContainer?.scrollTop ?? 0 ,
+        }
+      })
+  };
+
+
 
   const handleLike = (product) => {
     const productId = Number(product.id);
@@ -211,7 +304,7 @@ const Products = () => {
   const handleMinPriceChange = (event) => {
     const nextMin = Number(event.target.value);
     setPriceRange((current) => ({
-      min: Math.min(nextMin, current.max),
+      min: Math.min(nextMin, current.max - MIN_PRICE_GAP),
       max: current.max,
     }));
   };
@@ -220,7 +313,7 @@ const Products = () => {
     const nextMax = Number(event.target.value);
     setPriceRange((current) => ({
       min: current.min,
-      max: Math.max(nextMax, current.min),
+      max: Math.max(nextMax, current.min + MIN_PRICE_GAP),
     }));
   };
 
@@ -258,13 +351,13 @@ const Products = () => {
     100;
 
   return (
-    <div className="mt-4  bg-gray-100 px-4 pb-8 sm:mt-6 sm:px-6 lg:mt-[30px] lg:px-[30px] dark:bg-slate-950 [--base-color:#e5e7eb] [--highlight-color:#f3f4f6] dark:[--base-color:#1f2937] dark:[--highlight-color:#334155]">
+    <div className="mt-4 bg-gray-100 px-4 pb-8 sm:mt-6 sm:px-6 lg:mt-[30px] lg:px-[30px] dark:bg-slate-950 dark:text-slate-100 [--base-color:#e5e7eb] [--highlight-color:#f3f4f6] dark:[--base-color:#1f2937] dark:[--highlight-color:#334155]">
       <h2 className="mb-4 text-2xl font-bold text-gray-800 sm:text-[28px] lg:text-[32px] dark:text-slate-100">
         Products
       </h2>
 
       <div className="grid gap-6 xl:grid-cols-[280px_minmax(0,1fr)]">
-        <aside className="h-fit rounded-xl border border-white/70 bg-white/95 p-5 shadow-sm xl:sticky xl:top-6 dark:border-slate-800 dark:bg-slate-900">
+        <aside className="h-fit rounded-xl border border-white/70 bg-white/95 p-5 shadow-sm xl:sticky xl:top-6 dark:border-slate-800 dark:bg-slate-900/95">
           <div className="flex items-center justify-between gap-3">
             <p className="text-xl font-bold uppercase tracking-[0.22em] text-[#4880FF]">
               Filter
@@ -274,15 +367,15 @@ const Products = () => {
               text="Reset"
               variant="custom"
               useColorClasses={false}
-              className="cursor-pointer rounded-[14px] bg-[#EDF4FF] px-4 py-2 text-sm font-bold text-[#356DFF] hover:opacity-80 dark:bg-slate-800 dark:text-slate-100"
+              className="cursor-pointer rounded-[14px] bg-[#EDF4FF] px-4 py-2 text-sm font-bold text-[#356DFF] transition-colors duration-150 hover:opacity-80 dark:bg-slate-800 dark:text-slate-100"
               onClick={resetFilters}
             />
           </div>
 
           <div className="mt-6">
-            <div className="mb-2 flex items-center justify-between text-sm font-semibold">
+            <div className="mb-2 flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-slate-200">
               <span className="font-bold">Price</span>
-              <span>
+              <span className="text-[color:var(--color-text-secondary)] dark:text-slate-400">
                 ${priceRange.min} - ${priceRange.max}
               </span>
             </div>
@@ -303,7 +396,7 @@ const Products = () => {
                 max={maxProductPrice}
                 value={priceRange.min}
                 onChange={handleMinPriceChange}
-                className="pointer-events-none absolute left-0 top-1/2 z-20 h-2 w-full -translate-y-1/2 appearance-none bg-transparent [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:bg-[#4880FF] [&::-webkit-slider-thumb]:shadow-md [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-4 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:bg-[#4880FF]"
+                className="pointer-events-none absolute left-0 top-1/2 z-20 h-2 w-full -translate-y-1/2 appearance-none bg-transparent [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:bg-[#4880FF] [&::-webkit-slider-thumb]:shadow-md [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-4 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:bg-[#4880FF]"
               />
               <input
                 type="range"
@@ -311,7 +404,7 @@ const Products = () => {
                 max={maxProductPrice}
                 value={priceRange.max}
                 onChange={handleMaxPriceChange}
-                className="pointer-events-none absolute left-0 top-1/2 z-10 h-2 w-full -translate-y-1/2 appearance-none bg-transparent [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:bg-[#4880FF] [&::-webkit-slider-thumb]:shadow-md [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-4 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:bg-[#4880FF]"
+                className="pointer-events-none absolute left-0 top-1/2 z-10 h-2 w-full -translate-y-1/2 appearance-none bg-transparent [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:bg-[#4880FF] [&::-webkit-slider-thumb]:shadow-md [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-4 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:bg-[#4880FF]"
               />
             </div>
           </div>
@@ -332,15 +425,15 @@ const Products = () => {
                   <li
                     key={brand.name}
                     onClick={()=>handleBrandToggle(brand.name)}
-                    className="flex cursor-pointer items-center justify-between rounded-[14px] border border-transparent px-3 py-2 hover:border-[#E5ECFA] hover:bg-[#F7FAFF] dark:hover:border-slate-700 dark:hover:bg-slate-950"
+                    className="flex cursor-pointer items-center justify-between rounded-[14px] border border-transparent px-3 py-2 hover:border-[#E5ECFA] hover:bg-[#F7FAFF] dark:hover:border-slate-700 dark:hover:bg-slate-800/70"
                   >
                     <label className="flex cursor-pointer items-center gap-3 text-sm font-medium text-gray-700 dark:text-slate-200">
                       <input
                         type="checkbox"
                         checked={isChecked}
-                        className="h-4 w-4 rounded cursor-pointer accent-[#4880FF]"
+                        className="h-4 w-4 cursor-pointer rounded accent-[#4880FF]"
                       />
-                      <span>{brand.name}</span>
+                      <span onClick={()=>handleBrandToggle(brand.name)}>{brand.name}</span>
                     </label>
                     <span className="text-xs font-semibold text-[color:var(--color-text-secondary)] dark:text-slate-400">
                       ({brand.count})
@@ -366,18 +459,17 @@ const Products = () => {
             <ul className="space-y-2">
               {discountOptions.map((option) => {
                 const isChecked = selectedDiscounts.includes(option.id);
-
                 return (
                   <li
                     key={option.id}
-                    className="rounded-[14px] border border-transparent px-3 py-2 hover:border-[#E5ECFA] hover:bg-[#F7FAFF] dark:hover:border-slate-700 dark:hover:bg-slate-950"
+                    className="rounded-[14px] border border-transparent px-3 py-2 hover:border-[#E5ECFA] hover:bg-[#F7FAFF] dark:hover:border-slate-700 dark:hover:bg-slate-800/70"
                   >
                     <label className="flex cursor-pointer items-center gap-3 text-sm font-medium text-gray-700 dark:text-slate-200">
                       <input
                         type="checkbox"
                         checked={isChecked}
                         onChange={() => handleDiscountToggle(option.id)}
-                        className="h-4 w-4 rounded accent-[#4880FF]"
+                        className="h-4 w-4 cursor-pointer rounded accent-[#4880FF]"
                       />
                       <span>{option.label}</span>
                     </label>
@@ -392,7 +484,7 @@ const Products = () => {
           <ProductsBanner slides={bannerSlides} />
 
           {selectedGender ? (
-            <div className="mt-5 flex items-center justify-between gap-3 rounded-[18px] border border-[#D8E7FF] bg-[#F4F8FF] px-4 py-3 dark:border-slate-700 dark:bg-slate-900">
+            <div className="mt-5 flex items-center justify-between gap-3 rounded-[18px] border border-[#D8E7FF] bg-[#F4F8FF] px-4 py-3 dark:border-slate-700 dark:bg-slate-900/95">
               <div>
                 <p className="mt-1 text-sm font-semibold text-gray-700 dark:text-slate-200">
                   Showing {selectedCategoryQuery} products
@@ -402,14 +494,14 @@ const Products = () => {
                 text="Clear"
                 variant="custom"
                 useColorClasses={false}
-                className="rounded-[12px] bg-white px-4 py-2 text-sm font-bold text-[#356DFF] dark:bg-slate-800 dark:text-slate-100"
+                className="rounded-[12px] bg-white px-4 py-2 text-sm font-bold text-[#356DFF] dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
                 onClick={() => navigate("/products")}
               />
             </div>
           ) : null}
 
           {searchQuery ? (
-            <div className="mt-5 flex items-center justify-between gap-3 rounded-[18px] border border-[#E7ECF7] bg-white px-4 py-3 dark:border-slate-700 dark:bg-slate-900">
+            <div className="mt-5 flex items-center justify-between gap-3 rounded-[18px] border border-[#E7ECF7] bg-white px-4 py-3 dark:border-slate-700 dark:bg-slate-900/95">
               <p className="text-sm font-semibold text-gray-700 dark:text-slate-200">
                 Search results for "{searchParams.get("search")}"
               </p>
@@ -417,7 +509,7 @@ const Products = () => {
                 text="Clear search"
                 variant="custom"
                 useColorClasses={false}
-                className="rounded-[12px] bg-[#EDF4FF] px-4 py-2 text-sm font-bold text-[#356DFF] dark:bg-slate-800 dark:text-slate-100"
+                className="rounded-[12px] bg-[#EDF4FF] px-4 py-2 text-sm font-bold text-[#356DFF] dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
                 onClick={() => {
                   const nextSearchParams = new URLSearchParams(searchParams);
                   nextSearchParams.delete("search");
@@ -433,21 +525,22 @@ const Products = () => {
 
           <div className="mt-5 grid grid-cols-1 justify-items-center gap-5 sm:grid-cols-2 sm:gap-6 xl:grid-cols-3 lg:gap-7">
             {visibleProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                name={product.name}
-                price={product.price}
-                rating={product.rating}
-                reviews={product.reviews}
-                images={product.images}
-                showImageSlider={false}
-                actionText="View Product"
-                isLiked={favourites.some(
-                  (item) => Number(item.productId) === Number(product.id),
-                )}
-                onLike={() => handleLike(product)}
-                onEdit={() => navigate(`/products/${product.id}`)}
-              />
+              <div key={product.id} data-product-card-id={product.id}>
+                <ProductCard
+                  name={product.name}
+                  price={product.price}
+                  rating={product.rating}
+                  reviews={product.reviews}
+                  images={product.images}
+                  showImageSlider={false}
+                  actionText="View Product"
+                  isLiked={favourites.some(
+                    (item) => Number(item.productId) === Number(product.id),
+                  )}
+                  onLike={() => handleLike(product)}
+                  onEdit={() => handleOpenProduct(product)}
+                />
+              </div>
             ))}
           </div>
 
@@ -459,7 +552,7 @@ const Products = () => {
               {visibleProducts.length < filteredProducts.length ? (
                 <div
                   ref={loadMoreRef}
-                  className="flex min-h-12 items-center justify-center rounded-full bg-white/80 px-5 py-3 text-sm font-semibold text-[#4880FF] shadow-sm dark:bg-slate-900 dark:text-blue-300"
+                  className="flex min-h-12 items-center justify-center rounded-full border border-white/60 bg-white/80 px-5 py-3 text-sm font-semibold text-[#4880FF] shadow-sm dark:border-slate-700 dark:bg-slate-900/95 dark:text-blue-300"
                 >
                   Scroll to load more products
                 </div>
@@ -468,7 +561,7 @@ const Products = () => {
           ) : null}
 
           {!filteredProducts.length ? (
-            <div className="mt-6 rounded-[28px] border border-dashed border-[#C8D8F0] bg-white/80 p-8 text-center shadow-sm dark:border-slate-700 dark:bg-slate-900">
+            <div className="mt-6 rounded-[28px] border border-dashed border-[#C8D8F0] bg-white/80 p-8 text-center shadow-sm dark:border-slate-700 dark:bg-slate-900/95">
               <h4 className="text-xl font-semibold text-gray-800 dark:text-slate-100">
                 No products available for these filters
               </h4>
@@ -476,7 +569,7 @@ const Products = () => {
                 text="Reset"
                 variant="custom"
                 useColorClasses={false}
-                className="mt-5 rounded-[14px] bg-[#4880FF] px-5 py-3 text-sm font-bold text-white"
+                className="mt-5 rounded-[14px] bg-[#4880FF] px-5 py-3 text-sm font-bold text-white transition-colors duration-150 dark:hover:bg-[#3b6fe0]"
                 onClick={resetFilters}
               />
             </div>

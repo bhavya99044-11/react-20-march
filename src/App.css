@@ -216,6 +216,7 @@
   --highlight-color: var(--skeleton-highlight);
 }
 
+
 .auth-page {
   min-height: 100vh;
   display: flex;

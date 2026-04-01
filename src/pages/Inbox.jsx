@@ -142,12 +142,9 @@ const Inbox = () => {
     setActiveFolder(folder);
   };
 
-  const handleLabelChange = (key) => {
-      console.log(key)
-  }
+  const handleLabelChange = () => {};
 
   const handleToggleStar = async (id) => {
-    console.log(id)
     const currentEmail = emails.find((item) => item.id === id);
     if (!currentEmail) return;
     const updatedEmail = { ...currentEmail, starred: !currentEmail.starred };

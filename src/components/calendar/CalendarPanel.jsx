@@ -21,8 +21,6 @@ export default function CalendarPanel({
     date: "",
   });
 
-  console.log(events);
-
   return (
     <CalendarContext.Provider value={{ calendarData, setCalendarData }}>
       <div className="flex-1 mr-[30px] bg-white h-[calc(100vh-18vh)] no-scrollbar overflow-auto rounded-[14px] border-[0.3px] border-[#B9B9B9] flex flex-col dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100 [--base-color:#e5e7eb] [--highlight-color:#f3f4f6] dark:[--base-color:#1f2937] dark:[--highlight-color:#334155]">

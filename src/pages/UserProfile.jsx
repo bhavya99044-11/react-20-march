@@ -4,27 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { Button, DeleteModal } from "../components/common";
 import PurchasePlanModal from "../components/pricing/PurchasePlanModal";
 import { api } from "../utils/api";
-import { AUTH_SESSION_KEY } from "../utils/constants";
+import { fetchCurrentUser, getCurrentUserEmail } from "../utils/authSession";
 import { errorToast, successToast } from "../utils/toastMessage";
 import { FaRegEye } from "react-icons/fa";
 import { FaCheckCircle } from "react-icons/fa";
-
-const FALLBACK_USER_EMAIL = "bhavya99044@gmail.com";
-
-const getStoredSession = () => {
-  const rawSession = localStorage.getItem(AUTH_SESSION_KEY);
-
-  if (!rawSession) {
-    return null;
-  }
-
-  try {
-    return JSON.parse(rawSession);
-  } catch (error) {
-    console.error("Failed to parse auth session:", error);
-    return null;
-  }
-};
 
 const toPlanPrice = (plan) => Number(plan?.price || 0);
 
@@ -73,20 +56,17 @@ const UserProfile = () => {
 
   useEffect(() => {
     let isMounted = true;
-    const authSession = getStoredSession();
-    const currentEmail = authSession?.email || FALLBACK_USER_EMAIL;
+    const currentEmail = getCurrentUserEmail();
 
     const loadUserProfile = async () => {
       try {
-        const [userResponse, plansResponse] = await Promise.all([
-          api.get("/users", {
-            params: { email: currentEmail },
-          }),
+        const [currentUser, plansResponse] = await Promise.all([
+          fetchCurrentUser(),
           api.get("/pricingPlans"),
         ]);
 
         if (isMounted) {
-          setUserProfile(userResponse.data?.[0] || null);
+          setUserProfile(currentUser);
           setPricingPlans(
             Array.isArray(plansResponse.data) ? plansResponse.data : [],
           );
@@ -104,6 +84,13 @@ const UserProfile = () => {
       }
     };
 
+    if (!currentEmail) {
+      setLoading(false);
+      return () => {
+        isMounted = false;
+      };
+    }
+
     loadUserProfile();
 
     return () => {
@@ -112,13 +99,7 @@ const UserProfile = () => {
   }, []);
 
   const refreshUserProfile = async () => {
-    const authSession = getStoredSession();
-    const currentEmail = authSession?.email || FALLBACK_USER_EMAIL;
-    const response = await api.get("/users", {
-      params: { email: currentEmail },
-    });
-
-    const nextUser = response.data?.[0] || null;
+    const nextUser = await fetchCurrentUser();
     setUserProfile(nextUser);
     return nextUser;
   };
@@ -257,7 +238,11 @@ const UserProfile = () => {
                     "rounded-2xl bg-blue-50 border relative border-[#4880FF] border-[2px] p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800/70",
                   )}
                 >
-                          <div className={classNames("absolute bg-white -top-2 -right-1.5 z-40")}>
+                          <div
+                            className={classNames(
+                              "absolute -top-2 -right-1.5 z-40 rounded-full bg-white dark:bg-slate-900",
+                            )}
+                          >
                             <FaCheckCircle size={20} color="#4880FF" />
                           </div>
                   <div

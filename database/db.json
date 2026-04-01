@@ -427,7 +427,16 @@
       "name": "bhavya",
       "email": "bhavya99044@gmail.com",
       "password": "boss99044",
-      "purchasedPlans": []
+      "purchasedPlans": [
+        {
+          "planId": "standard",
+          "name": "Standard",
+          "price": "24.99",
+          "billingLabel": "Monthly Charge",
+          "trialText": "14 Day Priority Trial Included",
+          "purchasedAt": "2026-04-01T12:10:05.427Z"
+        }
+      ]
     },
     {
       "id": "e6f8",
@@ -508,6 +517,23 @@
       "password": "",
       "provider": "google",
       "avatar": "https://lh3.googleusercontent.com/a/ACg8ocIhoiSIt8NfpdYsInKRRDbgm9hfNYjcUUtjO7l-hQqMusdJzA=s96-c"
+    },
+    {
+      "id": "af3a",
+      "name": "Vimal",
+      "email": "vimal99044@gmail.com",
+      "password": "boss99044",
+      "cart": [],
+      "purchasedPlans": [
+        {
+          "planId": "standard",
+          "name": "Standard",
+          "price": "24.99",
+          "billingLabel": "Monthly Charge",
+          "trialText": "14 Day Priority Trial Included",
+          "purchasedAt": "2026-04-01T12:39:41.008Z"
+        }
+      ]
     }
   ],
   "productStock": [

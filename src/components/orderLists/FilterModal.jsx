@@ -35,7 +35,6 @@ const FilterModal = ({
     const handleOutside = (event) => {
       if (!containerRef.current) return;
       if (!containerRef.current.contains(event.target)) {
-        console.log('outside click');
         setOpenFilter(null);
       }
     };

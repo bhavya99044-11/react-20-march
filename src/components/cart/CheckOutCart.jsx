@@ -22,6 +22,7 @@ const CheckOutCart = ({
   return (
     <form
       onSubmit={onSubmit}
+      noValidate
       className="rounded-2xl bg-white p-6 shadow-sm dark:bg-slate-900"
     >
       <div className="flex flex-col gap-2 border-b border-[color:var(--color-border-subtle)] pb-4 dark:border-slate-800">
@@ -132,7 +133,7 @@ const CheckOutCart = ({
         </div>
         <div className="space-y-4">
           <div>
-            <p className="=text-sm font-semibold text-[color:var(-color-text-primary)] dark:text-slate-100">
+            <p className="text-sm font-semibold text-[color:var(--color-text-primary)] dark:text-slate-100">
               Payment Method
             </p>
             <div className="mt-3 grid gap-3 sm:grid-cols-2">

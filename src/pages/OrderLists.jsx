@@ -154,7 +154,6 @@ const OrderLists = () => {
   const [openFilter, setOpenFilter] = useState(null);
 
   const filteredOrders = useMemo(() => {
-    console.log('1assss')
     setOpenFilter(null);
     return orders.filter((order) => {
       const matchesSearch = [order.id, order.name, order.address]

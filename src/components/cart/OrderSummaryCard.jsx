@@ -35,7 +35,7 @@ const OrderSummaryCard = ({
           <span>{shippingCost === 0 ? "Free" : formatCurrency(shippingCost)}</span>
         </div>
         <div className="flex items-center justify-between text-[color:var(--color-text-secondary)] dark:text-slate-300">
-          <span>Estimated Tax</span>
+          <span>Tax</span>
           <span>{formatCurrency(taxAmount)}</span>
         </div>
       </div>

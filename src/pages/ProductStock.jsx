@@ -146,8 +146,6 @@ const ProductStock = () => {
       (value) => value == "",
     );
 
-    console.log(hasNoErrors);
-
     if (!hasNoErrors) {
       return;
     }

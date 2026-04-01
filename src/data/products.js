@@ -2489,9 +2489,9 @@ const rawProducts = [
     ],
     "description": "A premium-style Rolex concept that pairs luxury looks with fitness basics.",
     "images": [
-      "/images/img9.png",
-      "/images/img10.png",
-      "/images/img11.png"
+      "/images/img5.png",
+      "/images/img6.png",
+      "/images/img7.png"
     ],
     "colors": [
       {

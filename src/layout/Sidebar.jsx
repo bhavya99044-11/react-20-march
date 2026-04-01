@@ -25,17 +25,17 @@ const Sidebar = ({ isCollapsed = false, onToggleCollapse }) => {
     >
       <div
         className={classNames(
-          "sticky top-0 z-40 flex items-center bg-white shadow-md transition-all duration-300 dark:border-b dark:border-gray-800 dark:bg-slate-950",
+          "sticky top-0 z-40 flex items-center bg-white shadow-md dark:border-b dark:border-gray-800 dark:bg-slate-950",
           isCollapsed
             ? "justify-center px-3 py-[17px]"
             : "justify-between gap-3 pl-8 pr-5 pt-[18px] pb-4",
         )}
       >
         {!isCollapsed ? (
-          <div className="flex min-w-0 items-center transition-all duration-300 justify-start">
+          <div className="flex min-w-0 items-center transition-all duration-150 justify-start">
             <img
               src="/images/dashtack.png"
-              className="cursor-pointer dark:invert dark:brightness-95"
+              className="cursor-pointer"
               alt="Dashtack"
             />
           </div>
@@ -46,7 +46,7 @@ const Sidebar = ({ isCollapsed = false, onToggleCollapse }) => {
           onClick={onToggleCollapse}
           title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           className={classNames(
-            "flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full border border-[#E0E0E0] bg-white text-[#202224] transition-all duration-300 hover:bg-[#4880FF] hover:text-white dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-[#4880FF]",
+            "flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full border border-[#E0E0E0] bg-white text-[#202224]  hover:bg-[#4880FF] hover:text-white dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-[#4880FF]",
             isCollapsed ? "mx-auto shadow-sm" : "mr-1",
           )}
         >
@@ -77,7 +77,7 @@ const Sidebar = ({ isCollapsed = false, onToggleCollapse }) => {
             {section.heading ? (
               <div
                 className={classNames(
-                  "font-bold text-black/60 text-xs uppercase mt-4 mb-4 transition-all duration-300 dark:text-slate-400",
+                  "font-bold text-black/60 text-xs uppercase mt-4 mb-4 dark:text-slate-400",
                   isCollapsed ? "text-center tracking-[0.3em]" : "ml-10",
                 )}
               >
@@ -88,12 +88,9 @@ const Sidebar = ({ isCollapsed = false, onToggleCollapse }) => {
             ) : null}
 
             {section.items.map((item) => {
-              console.log(item);
-              console.log(item.path.includes(pathname));
               const isActive = item.path.includes(pathname)
-                ? pathname === item.path[0] || pathname == item.path?.[1]
-                : activeItem === item.key;
-              console;
+                ? pathname === item.path[0] || pathname === item.path[1]
+                : null;
               return (
                 <div
                   key={item.key}
@@ -107,7 +104,7 @@ const Sidebar = ({ isCollapsed = false, onToggleCollapse }) => {
                       "text-sm sidemenu rounded-[10px] text-[color:var(--orderlist-text-color)] cursor-pointer flex items-center overflow-hidden transition-transform dark:text-slate-200",
                       isCollapsed
                         ? "h-[52px] w-[60px] justify-center py-3 mx-auto"
-                        : "pt-4 pb-[14px] pl-[54px] ml-[24px] mr-6 w-[calc(100%-48px)] text-left gap-3",
+                        : "pt-4 pb-[14px] pl-[54px] ml-[20px] mr-6 w-[calc(100%-48px)] text-left gap-3",
                     )}
                   >
                     {item.icon ? (

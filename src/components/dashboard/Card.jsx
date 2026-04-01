@@ -14,7 +14,7 @@ const Card = ({
   loading = false,
 }) => {
   return (
-    <div className="flex hover:-translate-y-1 duration-300 transition-transform p-4 w-full flex-col dark:bg-slate-700 dark:text-white bg-white rounded-[14px]">
+    <div className="flex w-full flex-col rounded-[14px] bg-white p-4 transition-transform duration-300 hover:-translate-y-1 dark:border dark:border-slate-800 dark:bg-slate-900 dark:text-white">
       <div className="flex flex-row justify-between">
         <div>
           <div className="text-black/70 dark:text-white capitalize">

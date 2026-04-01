@@ -9,6 +9,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { clearCart } from "@/features/cartSlice";
 import { remove } from "@/features/tokenSlice";
 import { AUTH_SESSION_KEY, DARK_MODE_KEY } from "@/utils/constants";
+import { fetchCurrentUser, getStoredSession } from "@/utils/authSession";
 import classNames from "classnames";
 import { HiOutlineShoppingCart } from "react-icons/hi2";
 
@@ -29,11 +30,14 @@ const Header = () => {
   const [isDarkMode, setIsDarkMode] = useState(
     () => localStorage.getItem(DARK_MODE_KEY) === "true",
   );
+  const themeTransitionTimeoutRef = useRef(null);
+  const hasMountedRef = useRef(false);
   const [searchFilters] = useSearchParams();
   const [searchProduct, setSearchProduct] = useState(
     searchFilters.get("product"),
   );
   const [searchTerm, setSearchTerm] = useState(searchFilters.get("search") ?? "");
+  const [currentUser, setCurrentUser] = useState(() => getStoredSession());
   const cartCount = useSelector((state) => state.cart.items.length);
 
   useEffect(() => {
@@ -42,8 +46,22 @@ const Header = () => {
   }, [searchFilters]);
 
   useEffect(() => {
+    if (hasMountedRef.current) {
+      document.documentElement.classList.add("theme-transition");
+      window.clearTimeout(themeTransitionTimeoutRef.current);
+      themeTransitionTimeoutRef.current = window.setTimeout(() => {
+        document.documentElement.classList.remove("theme-transition");
+      }, 260);
+    } else {
+      hasMountedRef.current = true;
+    }
+
     document.documentElement.classList.toggle("dark", isDarkMode);
     localStorage.setItem(DARK_MODE_KEY, String(isDarkMode));
+
+    return () => {
+      window.clearTimeout(themeTransitionTimeoutRef.current);
+    };
   }, [isDarkMode]);
 
   const fetchLanguages = async () => {
@@ -61,6 +79,31 @@ const Header = () => {
 
   useEffect(() => {
     fetchLanguages();
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadCurrentUser = async () => {
+      try {
+        const user = await fetchCurrentUser();
+
+        if (isMounted && user) {
+          setCurrentUser((prev) => ({
+            ...prev,
+            ...user,
+          }));
+        }
+      } catch (error) {
+        console.error("Failed to load current user for header:", error);
+      }
+    };
+
+    loadCurrentUser();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -159,7 +202,7 @@ const Header = () => {
                 onProductMenuClick(item.query);
               }}
               className={classNames(
-                "cursor-pointer text-sm capitalize font-semibold text-[color:var(--color-text-body)] transition hover:text-[#4880FF] dark:text-slate-100 dark:hover:text-blue-300",
+                "cursor-pointer text-sm capitalize font-semibold text-[color:var(--color-text-body)]  hover:text-[#4880FF] dark:text-slate-100 dark:hover:text-blue-300",
                 searchProduct == item.query ? "!text-[#4880FF]" : null,
               )}
             >
@@ -359,7 +402,7 @@ const Header = () => {
               />
               <div className="ml-5 flex flex-col text-left">
                 <span className="text-[color:var(--color-text-body)] font-bold text-sm dark:text-slate-100">
-                  Moni Roy
+                  {currentUser?.name || "User"}
                 </span>
                 <span className="text-[color:var(--color-text-muted)] mt-[3px] text-xs font-semibold dark:text-slate-400">
                   Admin
@@ -374,19 +417,19 @@ const Header = () => {
             </button>
 
             <div
-              className={`${isMenuOpen ? "opacity-100 pointer-events-auto translate-y-0" : "opacity-0 pointer-events-none -translate-y-1"} absolute right-0 mt-2 min-w-[220px] rounded-lg border border-[var(--color-border-subtle)] bg-white p-2 shadow-md transition-all duration-150 dark:bg-slate-900 dark:border-slate-700`}
+              className={`${isMenuOpen ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none -translate-y-1 opacity-0"} absolute right-0 z-50 mt-2 min-w-[220px] rounded-lg border border-[var(--color-border-subtle)] bg-white p-2 shadow-md transition-all duration-150 dark:border-slate-700 dark:bg-slate-900`}
             >
               <div
                 type="button"
                 onClick={onProfile}
-                className="mt-1 w-full cursor-pointer rounded-md px-3 py-2 hover:bg-blue-100 transition-colors ease-in-out duration-300 text-left text-sm"
+                className="mt-1 w-full cursor-pointer rounded-md px-3 py-2 text-left text-sm font-medium text-[color:var(--color-text-primary)] transition-colors duration-300 ease-in-out hover:bg-blue-100 hover:text-[#356DFF] dark:text-slate-100 dark:hover:bg-slate-800 dark:hover:text-blue-300"
               >
                 Profile
               </div>
               <div
                 type="button"
                 onClick={onLogout}
-                className="mt-1 w-full cursor-pointer rounded-md transition-colors ease-in-out duration-300  px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/30"
+                className="mt-1 w-full cursor-pointer rounded-md px-3 py-2 text-left text-sm text-red-600 transition-colors duration-300 ease-in-out hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/30"
               >
                 Logout
               </div>

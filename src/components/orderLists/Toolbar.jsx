@@ -24,7 +24,6 @@ const Toolbar = ({
   const open = (key) => {
     setOpenFilter((prev) => {
       if (prev == key) {
-        console.log(key);
         return null;
       }
       return key;

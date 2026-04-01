@@ -14,9 +14,7 @@ const CartItemsCard = ({
         <span className="text-lg font-bold text-[color:var(--color-text-primary)] dark:text-slate-100">
           Cart Items
         </span>
-        <span className="text-sm font-medium text-[color:var(--color-text-secondary)] dark:text-slate-300">
-          {cartItems.length} product{cartItems.length > 1 ? "s" : ""} and {totalQuantity} unit{totalQuantity > 1 ? "s" : ""}
-        </span>
+
       </div>
 
       <div className="hidden grid-cols-[minmax(0,2fr)_120px_150px_120px_90px] gap-4 px-4 py-4 text-sm font-semibold text-[color:var(--color-text-secondary)] dark:text-slate-300 lg:grid">

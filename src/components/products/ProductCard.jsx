@@ -33,10 +33,9 @@ const ProductCard = ({
   const handleCardClick = () => {
     onEdit?.();
   };
-
   return (
     <div
-      className="bg-white hover:scale-105 group duration-300 ease-in-out transition-transform rounded-xl shadow-sm w-[361px] cursor-pointer dark:bg-slate-900 dark:border dark:border-slate-800"
+      className="bg-white hover:scale-105 pt-4 group duration-300 ease-in-out transition-transform rounded-xl shadow-sm w-[361px] cursor-pointer dark:bg-slate-900 dark:border dark:border-slate-800"
       onClick={handleCardClick}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === " ") {
@@ -46,7 +45,6 @@ const ProductCard = ({
       }}
       role="button"
       tabIndex={0}
-      aria-label={`Open details for ${name}`}
     >
       <div className="relative">
         {showImageSlider ? (
@@ -145,7 +143,7 @@ const ProductCard = ({
         </div>
 
         <div className="w-[200px] overflow-hidden">
-          <p className="text-blue-600 -translate-x-15 group-hover:translate-x-0 transition-transform ease-in-out duration-300  font-bold text-sm dark:text-blue-400">
+          <p className="text-blue-600  transition-transform ease-in-out duration-300  font-bold text-sm dark:text-blue-400">
             ${price.toFixed(2)}
           </p>
         </div>

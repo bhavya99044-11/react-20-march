@@ -21,6 +21,7 @@ const CheckoutForm = ({
   return (
     <form
       onSubmit={onSubmit}
+      noValidate
       className="rounded-2xl bg-white p-6 shadow-sm dark:bg-slate-900"
     >
       <div className="flex flex-col gap-2 border-b border-[color:var(--color-border-subtle)] pb-4 dark:border-slate-800 sm:flex-row sm:items-center sm:justify-between">
