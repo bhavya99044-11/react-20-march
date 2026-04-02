@@ -26,14 +26,16 @@ const Register = () => {
 
   const onChangeValue = (e) => {
     setFormData((prev) => {
+      const nextValue = e.target.value.replace(/^\s+/, "");
+
       const updatedData = {
         ...prev,
-        [e.target.name]: e.target.value.replace(/^\s+/, ""),
+        [e.target.name]: nextValue,
       };
       checkButtonDisable(updatedData, setIsSignupDisabled);
       checkValidation(
         {
-          [e.target.name]: [e.target.value.replace(/^\s+/, "")],
+          [e.target.name]: [nextValue],
         },
         registerRules,
         error,
@@ -57,7 +59,6 @@ const Register = () => {
     if (!hasEmptyField) {
       return;
     }
-
     setIsSubmitting(true);
     try {
       const existingUsersResponse = await api.get("/users", {
@@ -153,6 +154,7 @@ const Register = () => {
             className="auth-input-width"
             startIcon="user"
             name="name"
+            capitalizeWords={true}
             value={formData.name}
             required={true}
             error={error?.name}

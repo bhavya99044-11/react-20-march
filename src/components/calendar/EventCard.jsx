@@ -25,7 +25,7 @@ export default function EventCard({ event }) {
             //   className="w-6 h-6 rounded-full border-2 border-white object-cover"
             // />
           ))}
-          <span className="w-6 h-6 cursor-pointer rounded-full bg-[#DFE9FF5E]/36 flex items-center justify-center text-[9px] font-bold text-[#4880FF] border-1 border-[#4880FF] dark:bg-[#1d4ed8]/20 dark:text-blue-300 dark:border-blue-400">
+          <span className="w-6 h-6  rounded-full bg-[#DFE9FF5E]/36 flex items-center justify-center text-[9px] font-bold text-[#4880FF] border-1 border-[#4880FF] dark:bg-[#1d4ed8]/20 dark:text-blue-300 dark:border-blue-400">
             <span className="">{event.extraCount}</span>{" "}
             <span className="-mt-[1px]">+</span>
           </span>

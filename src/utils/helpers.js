@@ -8,6 +8,16 @@ const checkButtonDisable = (formData, setButton) => {
   setButton(disabled);
 };
 
+const capitalizeWords = (value) => {
+  if (typeof value !== "string") {
+    return value;
+  }
+
+  return value.replace(/(^|\s)([a-zA-Z])/g, (match, prefix, letter) => {
+    return `${prefix}${letter.toUpperCase()}`;
+  });
+};
+
 const checkValidation = (values, rules, error, setError) => {
   const validationObject = { ...(error || {}) };
 
@@ -65,4 +75,4 @@ const decodeGoogleCredential = (credential) => {
   }
 };
 
-export { checkButtonDisable, checkValidation , decodeGoogleCredential };
+export { checkButtonDisable, checkValidation, decodeGoogleCredential, capitalizeWords };

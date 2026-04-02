@@ -24,7 +24,9 @@ import {
   formatCurrency,
   buildOrderNumber,
   getCheckoutValidationRules,
+  getRewardDiscountDetails,
 } from "../components/cart/cartUtils";
+import { api } from "../utils/api";
 import { fetchCurrentUser, getStoredSession } from "../utils/authSession";
 import { checkValidation } from "../utils/helpers";
 import { errorToast, successToast } from "../utils/toastMessage";
@@ -35,13 +37,17 @@ const Cart = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
-
+  
   const [itemToRemove, setItemToRemove] = useState(null);
   const [checkoutStarted, setCheckoutStarted] = useState(false);
   const [checkoutForm, setCheckoutForm] = useState(initialCheckoutForm);
   const [checkoutErrors, setCheckoutErrors] = useState({});
   const [isProcessingCheckout, setIsProcessingCheckout] = useState(false);
   const [orderConfirmation, setOrderConfirmation] = useState(null);
+  const [couponCode, setCouponCode] = useState("");
+  const [couponFeedback, setCouponFeedback] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
 
   const cartSubtotal = cartItems.reduce(
     (total, item) =>
@@ -58,10 +64,14 @@ const Cart = () => {
     100,
   );
   const hasFreeShipping = cartSubtotal >= FREE_SHIPPING_THRESHOLD;
-  const shippingCost =
+  const baseShippingCost =
     cartItems.length === 0 ? 0 : hasFreeShipping ? 0 : SHIPPING_RATE;
-  const taxAmount = cartSubtotal * TAX_RATE;
-  const orderTotal = cartSubtotal + shippingCost + taxAmount;
+  const { discountAmount, adjustedShippingCost, summaryLabel } =
+    getRewardDiscountDetails(appliedCoupon, cartSubtotal, baseShippingCost);
+  const discountedSubtotal = Math.max(cartSubtotal - discountAmount, 0);
+  const shippingCost = adjustedShippingCost;
+  const taxAmount = discountedSubtotal * TAX_RATE;
+  const orderTotal = discountedSubtotal + shippingCost + taxAmount;
 
   useEffect(() => {
     let isMounted = true;
@@ -216,6 +226,77 @@ const Cart = () => {
     setOrderConfirmation(null);
   };
 
+  const handleApplyCoupon = async () => {
+    const normalizedCode = couponCode.trim().toUpperCase();
+
+    if (!normalizedCode) {
+      setAppliedCoupon(null);
+      setCouponFeedback("Enter a coupon code first.");
+      return;
+    }
+
+    if (cartItems.length === 0) {
+      setAppliedCoupon(null);
+      setCouponFeedback("Add products to your cart before applying a coupon.");
+      return;
+    }
+
+    if (appliedCoupon?.couponName === normalizedCode) {
+      setCouponFeedback(summaryLabel || "This coupon is already applied.");
+      return;
+    }
+
+    setIsApplyingCoupon(true);
+    setCouponFeedback("");
+
+    try {
+      const response = await api.get("/rewards", {
+        params: { couponName: normalizedCode },
+      });
+
+      const matchingCoupon = response.data?.[0];
+
+      if (!matchingCoupon) {
+        setAppliedCoupon(null);
+        setCouponFeedback("Invalid coupon code.");
+        return;
+      }
+
+      if (matchingCoupon.status !== "Active") {
+        setAppliedCoupon(null);
+        setCouponFeedback("This coupon is inactive.");
+        return;
+      }
+
+      const couponExpiry = new Date(matchingCoupon.validTill);
+      if (Number.isNaN(couponExpiry.getTime()) || couponExpiry.getTime() < Date.now()) {
+        setAppliedCoupon(null);
+        setCouponFeedback("This coupon has expired.");
+        return;
+      }
+
+      setAppliedCoupon(matchingCoupon);
+      setCouponCode(matchingCoupon.couponName);
+      setCouponFeedback(
+        getRewardDiscountDetails(matchingCoupon, cartSubtotal, baseShippingCost).summaryLabel ||
+          "Coupon applied successfully.",
+      );
+      successToast("Coupon applied successfully.");
+    } catch (error) {
+      console.error("Failed to apply coupon:", error);
+      setAppliedCoupon(null);
+      setCouponFeedback("Unable to apply coupon right now.");
+    } finally {
+      setIsApplyingCoupon(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponCode("");
+    setCouponFeedback("");
+  };
+
   const handlePlaceOrder = async (event) => {
     event.preventDefault();
 
@@ -261,13 +342,16 @@ const Cart = () => {
         fullName: prev.fullName,
         email: prev.email,
       }));
+      setAppliedCoupon(null);
+      setCouponCode("");
+      setCouponFeedback("");
       successToast("Order placed successfully.");
     } finally {
       setIsProcessingCheckout(false);
     }
   };
   return (
-    <div className="mt-4 px-4 pb-8 sm:mt-6 sm:px-6 lg:mt-[30px] lg:px-[30px] dark:bg-slate-950 [--base-color:#e5e7eb] [--highlight-color:#f3f4f6] dark:[--base-color:#1f2937] dark:[--highlight-color:#334155]">
+    <div className="mt-4 px-4 pb-8 sm:mt-6 no-scrollbar sm:px-6 lg:mt-[30px] lg:px-[30px] dark:bg-slate-950 [--base-color:#e5e7eb] [--highlight-color:#f3f4f6] dark:[--base-color:#1f2937] dark:[--highlight-color:#334155]">
       <CartHeader />
 
       <FreeShippingBanner
@@ -316,10 +400,18 @@ const Cart = () => {
             totalQuantity={totalQuantity}
             cartSubtotal={cartSubtotal}
             shippingCost={shippingCost}
+            discountAmount={discountAmount}
             taxAmount={taxAmount}
             orderTotal={orderTotal}
             checkoutStarted={checkoutStarted}
             formatCurrency={formatCurrency}
+            couponCode={couponCode}
+            couponFeedback={couponFeedback}
+            appliedCoupon={appliedCoupon}
+            isApplyingCoupon={isApplyingCoupon}
+            onCouponCodeChange={setCouponCode}
+            onApplyCoupon={handleApplyCoupon}
+            onRemoveCoupon={handleRemoveCoupon}
             onStartCheckout={handleStartCheckout}
             onContinueShopping={() => navigate("/products")}
           />

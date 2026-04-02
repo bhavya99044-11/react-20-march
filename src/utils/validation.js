@@ -61,6 +61,9 @@ const addEventRules = {
   date: {
     required: true,
   },
+  endDate: {
+    required: true,
+  },
   time: {
     required: true,
   },
@@ -122,6 +125,22 @@ const checkoutRules = {
   },
 };
 
+const rewardRules = {
+  couponName: {
+    required: true,
+    minLength: 4,
+  },
+  rewardType: {
+    required: true,
+  },
+  validTill: {
+    required: true,
+  },
+  status: {
+    required: true,
+  },
+};
+
 export {
   loginRules,
   registerRules,
@@ -129,4 +148,5 @@ export {
   productStockRules,
   addEventRules,
   checkoutRules,
+  rewardRules,
 };

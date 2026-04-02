@@ -39,9 +39,20 @@ const FilterModal = ({
       }
     };
 
+    const handleEscape = (event) => {
+      if (event.key === "Escape") {
+        onClose?.();
+        setOpenFilter(null);
+      }
+    };
+
     document.addEventListener("mousedown", handleOutside);
-    return () => document.removeEventListener("mousedown", handleOutside);
-  }, []);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [onClose, setOpenFilter]);
 
   if (isOrderType || isOrderStatus || isDate) {
     const title = isOrderType

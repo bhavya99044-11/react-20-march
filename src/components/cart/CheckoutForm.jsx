@@ -37,14 +37,14 @@ const CheckoutForm = ({
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
         <div className="space-y-4">
-          <Input id="fullName" name="fullName" label="Full Name" value={checkoutForm.fullName} onChange={onFieldChange} placeholder="John Smith" required={true} error={checkoutErrors.fullName} className={inputShellClassName} divClassName={inputDivClassName} inputClassName={inputFieldClassName} />
+          <Input id="fullName" name="fullName" label="Full Name" value={checkoutForm.fullName} onChange={onFieldChange} placeholder="John Smith" required={true} error={checkoutErrors.fullName} capitalizeWords={true} className={inputShellClassName} divClassName={inputDivClassName} inputClassName={inputFieldClassName} />
           <Input id="email" name="email" type="email" label="Email" value={checkoutForm.email} onChange={onFieldChange} placeholder="john@example.com" required={true} error={checkoutErrors.email} className={inputShellClassName} divClassName={inputDivClassName} inputClassName={inputFieldClassName} />
           <Input id="phone" name="phone" label="Phone" value={checkoutForm.phone} onChange={onFieldChange} placeholder="+1 (555) 123-4567" required={true} error={checkoutErrors.phone} className={inputShellClassName} divClassName={inputDivClassName} inputClassName={inputFieldClassName} />
           <Input id="address" name="address" label="Street Address" value={checkoutForm.address} onChange={onFieldChange} placeholder="123 Market Street" required={true} error={checkoutErrors.address} className={inputShellClassName} divClassName={inputDivClassName} inputClassName={inputFieldClassName} />
 
           <div className="grid gap-4 sm:grid-cols-3">
-            <Input id="city" name="city" label="City" value={checkoutForm.city} onChange={onFieldChange} placeholder="Austin" required={true} error={checkoutErrors.city} className={inputShellClassName} divClassName={inputDivClassName} inputClassName={inputFieldClassName} />
-            <Input id="state" name="state" label="State" value={checkoutForm.state} onChange={onFieldChange} placeholder="TX" required={true} error={checkoutErrors.state} className={inputShellClassName} divClassName={inputDivClassName} inputClassName={inputFieldClassName} />
+            <Input id="city" name="city" label="City" value={checkoutForm.city} onChange={onFieldChange} placeholder="Austin" required={true} error={checkoutErrors.city} capitalizeWords={true} className={inputShellClassName} divClassName={inputDivClassName} inputClassName={inputFieldClassName} />
+            <Input id="state" name="state" label="State" value={checkoutForm.state} onChange={onFieldChange} placeholder="TX" required={true} error={checkoutErrors.state} capitalizeWords={true} className={inputShellClassName} divClassName={inputDivClassName} inputClassName={inputFieldClassName} />
             <Input id="zipCode" name="zipCode" label="ZIP Code" value={checkoutForm.zipCode} onChange={onFieldChange} placeholder="78701" required={true} error={checkoutErrors.zipCode} className={inputShellClassName} divClassName={inputDivClassName} inputClassName={inputFieldClassName} />
           </div>
         </div>
@@ -96,7 +96,7 @@ const CheckoutForm = ({
 
           {checkoutForm.paymentMethod === "card" ? (
             <>
-              <Input id="cardName" name="cardName" label="Name on Card" value={checkoutForm.cardName} onChange={onFieldChange} placeholder="John Smith" required={true} error={checkoutErrors.cardName} className={inputShellClassName} divClassName={inputDivClassName} inputClassName={inputFieldClassName} />
+              <Input id="cardName" name="cardName" label="Name on Card" value={checkoutForm.cardName} onChange={onFieldChange} placeholder="John Smith" required={true} error={checkoutErrors.cardName} capitalizeWords={true} className={inputShellClassName} divClassName={inputDivClassName} inputClassName={inputFieldClassName} />
               <Input id="cardNumber" name="cardNumber" label="Card Number" value={checkoutForm.cardNumber} onChange={onFieldChange} placeholder="4242 4242 4242 4242" required={true} error={checkoutErrors.cardNumber} className={inputShellClassName} divClassName={inputDivClassName} inputClassName={inputFieldClassName} inputMode="numeric" />
               <div className="grid gap-4 sm:grid-cols-2">
                 <Input id="expiryDate" name="expiryDate" label="Expiry Date" value={checkoutForm.expiryDate} onChange={onFieldChange} placeholder="MM/YY" required={true} error={checkoutErrors.expiryDate} className={inputShellClassName} divClassName={inputDivClassName} inputClassName={inputFieldClassName} inputMode="numeric" />

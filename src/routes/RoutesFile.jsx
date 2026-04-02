@@ -25,6 +25,7 @@ import NotFound from "../components/NotFound";
 import AuthLayout from "../layout/AuthLayout";
 import UserProfile from "../pages/UserProfile";
 import Cart from "../pages/Cart";
+import Rewards from '../pages/Rewards'
 
 const router = createBrowserRouter([
   {
@@ -129,6 +130,10 @@ const router = createBrowserRouter([
           {
             path:'/cart',
             element:<Cart/>
+          },
+          {
+            path:'/rewards',
+            element:<Rewards/>
           }
         ],
       },

@@ -46,7 +46,7 @@ export default function CalendarToolbar({
   };
   
   return (
-    <div className="flex items-center justify-between mt-[33px] px-6 border-b border-gray-100 dark:border-slate-800">
+    <div className="sticky top-0 z-20  flex items-center justify-between border-b border-gray-100 bg-white px-6 py-4 dark:border-slate-800 dark:bg-slate-900">
       <button
         onClick={handleToday}
         className="text-sm text-[#202224]/60 font-semibold dark:text-slate-400"

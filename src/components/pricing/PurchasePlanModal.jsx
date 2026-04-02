@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { RiCloseLine } from "react-icons/ri";
 import { Button } from "../common";
 import { FaCheckCircle } from "react-icons/fa";
@@ -15,6 +15,21 @@ const PurchasePlanModal = ({
   onClose,
   onConfirm,
 }) => {
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape" && !loading) {
+        onClose?.();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [open, loading, onClose]);
+
   if (!open) return null;
 
   return (

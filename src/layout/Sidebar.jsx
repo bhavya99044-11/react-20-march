@@ -19,7 +19,7 @@ const Sidebar = ({ isCollapsed = false, onToggleCollapse }) => {
   return (
     <div
       className={classNames(
-        "sticky top-0 -pr-1 h-screen shrink-0 no-scrollbar overflow-y-auto bg-white flex flex-col font-semibold nunito-font transition-[width] duration-300 ease-in-out dark:bg-slate-950 dark:text-slate-100",
+        "sticky top-0 -pr-1 h-screen shrink-0 pb-5 no-scrollbar overflow-y-auto bg-white flex flex-col font-semibold nunito-font transition-[width] duration-300 ease-in-out dark:bg-slate-950 dark:text-slate-100",
         isCollapsed ? "w-[96px]" : "w-[270px]",
       )}
     >

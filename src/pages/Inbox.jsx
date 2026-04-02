@@ -175,6 +175,21 @@ const Inbox = () => {
     setLabelModalOpen(true);
   };
 
+  useEffect(() => {
+    if (!labelModalOpen) {
+      return;
+    }
+
+    const handleEscape = (event) => {
+      if (event.key === "Escape") {
+        setLabelModalOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [labelModalOpen]);
+
   const applyLabelChange = async () => {
     if (!labelModalEmail) return;
 

@@ -26,7 +26,7 @@ export default function CalendarPanel({
       <div className="flex-1 mr-[30px] bg-white h-[calc(100vh-18vh)] no-scrollbar overflow-auto rounded-[14px] border-[0.3px] border-[#B9B9B9] flex flex-col dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100 [--base-color:#e5e7eb] [--highlight-color:#f3f4f6] dark:[--base-color:#1f2937] dark:[--highlight-color:#334155]">
         {loading ? (
           <>
-            <div className="flex items-center justify-between mt-[33px] px-6 border-b border-gray-100 dark:border-slate-800">
+            <div className="flex items-center justify-between px-6 border-b border-gray-100 dark:border-slate-800">
               <Skeleton width={39} height={19} />
               <div className="flex items-center gap-2">
                 <Skeleton width={14} height={16} />
@@ -47,7 +47,7 @@ export default function CalendarPanel({
                 </div>
               </div>
             </div>
-            <div className="px-6 mt-[51px]">
+            <div className="px-6">
               <div className="bg-gray-100 px-25 flex items-center justify-between rounded-t-lg w-full h-[48px] dark:bg-slate-800">
                 {Array.from({ length: 5 }).map((item) => {
                   return <Skeleton width={34} height={19} />;
@@ -66,7 +66,7 @@ export default function CalendarPanel({
             </div>
           </>
         ) : (
-          <>
+          <div>
             <CalendarToolbar
               view={view}
               onViewChange={onViewChange}
@@ -77,7 +77,7 @@ export default function CalendarPanel({
               onToday={onToday}
             />
             <MonthCalender events={events} />                        
-          </>
+          </div>
         )}
       </div>
     </CalendarContext.Provider>

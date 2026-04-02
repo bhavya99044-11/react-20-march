@@ -61,6 +61,21 @@ const ProductStock = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (!editOpen) {
+      return;
+    }
+
+    const handleEscape = (event) => {
+      if (event.key === "Escape" && !editLoading) {
+        closeEditModal();
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [editOpen, editLoading]);
+
   const filteredProducts = useMemo(() => {
     return products.filter((product) =>
       [product.name, product.category, product.price, product.piece]
@@ -384,6 +399,7 @@ const ProductStock = () => {
                 placeholder="Enter product name"
                 value={editForm.name}
                 error={editError?.name}
+                capitalizeWords={true}
                 onChange={(event) =>
                   handleEditFieldChange("name", event.target.value)
                 }
@@ -395,6 +411,7 @@ const ProductStock = () => {
                 placeholder="Enter category"
                 value={editForm.category}
                 error={editError?.category}
+                capitalizeWords={true}
                 onChange={(event) =>
                   handleEditFieldChange("category", event.target.value)
                 }

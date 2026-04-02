@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import { RiCloseLine } from "react-icons/ri";
 import EventCard from "./EventCard";
+import { Button, Input } from "../common";
 import {
   MODAL_CANCEL_BUTTON_CLASS,
   MODAL_PRIMARY_BUTTON_CLASS,
@@ -42,12 +43,31 @@ export default function CalendarSidebar({ events, onCreateEvent, loading = false
     }
   }, []);
 
+  useEffect(() => {
+    if (!isModalOpen) {
+      return;
+    }
+
+    const handleEscape = (event) => {
+      if (event.key === "Escape") {
+        handleCloseModal();
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [isModalOpen, isModalClosing]);
+
   const colorOptions = [
     { label: "Violet", color: "#A78BFA", bgLight: "#EDE9FE" },
     { label: "Pink", color: "#EC4899", bgLight: "#FCE7F3" },
     { label: "Orange", color: "#F97316", bgLight: "#FFEDD5" },
     { label: "Blue", color: "#3B82F6", bgLight: "#DBEAFE" },
   ];
+  const modalInputClassName = "w-full";
+  const modalInputFieldClassName = "w-full";
+  const modalInputWrapperClassName =
+    "rounded-xl border-slate-200 bg-[#FAFBFD] dark:border-slate-700 dark:bg-slate-800";
 
   const handleSeeMore = () => {
     if (events.length <= DEFAULT_VISIBLE_EVENTS) return;
@@ -294,71 +314,60 @@ export default function CalendarSidebar({ events, onCreateEvent, loading = false
               Fill the event details below.
             </p>
             <form onSubmit={handleSubmit} className="mt-4 space-y-4">
-              <div>
-                <label className="text-sm font-semibold text-[#202224] dark:text-slate-200">
-                  Title
-                </label>
-                <input
-                  type="text"
-                  value={formValues.title}
-                  onChange={updateField("title")}
+              <Input
+                label="Title"
+                name="title"
+                value={formValues.title}
+                onChange={updateField("title")}
+                required={true}
+                placeholder="Event title"
+                error={formErrors.title}
+                capitalizeWords={true}
+                className={modalInputClassName}
+                inputClassName={modalInputFieldClassName}
+                divClassName={modalInputWrapperClassName}
+              />
+
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <Input
+                  label="Start Date"
+                  name="date"
+                  type="date"
+                  value={formValues.date}
+                  onChange={updateField("date")}
                   required={true}
-                  className="mt-2 w-full h-10 rounded-lg border border-[#E5E7EB] px-3 text-sm bg-[#FAFBFD] dark:bg-slate-800 dark:border-slate-700"
-                  placeholder="Event title"
+                  error={formErrors.date}
+                  className={modalInputClassName}
+                  inputClassName={modalInputFieldClassName}
+                  divClassName={modalInputWrapperClassName}
                 />
-                {formErrors.title ? (
-                  <p className="mt-1 text-xs text-red-500">{formErrors.title}</p>
-                ) : null}
+                <Input
+                  label="End Date"
+                  name="endDate"
+                  type="date"
+                  value={formValues.endDate}
+                  onChange={updateField("endDate")}
+                  required={true}
+                  error={formErrors.endDate}
+                  className={modalInputClassName}
+                  inputClassName={modalInputFieldClassName}
+                  divClassName={modalInputWrapperClassName}
+                />
               </div>
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div>
-                  <label className="text-sm font-semibold text-[#202224] dark:text-slate-200">
-                    Start Date
-                  </label>
-                  <input
-                    type="date"
-                    value={formValues.date}
-                    onChange={updateField("date")}
-                    required={true}
-                    className="mt-2 w-full h-10 rounded-lg border border-[#E5E7EB] px-3 text-sm bg-[#FAFBFD] dark:bg-slate-800 dark:border-slate-700"
-                  />
-                  {formErrors.date ? (
-                    <p className="mt-1 text-xs text-red-500">{formErrors.date}</p>
-                  ) : null}
-                </div>
-                <div>
-                  <label className="text-sm font-semibold text-[#202224] dark:text-slate-200">
-                    End Date
-                  </label>
-                  <input
-                    type="date"
-                    value={formValues.endDate}
-                    onChange={updateField("endDate")}
-                    className="mt-2 w-full h-10 rounded-lg border border-[#E5E7EB] px-3 text-sm bg-[#FAFBFD] dark:bg-slate-800 dark:border-slate-700"
-                  />
-                  {formErrors.endDate ? (
-                    <p className="mt-1 text-xs text-red-500">{formErrors.endDate}</p>
-                  ) : null}
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div>
-                  <label className="text-sm font-semibold text-[#202224] dark:text-slate-200">
-                    Time
-                  </label>
-                  <input
-                    type="time"
-                    value={formValues.time}
-                    onChange={updateField("time")}
-                    required={true}
-                    className="mt-2 w-full h-10 rounded-lg border border-[#E5E7EB] px-3 text-sm bg-[#FAFBFD] dark:bg-slate-800 dark:border-slate-700"
-                  />
-                  {formErrors.time ? (
-                    <p className="mt-1 text-xs text-red-500">{formErrors.time}</p>
-                  ) : null}
-                </div>
+                <Input
+                  label="Time"
+                  name="time"
+                  type="time"
+                  value={formValues.time}
+                  onChange={updateField("time")}
+                  required={true}
+                  error={formErrors.time}
+                  className={modalInputClassName}
+                  inputClassName={modalInputFieldClassName}
+                  divClassName={modalInputWrapperClassName}
+                />
                 <div>
                   <label className="text-sm font-semibold text-[#202224] dark:text-slate-200">
                     Color
@@ -367,7 +376,7 @@ export default function CalendarSidebar({ events, onCreateEvent, loading = false
                     value={formValues.color}
                     onChange={updateField("color")}
                     required={true}
-                    className="mt-2 w-full h-10 rounded-lg border border-[#E5E7EB] px-3 text-sm bg-[#FAFBFD] dark:bg-slate-800 dark:border-slate-700"
+                    className="mt-2 h-10 w-full cursor-pointer rounded-lg border border-[#E5E7EB] bg-[#FAFBFD] px-3 text-sm dark:border-slate-700 dark:bg-slate-800"
                   >
                     {colorOptions.map((option) => (
                       <option key={option.color} value={option.color}>
@@ -378,54 +387,47 @@ export default function CalendarSidebar({ events, onCreateEvent, loading = false
                 </div>
               </div>
 
-              <div>
-                <label className="text-sm font-semibold text-[#202224] dark:text-slate-200">
-                  Address
-                </label>
-                <input
-                  type="text"
-                  value={formValues.address}
-                  onChange={updateField("address")}
-                  required={true}
-                  className="mt-2 w-full h-10 rounded-lg border border-[#E5E7EB] px-3 text-sm bg-[#FAFBFD] dark:bg-slate-800 dark:border-slate-700"
-                  placeholder="Street address"
-                />
-                {formErrors.address ? (
-                  <p className="mt-1 text-xs text-red-500">{formErrors.address}</p>
-                ) : null}
-              </div>
+              <Input
+                label="Address"
+                name="address"
+                value={formValues.address}
+                onChange={updateField("address")}
+                required={true}
+                placeholder="Street address"
+                error={formErrors.address}
+                className={modalInputClassName}
+                inputClassName={modalInputFieldClassName}
+                divClassName={modalInputWrapperClassName}
+              />
 
-              <div>
-                <label className="text-sm font-semibold text-[#202224] dark:text-slate-200">
-                  City
-                </label>
-                <input
-                  type="text"
-                  value={formValues.city}
-                  onChange={updateField("city")}
-                  required={true}
-                  className="mt-2 w-full h-10 rounded-lg border border-[#E5E7EB] px-3 text-sm bg-[#FAFBFD] dark:bg-slate-800 dark:border-slate-700"
-                  placeholder="City"
-                />
-                {formErrors.city ? (
-                  <p className="mt-1 text-xs text-red-500">{formErrors.city}</p>
-                ) : null}
-              </div>
+              <Input
+                label="City"
+                name="city"
+                value={formValues.city}
+                onChange={updateField("city")}
+                required={true}
+                placeholder="City"
+                error={formErrors.city}
+                capitalizeWords={true}
+                className={modalInputClassName}
+                inputClassName={modalInputFieldClassName}
+                divClassName={modalInputWrapperClassName}
+              />
 
               <div className="flex items-center justify-end gap-3 pt-2">
-                <button
+                <Button
                   type="button"
+                  text="Cancel"
                   onClick={handleCloseModal}
-                  className={`${MODAL_CANCEL_BUTTON_CLASS} cursor-pointer`}
-                >
-                  Cancel
-                </button>
-                <button
+                  useColorClasses={false}
+                  className={MODAL_CANCEL_BUTTON_CLASS}
+                />
+                <Button
                   type="submit"
-                  className={`${MODAL_PRIMARY_BUTTON_CLASS} cursor-pointer`}
-                >
-                  Create
-                </button>
+                  text="Create"
+                  useColorClasses={false}
+                  className={MODAL_PRIMARY_BUTTON_CLASS}
+                />
               </div>
             </form>
             </div>

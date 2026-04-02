@@ -16,6 +16,7 @@ import {
   MdSettings,
   MdLogout,
 } from "react-icons/md";
+import { LiaAwardSolid } from "react-icons/lia";
 
 export const SIDEBAR_SECTIONS = [
   {
@@ -82,6 +83,7 @@ export const SIDEBAR_SECTIONS = [
         path: ["/contact"],
         icon: MdContactMail,
       },
+      { key: "reward", label: "Rewards", path: ["/rewards"], icon: LiaAwardSolid },
       {
         key: "invoice",
         label: "Invoice",
@@ -96,18 +98,10 @@ export const SIDEBAR_SECTIONS = [
       },
       { key: "team", label: "Team", path: ["/team"], icon: MdGroup },
       { key: "table", label: "Table", path: ["/table"], icon: MdTableChart },
+      
     ],
   },
-  {
-    key: "account",
-    items: [
-      {
-        key: "settings",
-        label: "Settings",
-        path: ["/settings"],
-        icon: MdSettings,
-      }    ],
-  },
+
 ];
 
 export const monthOptions = [

@@ -28,6 +28,7 @@ const CartItemsCard = ({
       <div className="divide-y divide-[color:var(--color-border-subtle)] dark:divide-slate-800">
         {cartItems.map((item) => {
           const itemTotal = Number(item.price || 0) * Number(item.quantity || 0);
+          const isDecreaseDisabled = Number(item.quantity || 1) <= 1;
 
           return (
             <div
@@ -73,8 +74,9 @@ const CartItemsCard = ({
                 <div className="flex items-center rounded-full border border-[color:var(--color-border-subtle)] dark:border-slate-700">
                   <button
                     type="button"
+                    disabled={isDecreaseDisabled}
                     onClick={() => onQuantityChange(item, Math.max(1, Number(item.quantity || 1) - 1))}
-                    className="h-10 w-10 cursor-pointer rounded-l-full text-lg font-bold text-[color:var(--color-text-primary)] transition hover:bg-slate-100 dark:text-slate-100 dark:hover:bg-slate-800"
+                    className="h-10 w-10 rounded-l-full text-lg font-bold text-[color:var(--color-text-primary)] transition hover:bg-slate-100 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent dark:text-slate-100 dark:hover:bg-slate-800 dark:disabled:hover:bg-transparent"
                     aria-label={`Decrease quantity for ${item.name}`}
                   >
                     -

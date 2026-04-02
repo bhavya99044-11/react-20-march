@@ -290,16 +290,108 @@
   width: 387px;
 }
 
-.fc-theme-standard .fc-scrollgrid {
+.css-b62m3t-container{
+  margin-top:-5px;
+}
+
+.calendar-shell {
+  --fc-border-color: #d7deea;
+  --fc-page-bg-color: #ffffff;
+  --fc-neutral-bg-color: #f7faff;
+  --fc-neutral-text-color: #202224;
+  --fc-list-event-hover-bg-color: #eff5ff;
+  --fc-today-bg-color: rgba(72, 128, 255, 0.08);
+}
+
+.dark .calendar-shell {
+  --fc-border-color: #334155;
+  --fc-page-bg-color: #0f172a;
+  --fc-neutral-bg-color: #111827;
+  --fc-neutral-text-color: #e2e8f0;
+  --fc-list-event-hover-bg-color: #172033;
+  --fc-today-bg-color: rgba(59, 130, 246, 0.18);
+}
+
+.calendar-shell .fc-theme-standard .fc-scrollgrid {
   border-left: 0 !important;
   border-right: 0 !important;
   border-bottom: 0 !important;
 }
 
-.fc-event-main {
-  border-left-width: 10px;
-  border-left-style: solid;
-  border-left-color: black;
+.calendar-shell .fc .fc-scrollgrid,
+.calendar-shell .fc .fc-scrollgrid-section > *,
+.calendar-shell .fc .fc-scrollgrid-section table,
+.calendar-shell .fc .fc-col-header-cell,
+.calendar-shell .fc .fc-daygrid-day,
+.calendar-shell .fc .fc-timegrid-slot,
+.calendar-shell .fc .fc-timegrid-axis,
+.calendar-shell .fc .fc-timegrid-divider,
+.calendar-shell .fc .fc-timegrid-slot-lane,
+.calendar-shell .fc .fc-timegrid-cols table,
+.calendar-shell .fc .fc-timegrid-body,
+.calendar-shell .fc .fc-timegrid-body table {
+  border-color: var(--fc-border-color) !important;
+}
+
+.calendar-shell .fc .fc-col-header-cell {
+  background: var(--fc-neutral-bg-color);
+}
+
+.calendar-shell .fc .fc-col-header-cell-cushion {
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 14px 6px;
+  text-transform: uppercase;
+}
+
+.dark .calendar-shell .fc .fc-col-header-cell-cushion {
+  color: #94a3b8;
+}
+
+.calendar-shell .fc .fc-daygrid-day-frame,
+.calendar-shell .fc .fc-timegrid-slot,
+.calendar-shell .fc .fc-timegrid-axis,
+.calendar-shell .fc .fc-timegrid-axis-cushion,
+.calendar-shell .fc .fc-timegrid-slot-label-cushion {
+  background-color: var(--fc-page-bg-color);
+}
+
+.calendar-shell .fc .fc-timegrid-axis-cushion,
+.calendar-shell .fc .fc-timegrid-slot-label-cushion {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.dark .calendar-shell .fc .fc-timegrid-axis-cushion,
+.dark .calendar-shell .fc .fc-timegrid-slot-label-cushion {
+  color: #94a3b8;
+}
+
+.calendar-shell .fc .fc-day-today {
+  background: var(--fc-today-bg-color) !important;
+}
+
+.calendar-shell .fc .fc-day-today .fc-daygrid-day-number {
+  color: #2563eb;
+}
+
+.dark .calendar-shell .fc .fc-day-today .fc-daygrid-day-number {
+  color: #93c5fd;
+}
+
+.calendar-shell .fc .fc-timegrid-col.fc-day-today,
+.calendar-shell .fc .fc-timegrid-now-indicator-arrow,
+.calendar-shell .fc .fc-timegrid-now-indicator-line {
+  background-color: transparent;
+  border-color: #3b82f6;
+}
+
+.dark .calendar-shell .fc .fc-timegrid-now-indicator-arrow,
+.dark .calendar-shell .fc .fc-timegrid-now-indicator-line {
+  border-color: #60a5fa;
 }
 
 .rdp-caption_label {
@@ -375,11 +467,11 @@
   border: 0;
 }
 
-.fc-event-main {
+.calendar-shell .fc-event-main {
   padding: 10px;
 }
 
-.fc-event-main {
+.calendar-shell .fc-event-main {
   background-image: repeating-linear-gradient(
     -10deg,
     rgba(255, 255, 255, 1) 0,
@@ -390,10 +482,20 @@
   background-size: 100% 100%;
 }
 
-.fc-daygrid-block-event {
+.dark .calendar-shell .fc-event-main {
+  background-image: repeating-linear-gradient(
+    -10deg,
+    rgba(255, 255, 255, 0.09) 0,
+    rgba(255, 255, 255, 0.09) 1px,
+    transparent 2px,
+    transparent 8px
+  );
+}
+
+.calendar-shell .fc-daygrid-block-event {
   padding: 0px !important;
 }
-.fc-direction-ltr .fc-daygrid-event.fc-event-end {
+.calendar-shell .fc-direction-ltr .fc-daygrid-event.fc-event-end {
   margin-left: 0px !important;
   margin-right: 0px !important;
 }
@@ -402,82 +504,95 @@
   opacity: 0 !important;
   display: none !important;
 }
-.fc .fc-day-other {
-  background-image: repeating-linear-gradient(
-    -45deg,
-    rgba(32, 34, 36, 0.12) 0,
-    rgba(32, 34, 36, 0.12) 2px,
-    transparent 2px,
-    transparent 8px
-  );
-  background-size: 100% 100%;
-}
-
-.fc .fc-day-other .fc-daygrid-day-number {
-  color: rgba(32, 34, 36, 0.45);
-}
-
-.dark .fc {
-  color: #e2e8f0;
-}
-
-.dark .fc-theme-standard .fc-scrollgrid {
-  border-color: #1f2937 !important;
-}
-
-.dark .fc .fc-daygrid-day-frame {
-  background-color: #0f172a;
-}
-
-.dark .fc .fc-daygrid-day {
-  border-color: #1f2937;
-}
-
-.dark .fc .fc-daygrid-day-number {
-  color: #cbd5e1;
-}
-
-.dark .fc .fc-day-other {
+.calendar-shell .fc .fc-day-other {
+  background-color: #f5f7fb;
   background-image: repeating-linear-gradient(
     -45deg,
     rgba(148, 163, 184, 0.18) 0,
     rgba(148, 163, 184, 0.18) 2px,
     transparent 2px,
-    transparent 8px
+    transparent 9px
   );
   background-size: 100% 100%;
 }
 
-.dark .fc .fc-day-other .fc-daygrid-day-number {
+.calendar-shell .fc .fc-day-other .fc-daygrid-day-frame {
+  background-color: transparent;
+}
+
+.calendar-shell .fc .fc-day-other .fc-daygrid-day-number {
+  color: rgba(32, 34, 36, 0.45);
+}
+
+.dark .calendar-shell .fc {
+  color: #e2e8f0;
+}
+
+.calendar-shell .fc .fc-daygrid-day-number {
+  color: #111827;
+}
+
+.dark .calendar-shell .fc .fc-daygrid-day-number {
+  color: #cbd5e1;
+}
+
+.dark .calendar-shell .fc .fc-day-other {
+  background-color: #0b1220;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(148, 163, 184, 0.24) 0,
+    rgba(148, 163, 184, 0.24) 2px,
+    transparent 2px,
+    transparent 9px
+  );
+  background-size: 100% 100%;
+}
+
+.dark .calendar-shell .fc .fc-day-other .fc-daygrid-day-frame {
+  background-color: transparent;
+}
+
+.dark .calendar-shell .fc .fc-day-other .fc-daygrid-day-number {
   color: rgba(203, 213, 225, 0.55);
 }
 
-.dark .fc .fc-col-header-cell-cushion {
-  color: #94a3b8;
-}
-
-.dark .fc .fc-daygrid-event {
+.dark .calendar-shell .fc .fc-daygrid-event,
+.dark .calendar-shell .fc .fc-timegrid-event {
   background-color: transparent;
 }
 
 /* FullCalendar: push events to bottom of each day cell */
-.fc .fc-daygrid-day-frame {
+.calendar-shell .fc .fc-daygrid-day-frame {
   display: flex;
   flex-direction: column;
 }
 
-.fc .fc-daygrid-day-top {
+.calendar-shell .fc .fc-daygrid-day-top {
   flex: 0 0 auto;
 }
 
-.fc .fc-daygrid-day-events {
+.calendar-shell .fc .fc-daygrid-day-events {
   margin-top: auto;
 }
 
-.fc .fc-daygrid-event {
+.calendar-shell .fc .fc-daygrid-event,
+.calendar-shell .fc .fc-timegrid-event {
   padding: 2px 6px;
   font-size: 12px;
   line-height: 1.2;
+  border-radius: 10px;
+}
+
+.calendar-shell .fc .fc-timegrid-event {
+  border: 0;
+}
+
+.calendar-shell .fc .fc-timegrid-event-harness {
+  margin-inline: 4px;
+}
+
+.calendar-shell .fc .fc-timegrid-col-events {
+  margin: 0 4px 0 0;
 }
 
 /* Hide scrollbar in common Select menu (react-select) */
@@ -492,7 +607,7 @@
 }
 
 /* FullCalendar: left color bar matches event text color */
-.fc .fc-event-main {
+.calendar-shell .fc .fc-event-main {
   border-left: 10px solid currentColor;
   padding-left: 6px;
 }

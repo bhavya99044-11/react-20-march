@@ -12,6 +12,9 @@ import { AUTH_SESSION_KEY, DARK_MODE_KEY } from "@/utils/constants";
 import { fetchCurrentUser, getStoredSession } from "@/utils/authSession";
 import classNames from "classnames";
 import { HiOutlineShoppingCart } from "react-icons/hi2";
+import { CgProfile } from "react-icons/cg";
+import { LuSettings } from "react-icons/lu";
+import { BiLogOut } from "react-icons/bi";
 
 const productMenuItems = [
   { label: "Men", query: "men" },
@@ -422,16 +425,23 @@ const Header = () => {
               <div
                 type="button"
                 onClick={onProfile}
-                className="mt-1 w-full cursor-pointer rounded-md px-3 py-2 text-left text-sm font-medium text-[color:var(--color-text-primary)] transition-colors duration-300 ease-in-out hover:bg-blue-100 hover:text-[#356DFF] dark:text-slate-100 dark:hover:bg-slate-800 dark:hover:text-blue-300"
+                className="mt-1 w-full flex items-center gap-3 cursor-pointer rounded-md px-3 py-2 text-left text-sm font-medium text-[color:var(--color-text-primary)] transition-colors duration-300 ease-in-out hover:bg-blue-100 hover:text-[#356DFF] dark:text-slate-100 dark:hover:bg-slate-800 dark:hover:text-blue-300"
               >
-                Profile
+                <CgProfile size={18}/> <span className="mt-1">Profile</span>
+              </div>
+              <div
+                type="button"
+                onClick={()=>navigate('settings')}
+                className="mt-1 w-full flex gap-3 items-center cursor-pointer rounded-md px-3 py-2 text-left text-sm font-medium text-[color:var(--color-text-primary)] transition-colors duration-300 ease-in-out hover:bg-blue-100 hover:text-[#356DFF] dark:text-slate-100 dark:hover:bg-slate-800 dark:hover:text-blue-300"
+              >
+                <LuSettings size={18}/> <span className="">Settings</span>
               </div>
               <div
                 type="button"
                 onClick={onLogout}
-                className="mt-1 w-full cursor-pointer rounded-md px-3 py-2 text-left text-sm text-red-600 transition-colors duration-300 ease-in-out hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/30"
+                className="mt-1 w-full cursor-pointer flex gap-3 items-center rounded-md px-3 py-2 text-left text-sm text-red-600 transition-colors duration-300 ease-in-out hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/30"
               >
-                Logout
+               <BiLogOut size={18}/> <span className="">Logout</span>
               </div>
             </div>
           </div>

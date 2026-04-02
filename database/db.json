@@ -434,7 +434,7 @@
           "price": "24.99",
           "billingLabel": "Monthly Charge",
           "trialText": "14 Day Priority Trial Included",
-          "purchasedAt": "2026-04-01T12:10:05.427Z"
+          "purchasedAt": "2026-04-02T05:32:37.869Z"
         }
       ]
     },
@@ -544,22 +544,17 @@
           "purchasedAt": "2026-04-01T12:39:41.008Z"
         }
       ]
+    },
+    {
+      "id": "03a0",
+      "name": "Bhavya Jain",
+      "email": "bhavya99@gmail.com",
+      "password": "boss99044",
+      "undefined": "B",
+      "cart": []
     }
   ],
   "productStock": [
-    {
-      "id": "3",
-      "name": "apple",
-      "category": "smartwatch",
-      "price": 1,
-      "piece": 1,
-      "image": "/images/watch.jpeg",
-      "colors": [
-        "#1F2937",
-        "#EC4899",
-        "#EAB308"
-      ]
-    },
     {
       "id": "5",
       "name": "Noise ColorFit Pro",
@@ -598,6 +593,53 @@
         "#06B6D4",
         "#84CC16"
       ]
+    }
+  ],
+  "rewards-coupons": [
+    {
+      "id": "1",
+      "name": "FREESHIP100X",
+      "expires_at": "12.09.2026 - 12.53 PM",
+      "status": "1",
+      "created_at": "10.09.2026 - 10.00 AM",
+      "created_by": "1",
+      "reward_type": "1"
+    },
+    {
+      "id": "2",
+      "name": "FLASH50Y",
+      "expires_at": "15.09.2026 - 02.30 PM",
+      "status": "1",
+      "created_at": "11.09.2026 - 11.15 AM",
+      "created_by": "2",
+      "reward_type": "2"
+    },
+    {
+      "id": "3",
+      "name": "SAVE100VT",
+      "expires_at": "18.09.2026 - 05.45 PM",
+      "status": "1",
+      "created_at": "12.09.2026 - 09.20 AM",
+      "created_by": "1",
+      "reward_type": "3"
+    },
+    {
+      "id": "4",
+      "name": "SAVE50DF",
+      "expires_at": "20.09.2026 - 01.10 PM",
+      "status": "0",
+      "created_at": "13.09.2026 - 03.00 PM",
+      "created_by": "3",
+      "reward_type": "4"
+    },
+    {
+      "id": "5",
+      "name": "QUICK35XV",
+      "expires_at": "22.09.2026 - 06.00 PM",
+      "status": "1",
+      "created_at": "14.09.2026 - 04.40 PM",
+      "created_by": "2",
+      "reward_type": "5"
     }
   ],
   "pricingPlans": [
@@ -714,6 +756,64 @@
           "active": true
         }
       ]
+    }
+  ],
+  "rewards": [
+    {
+      "id": "1",
+      "couponName": "FREESHIP100X",
+      "rewardType": "Delivery Free",
+      "validTill": "2026-09-12T12:53:00.000Z",
+      "status": "Active",
+      "typeId": "delivery-free"
+    },
+    {
+      "id": "2",
+      "couponName": "FLASH50Y",
+      "rewardType": "Flash Half",
+      "validTill": "2026-09-15T14:30:00.000Z",
+      "status": "Active",
+      "typeId": "flash-half"
+    },
+    {
+      "id": "3",
+      "couponName": "SAVE100VT",
+      "rewardType": "Save 100",
+      "validTill": "2026-09-18T17:45:00.000Z",
+      "status": "Active",
+      "typeId": "save-100"
+    },
+    {
+      "id": "4",
+      "couponName": "SAVE50DF",
+      "rewardType": "Save 50",
+      "validTill": "2026-09-20T13:10:00.000Z",
+      "status": "Active",
+      "typeId": "save-50"
+    },
+    {
+      "id": "5",
+      "couponName": "QUICK35XV",
+      "rewardType": "Quick Drop",
+      "validTill": "2026-09-22T18:00:00.000Z",
+      "status": "Active",
+      "typeId": "quick-drop"
+    },
+    {
+      "id": "dd66",
+      "couponName": "DELIVERYI41P",
+      "rewardType": "Delivery Free",
+      "validTill": "2026-04-09T05:06:00.000Z",
+      "status": "Active",
+      "typeId": "delivery-free"
+    },
+    {
+      "id": "6361",
+      "couponName": "SAVE100FIVH",
+      "rewardType": "Save 100",
+      "validTill": "2026-04-09T06:56:00.000Z",
+      "status": "Active",
+      "typeId": "save-100"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

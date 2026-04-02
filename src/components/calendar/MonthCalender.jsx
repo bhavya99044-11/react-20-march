@@ -56,15 +56,16 @@ export function MonthCalender({ events = [] }) {
   };
 
   return (
-    <div className="flex-1 mt-[51px] w-full dark:text-slate-100">
+    <div className="calendar-shell mt-[5px] flex-1 w-full dark:text-slate-100">
       <FullCalendar
         ref={calendarRef}
         plugins={[dayGridPlugin, timeGridPlugin]}
         initialView='dayGridMonth'
         initialDate={new Date(new Date().getFullYear(), new Date().getMonth(), 1)}
-        showNonCurrentDates={true}
+        showNonCurrentDates={false}
+        fixedWeekCount={false}
         headerToolbar={false}
-        weekends={false}
+        weekends={true}
         events={calendarEvents}
         eventContent={renderEventContent}
         datesSet={handleDatesSet}
