@@ -213,7 +213,7 @@ const Register = () => {
                 onError={() => errorToast("Error while signup")}
                 text="signup_with"
                 theme="outline"
-                size="large"
+                size="medium"
                 shape="pill"
                 width="360"
               />

@@ -11,7 +11,7 @@
       "subject": "Enhance Your Brand Potential With Giant Advertising Blimps",
       "time": "4:13 PM",
       "checked": false,
-      "starred": false,
+      "starred": true,
       "unread": false
     },
     {
@@ -23,8 +23,8 @@
       "tagColor": "bg-blue-100 text-blue-600",
       "subject": "Enhance Your Brand Potential With Giant Advertising Blimps",
       "time": "4:13 PM",
-      "checked": false,
-      "starred": true,
+      "checked": true,
+      "starred": false,
       "unread": false
     },
     {
@@ -516,7 +516,17 @@
       "email": "bhavya.jain@mindinventory.com",
       "password": "",
       "provider": "google",
-      "avatar": "https://lh3.googleusercontent.com/a/ACg8ocIhoiSIt8NfpdYsInKRRDbgm9hfNYjcUUtjO7l-hQqMusdJzA=s96-c"
+      "avatar": "https://lh3.googleusercontent.com/a/ACg8ocIhoiSIt8NfpdYsInKRRDbgm9hfNYjcUUtjO7l-hQqMusdJzA=s96-c",
+      "purchasedPlans": [
+        {
+          "planId": "basic",
+          "name": "Basic",
+          "price": "14.99",
+          "billingLabel": "Monthly Charge",
+          "trialText": "Start Your 30 Day Free Trial",
+          "purchasedAt": "2026-04-01T13:57:19.416Z"
+        }
+      ]
     },
     {
       "id": "af3a",

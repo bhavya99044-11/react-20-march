@@ -249,7 +249,7 @@ const Login = () => {
                 onError={() => errorToast("Failed google login")}
                 text="signin_with"
                 theme="outline"
-                size="large"
+                size="medium"
                 shape="pill"
                 width="360"
               />
