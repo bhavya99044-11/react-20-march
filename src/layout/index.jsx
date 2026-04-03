@@ -4,7 +4,7 @@ import Sidebar from "./Sidebar";
 import Header from "./Header";
 import { SIDEBAR_COLLAPSED_KEY } from "@/utils/constants";
 
-const index = () => {
+const Layout = () => {
   const { pathname } = useLocation();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(
     () => localStorage.getItem(SIDEBAR_COLLAPSED_KEY) === "true",
@@ -32,4 +32,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Layout;

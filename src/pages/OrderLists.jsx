@@ -154,7 +154,6 @@ const OrderLists = () => {
   const [openFilter, setOpenFilter] = useState(null);
 
   const filteredOrders = useMemo(() => {
-    setOpenFilter(null);
     return orders.filter((order) => {
       const matchesSearch = [order.id, order.name, order.address]
         .join(" ")
@@ -204,14 +203,29 @@ const OrderLists = () => {
       <div className="mt-[26px]">
         <Toolbar
           search={search}
-          onSearchChange={(event) => setSearch(event.target.value)}
+          onSearchChange={(event) => {
+            setOpenFilter(null);
+            setSearch(event.target.value);
+          }}
           dateFilter={dateFilter}
-          onDateChange={setDateFilter}
+          onDateChange={(value) => {
+            setOpenFilter(null);
+            setDateFilter(value);
+          }}
           typeFilter={typeFilter}
-          onTypeChange={setTypeFilter}
+          onTypeChange={(value) => {
+            setOpenFilter(null);
+            setTypeFilter(value);
+          }}
           statusFilter={statusFilter}
-          onStatusChange={setStatusFilter}
-          onReset={handleReset}
+          onStatusChange={(value) => {
+            setOpenFilter(null);
+            setStatusFilter(value);
+          }}
+          onReset={() => {
+            setOpenFilter(null);
+            handleReset();
+          }}
           typeOptions={typeOptions}
           statusOptions={statusOptions}
           openFilter = {openFilter}

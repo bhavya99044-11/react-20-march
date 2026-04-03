@@ -458,6 +458,13 @@
     0 32px 80px rgba(37, 99, 235, 0.24);
   transition: transform 4.8s cubic-bezier(0.14, 0.88, 0.18, 1);
   overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.spin-wheel.is-dragging {
+  cursor: grabbing;
 }
 
 .dark .spin-wheel {

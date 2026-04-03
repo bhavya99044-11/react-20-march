@@ -35,8 +35,9 @@ export default function CalendarPanel({
               </div>
               <div className="px-6">
                 <div className="flex border divide-x-[0.4px] divide-[#979797]/70 border-[0.6px] border-[#D5D5D5] rounded-lg dark:border-slate-700 dark:divide-slate-700">
-                  {Array.from({ length: 3 }).map((option) => (
+                  {Array.from({ length: 3 }).map((_, index) => (
                     <button
+                      key={`calendar-toolbar-skeleton-${index}`}
                       className={
                         "pl-4 py-3 cursor-pointer pr-3 font-semibold text-xs transition-colors"
                       }
@@ -49,14 +50,14 @@ export default function CalendarPanel({
             </div>
             <div className="px-6">
               <div className="bg-gray-100 px-25 flex items-center justify-between rounded-t-lg w-full h-[48px] dark:bg-slate-800">
-                {Array.from({ length: 5 }).map((item) => {
-                  return <Skeleton width={34} height={19} />;
+                {Array.from({ length: 5 }).map((_, index) => {
+                  return <Skeleton key={`calendar-day-skeleton-${index}`} width={34} height={19} />;
                 })}
               </div>
               <div className="grid border-l-1 border-r-1 border-gray-300 border-b-1 rounded-b-lg grid-cols-5 divide-x-1 divide-y-1 divide-gray-100 dark:border-slate-700 dark:divide-slate-800">
-                {Array.from({length:42}).map(()=>{
+                {Array.from({length:42}).map((_, index)=>{
 
-                return (<div className="h-[139px] flex justify-end">
+                return (<div key={`calendar-cell-skeleton-${index}`} className="h-[139px] flex justify-end">
                   <div className="ml-auto pt-4 pr-4">
                     <Skeleton height={22} width={22} />
                   </div>

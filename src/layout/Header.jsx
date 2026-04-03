@@ -1,9 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import UkFlag from "../assets/images/uk-flag.png";
 import profileImage from "../assets/images/profile-img.png";
-import { IconComponent, Input, Select } from "@/components/common";
+import { IconComponent, Input } from "@/components/common";
 import Skeleton from "react-loading-skeleton";
-import { api } from "../utils/api";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { clearCart } from "@/features/cartSlice";
@@ -27,7 +25,6 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const menuRef = useRef(null);
-  const [loading, setLoading] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartReceiving, setIsCartReceiving] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(
@@ -36,17 +33,11 @@ const Header = () => {
   const themeTransitionTimeoutRef = useRef(null);
   const hasMountedRef = useRef(false);
   const [searchFilters] = useSearchParams();
-  const [searchProduct, setSearchProduct] = useState(
-    searchFilters.get("product"),
-  );
-  const [searchTerm, setSearchTerm] = useState(searchFilters.get("search") ?? "");
+  const loading = false;
+  const searchProduct = searchFilters.get("product");
+  const searchTerm = searchFilters.get("search") ?? "";
   const [currentUser, setCurrentUser] = useState(() => getStoredSession());
   const cartCount = useSelector((state) => state.cart.items.length);
-
-  useEffect(() => {
-    setSearchProduct(searchFilters.get("product"));
-    setSearchTerm(searchFilters.get("search") ?? "");
-  }, [searchFilters]);
 
   useEffect(() => {
     if (hasMountedRef.current) {
@@ -66,23 +57,6 @@ const Header = () => {
       window.clearTimeout(themeTransitionTimeoutRef.current);
     };
   }, [isDarkMode]);
-
-  const fetchLanguages = async () => {
-    try {
-      const response = await api.get("/languages");
-      const data = response.data.filter((item) => {
-        return (item.image = UkFlag);
-      });
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchLanguages();
-  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -138,10 +112,6 @@ const Header = () => {
     };
   }, []);
 
-  const changeLanguage = (selectedOption) => {
-    setSelectedLanguage(selectedOption);
-  };
-
   const onLogout = () => {
     dispatch(remove());
     dispatch(clearCart());
@@ -173,7 +143,6 @@ const Header = () => {
 
   const handleSearchChange = (event) => {
     const nextSearch = event.target.value;
-    setSearchTerm(nextSearch);
 
     const nextSearchParams = new URLSearchParams();
     const currentProduct = searchFilters.get("product");
@@ -201,7 +170,6 @@ const Header = () => {
               key={item.query}
               type="button"
               onClick={() => {
-                setSearchProduct(item.query);
                 onProductMenuClick(item.query);
               }}
               className={classNames(

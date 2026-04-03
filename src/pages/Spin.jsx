@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { IoIosPin } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -78,6 +78,31 @@ const wheelColors = [
 ];
 const SPIN_DURATION = 4800;
 const FEATURED_PRODUCTS_LIMIT = 20;
+const DRAG_SETTLE_DURATION = 900;
+const MIN_DRAG_SETTLE_ROTATION = 180;
+const MAX_DRAG_SETTLE_ROTATION = 540;
+
+const normalizeAngleDelta = (delta) => {
+  let nextDelta = delta;
+
+  while (nextDelta > 180) {
+    nextDelta -= 360;
+  }
+
+  while (nextDelta < -180) {
+    nextDelta += 360;
+  }
+
+  return nextDelta;
+};
+
+const getPointerAngle = (event, element) => {
+  const rect = element.getBoundingClientRect();
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+
+  return (Math.atan2(event.clientY - centerY, event.clientX - centerX) * 180) / Math.PI;
+};
 
 const formatCurrency = (value) =>
   new Intl.NumberFormat("en-US", {
@@ -86,12 +111,20 @@ const formatCurrency = (value) =>
   }).format(value);
 
 export default function SpinWheel() {
+  const dragStateRef = useRef({
+    pointerId: null,
+    lastAngle: 0,
+    lastDelta: 0,
+  });
+  const rotationRef = useRef(0);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const cartItems = useSelector((state) => state.cart.items);
   const { width, height } = useWindowSize();
   const [rotation, setRotation] = useState(0);
   const [isSpinning, setIsSpinning] = useState(false);
+  const [isDraggingWheel, setIsDraggingWheel] = useState(false);
+  const [wheelTransitionDuration, setWheelTransitionDuration] = useState(SPIN_DURATION);
   const [isProfileLoading, setIsProfileLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
   const [selectedReward, setSelectedReward] = useState(null);
@@ -103,6 +136,10 @@ export default function SpinWheel() {
     [],
   );
   const todayStamp = getTodayStamp();
+
+  useEffect(() => {
+    rotationRef.current = rotation;
+  }, [rotation]);
 
   useEffect(() => {
     let isMounted = true;
@@ -277,6 +314,7 @@ export default function SpinWheel() {
     };
 
     setIsSpinning(true);
+    setWheelTransitionDuration(SPIN_DURATION);
     setSelectedReward(null);
     setSelectedProductId(null);
     setRotation(finalRotation);
@@ -297,6 +335,66 @@ export default function SpinWheel() {
         setIsSpinning(false);
       }
     }, SPIN_DURATION);
+  };
+
+  const handleWheelPointerDown = (event) => {
+    if (isSpinning) {
+      return;
+    }
+
+    const nextAngle = getPointerAngle(event, event.currentTarget);
+    dragStateRef.current = {
+      pointerId: event.pointerId,
+      lastAngle: nextAngle,
+      lastDelta: 0,
+    };
+    setWheelTransitionDuration(0);
+    setIsDraggingWheel(true);
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+  };
+
+  const handleWheelPointerMove = (event) => {
+    if (
+      isSpinning ||
+      !isDraggingWheel ||
+      dragStateRef.current.pointerId !== event.pointerId
+    ) {
+      return;
+    }
+
+    const nextAngle = getPointerAngle(event, event.currentTarget);
+    const angleDelta = normalizeAngleDelta(nextAngle - dragStateRef.current.lastAngle);
+
+    dragStateRef.current.lastAngle = nextAngle;
+    dragStateRef.current.lastDelta = angleDelta;
+    setRotation((current) => current + angleDelta);
+  };
+
+  const handleWheelPointerUp = (event) => {
+    if (dragStateRef.current.pointerId !== event.pointerId) {
+      return;
+    }
+
+    const direction = Math.sign(dragStateRef.current.lastDelta);
+    const settleRotation =
+      direction === 0
+        ? 0
+        : direction *
+          Math.max(
+            MIN_DRAG_SETTLE_ROTATION,
+            Math.min(
+              MAX_DRAG_SETTLE_ROTATION,
+              Math.abs(dragStateRef.current.lastDelta) * 24,
+            ),
+          );
+
+    dragStateRef.current.pointerId = null;
+    setIsDraggingWheel(false);
+    setWheelTransitionDuration(DRAG_SETTLE_DURATION);
+    if (settleRotation !== 0) {
+      setRotation(rotationRef.current + settleRotation);
+    }
+    event.currentTarget.releasePointerCapture?.(event.pointerId);
   };
 
   const handleSelectProduct = (productId) => {
@@ -374,10 +472,17 @@ export default function SpinWheel() {
           </div>
 
           <div
-            className={`spin-wheel ${isSpinning ? "is-spinning" : ""}`}
+            className={`spin-wheel ${isSpinning ? "is-spinning" : ""} ${isDraggingWheel ? "is-dragging" : ""}`}
+            onPointerDown={handleWheelPointerDown}
+            onPointerMove={handleWheelPointerMove}
+            onPointerUp={handleWheelPointerUp}
+            onPointerCancel={handleWheelPointerUp}
             style={{
               "--wheel-bg": wheelBackground,
               transform: `rotate(${rotation}deg)`,
+              transition: isDraggingWheel
+                ? "none"
+                : `transform ${wheelTransitionDuration}ms cubic-bezier(0.14, 0.88, 0.18, 1)`,
             }}
           >
             {rewards.map((reward, index) => {

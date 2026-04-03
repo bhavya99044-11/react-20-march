@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import { RiCloseLine } from "react-icons/ri";
 import EventCard from "./EventCard";
@@ -31,17 +31,22 @@ export default function CalendarSidebar({ events, onCreateEvent, loading = false
   const visibleEvents = showAll ? events : events.slice(0, DEFAULT_VISIBLE_EVENTS);
   const hasMoreEvents = events.length > DEFAULT_VISIBLE_EVENTS;
 
-  useEffect(() => {
-    if (!hasMoreEvents && showAll) {
-      setShowAll(false);
-    }
-  }, [hasMoreEvents, showAll]);
-
   useEffect(() => () => {
     if (closeTimerRef.current) {
       clearTimeout(closeTimerRef.current);
     }
   }, []);
+
+  const handleCloseModal = useCallback(() => {
+    if (!isModalOpen || isModalClosing) return;
+    setIsModalClosing(true);
+    closeTimerRef.current = window.setTimeout(() => {
+      setIsModalOpen(false);
+      setIsModalClosing(false);
+      setFormErrors({});
+      closeTimerRef.current = null;
+    }, 180);
+  }, [isModalClosing, isModalOpen]);
 
   useEffect(() => {
     if (!isModalOpen) {
@@ -56,7 +61,7 @@ export default function CalendarSidebar({ events, onCreateEvent, loading = false
 
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
-  }, [isModalOpen, isModalClosing]);
+  }, [isModalOpen, isModalClosing, handleCloseModal]);
 
   const colorOptions = [
     { label: "Violet", color: "#A78BFA", bgLight: "#EDE9FE" },
@@ -82,17 +87,6 @@ export default function CalendarSidebar({ events, onCreateEvent, loading = false
     }
     setIsModalClosing(false);
     setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    if (!isModalOpen || isModalClosing) return;
-    setIsModalClosing(true);
-    closeTimerRef.current = setTimeout(() => {
-      setIsModalOpen(false);
-      setIsModalClosing(false);
-      setFormErrors({});
-      closeTimerRef.current = null;
-    }, 180);
   };
 
   const updateField = (field) => (event) => {

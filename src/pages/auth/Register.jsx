@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { AUTH_SESSION_KEY } from "@/utils/constants";
 import {
   capitalizeWords,
-  checkButtonDisable,
   checkValidation,
 } from "../../utils/helpers";
 import { registerRules } from "../../utils/validation";
@@ -22,7 +21,6 @@ const Register = () => {
     password: "",
   };
 
-  const [isSignupDisabled, setIsSignupDisabled] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
   const [formData, setFormData] = useState(initialFormData);
@@ -40,7 +38,6 @@ const Register = () => {
         ...prev,
         [e.target.name]: nextValue,
       };
-      checkButtonDisable(updatedData, setIsSignupDisabled);
       checkValidation(
         {
           [e.target.name]: [nextValue],
@@ -86,7 +83,6 @@ const Register = () => {
       });
       setFormData(initialFormData);
       setError({});
-      setIsSignupDisabled(true);
       navigate("/login");
     } catch (e) {
       console.error(e);
@@ -133,8 +129,8 @@ const Register = () => {
       localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(authSession));
       successToast("Signed in with Google");
       navigate("/dashboard");
-    } catch (eyy) {
-      console.error(e);
+    } catch (error) {
+      console.error(error);
       errorToast("Please try again.");
     } finally {
       setIsGoogleSubmitting(false);

@@ -436,7 +436,21 @@
           "trialText": "14 Day Priority Trial Included",
           "purchasedAt": "2026-04-02T05:32:37.869Z"
         }
-      ]
+      ],
+      "spinReward": {
+        "spinInstanceId": "spin-1775222063631-rwy7ag99",
+        "rewardId": "spin-free",
+        "rewardLabel": "Free Product",
+        "rewardType": "free-product",
+        "discountPercent": 100,
+        "details": "Choose one product for free",
+        "earnedOn": "2026-04-03",
+        "appliedProductId": 1,
+        "spinsUsedToday": 1,
+        "dailySpinLimit": 4,
+        "planId": "standard",
+        "productName": "Apple Watch Series 4"
+      }
     },
     {
       "id": "e6f8",
