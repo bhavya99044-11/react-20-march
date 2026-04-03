@@ -761,19 +761,11 @@
   "rewards": [
     {
       "id": "1",
-      "couponName": "FREESHIP100X",
+      "couponName": "DELIVERYN2RU",
       "rewardType": "Delivery Free",
       "validTill": "2026-09-12T12:53:00.000Z",
       "status": "Active",
       "typeId": "delivery-free"
-    },
-    {
-      "id": "2",
-      "couponName": "FLASH50Y",
-      "rewardType": "Flash Half",
-      "validTill": "2026-09-15T14:30:00.000Z",
-      "status": "Active",
-      "typeId": "flash-half"
     },
     {
       "id": "3",

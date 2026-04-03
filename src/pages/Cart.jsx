@@ -28,7 +28,7 @@ import {
 } from "../components/cart/cartUtils";
 import { api } from "../utils/api";
 import { fetchCurrentUser, getStoredSession } from "../utils/authSession";
-import { checkValidation } from "../utils/helpers";
+import { capitalizeWords, checkValidation } from "../utils/helpers";
 import { errorToast, successToast } from "../utils/toastMessage";
 import CheckOutCart from "../components/cart/CheckOutCart";
 import classNames from "classnames";
@@ -155,27 +155,34 @@ const Cart = () => {
 
   const handleCheckoutFieldChange = (event) => {
     const { name, value } = event.target;
-    let nextValue = value;
+    let nextValue =
+      name === "fullName" || name === "cardName" || name === "city" || name === "state"
+        ? value.replace(/^\s+/, "")
+        : value;
 
     if (name === "cardNumber") {
-      nextValue = value
+      nextValue = nextValue
         .replace(/\D/g, "")
         .slice(0, 16)
         .replace(/(\d{4})(?=\d)/g, "$1 ");
     }
 
     if (name === "expiryDate") {
-      const digits = value.replace(/\D/g, "").slice(0, 4);
+      const digits = nextValue.replace(/\D/g, "").slice(0, 4);
       nextValue =
         digits.length > 2 ? `${digits.slice(0, 2)}/${digits.slice(2)}` : digits;
     }
 
     if (name === "cvv") {
-      nextValue = value.replace(/\D/g, "").slice(0, 4);
+      nextValue = nextValue.replace(/\D/g, "").slice(0, 4);
     }
 
     if (name === "phone") {
-      nextValue = value.replace(/[^\d+\-() ]/g, "").slice(0, 18);
+      nextValue = nextValue.replace(/[^\d+\-() ]/g, "").slice(0, 18);
+    }
+
+    if (name === "fullName" || name === "cardName" || name === "city" || name === "state") {
+      nextValue = capitalizeWords(nextValue);
     }
 
     const nextPaymentMethod =

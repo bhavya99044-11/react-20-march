@@ -3,7 +3,11 @@ import { GoogleLogin } from "@react-oauth/google";
 import { Button, Input, LinkRef, PasswordInput } from "@/components/common";
 import { useNavigate } from "react-router-dom";
 import { AUTH_SESSION_KEY } from "@/utils/constants";
-import { checkButtonDisable, checkValidation } from "../../utils/helpers";
+import {
+  capitalizeWords,
+  checkButtonDisable,
+  checkValidation,
+} from "../../utils/helpers";
 import { registerRules } from "../../utils/validation";
 import { api } from "../../utils/api";
 import { decodeGoogleCredential } from "../../utils/helpers";
@@ -26,7 +30,11 @@ const Register = () => {
 
   const onChangeValue = (e) => {
     setFormData((prev) => {
-      const nextValue = e.target.value.replace(/^\s+/, "");
+      let nextValue = e.target.value.replace(/^\s+/, "");
+
+      if (e.target.name === "name") {
+        nextValue = capitalizeWords(nextValue);
+      }
 
       const updatedData = {
         ...prev,
@@ -154,7 +162,6 @@ const Register = () => {
             className="auth-input-width"
             startIcon="user"
             name="name"
-            capitalizeWords={true}
             value={formData.name}
             required={true}
             error={error?.name}
