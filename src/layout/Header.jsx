@@ -193,7 +193,7 @@ const Header = () => {
   };
 
   return (
-    <div className="sticky top-0 z-30 flex items-center bg-white justify-between shadow-md w-full dark:bg-slate-950 dark:border-b dark:border-slate-800 [--base-color:#e5e7eb] [--highlight-color:#f3f4f6] dark:[--base-color:#1f2937] dark:[--highlight-color:#334155]">
+    <div className="sticky top-0 z-40 flex items-center bg-white justify-between shadow-md w-full dark:bg-slate-950 dark:border-b dark:border-slate-800 [--base-color:#e5e7eb] [--highlight-color:#f3f4f6] dark:[--base-color:#1f2937] dark:[--highlight-color:#334155]">
       <div className="ml-[78px] flex items-center my-2">
         <div className="flex gap-4 mr-4">
           {productMenuItems.map((item) => (

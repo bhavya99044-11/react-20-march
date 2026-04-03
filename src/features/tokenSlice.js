@@ -9,7 +9,6 @@ const tokenSlice = createSlice({
     initialState,
     reducers:{
         store: (state,action) =>{
-            console.log(action.payload);
             state.value = action.payload;
         },
         remove: (state) =>{

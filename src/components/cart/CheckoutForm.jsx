@@ -43,8 +43,8 @@ const CheckoutForm = ({
           <Input id="address" name="address" label="Street Address" value={checkoutForm.address} onChange={onFieldChange} placeholder="123 Market Street" required={true} error={checkoutErrors.address} className={inputShellClassName} divClassName={inputDivClassName} inputClassName={inputFieldClassName} />
 
           <div className="grid gap-4 sm:grid-cols-3">
-            <Input id="city" name="city" label="City" value={checkoutForm.city} onChange={onFieldChange} placeholder="Austin" required={true} error={checkoutErrors.city} capitalizeWords={true} className={inputShellClassName} divClassName={inputDivClassName} inputClassName={inputFieldClassName} />
-            <Input id="state" name="state" label="State" value={checkoutForm.state} onChange={onFieldChange} placeholder="TX" required={true} error={checkoutErrors.state} capitalizeWords={true} className={inputShellClassName} divClassName={inputDivClassName} inputClassName={inputFieldClassName} />
+            <Input id="city" name="city" label="City" value={checkoutForm.city} onChange={onFieldChange} placeholder="Austin" required={true} error={checkoutErrors.city}  className={inputShellClassName} divClassName={inputDivClassName} inputClassName={inputFieldClassName} />
+            <Input id="state" name="state" label="State" value={checkoutForm.state} onChange={onFieldChange} placeholder="TX" required={true} error={checkoutErrors.state} className={inputShellClassName} divClassName={inputDivClassName} inputClassName={inputFieldClassName} />
             <Input id="zipCode" name="zipCode" label="ZIP Code" value={checkoutForm.zipCode} onChange={onFieldChange} placeholder="78701" required={true} error={checkoutErrors.zipCode} className={inputShellClassName} divClassName={inputDivClassName} inputClassName={inputFieldClassName} />
           </div>
         </div>

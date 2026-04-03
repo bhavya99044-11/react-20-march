@@ -1,9 +1,13 @@
 import React from "react";
 import { MdOutlineRemoveShoppingCart } from "react-icons/md";
+import {
+  getCartItemBasePrice,
+  getCartItemLineTotal,
+  getCartItemUnitPrice,
+} from "./cartUtils";
 
 const CartItemsCard = ({
   cartItems,
-  totalQuantity,
   formatCurrency,
   onQuantityChange,
   onRemoveItem,
@@ -27,12 +31,16 @@ const CartItemsCard = ({
 
       <div className="divide-y divide-[color:var(--color-border-subtle)] dark:divide-slate-800">
         {cartItems.map((item) => {
-          const itemTotal = Number(item.price || 0) * Number(item.quantity || 0);
+          const unitPrice = getCartItemUnitPrice(item);
+          const originalUnitPrice = getCartItemBasePrice(item);
+          const itemTotal = getCartItemLineTotal(item);
           const isDecreaseDisabled = Number(item.quantity || 1) <= 1;
+          const hasSpinReward = Boolean(item.spinReward);
+          const rewardLabel = item.spinReward?.rewardLabel;
 
           return (
             <div
-              key={`${item.id}-${item.selectedColor?.id ?? "default"}-${item.selectedSize?.id ?? "default"}`}
+              key={`${item.id}-${item.selectedColor?.id ?? "default"}-${item.selectedSize?.id ?? "default"}-${item.spinReward?.spinInstanceId ?? item.spinReward?.rewardId ?? "regular"}`}
               className="grid gap-4 px-4 py-5 lg:grid-cols-[minmax(0,2fr)_120px_150px_120px_90px] lg:items-center"
             >
               <div className="flex items-center gap-4">
@@ -57,6 +65,11 @@ const CartItemsCard = ({
                       Size: {item.selectedSize.name}
                     </p>
                   ) : null}
+                  {hasSpinReward ? (
+                    <p className="mt-2 inline-flex w-fit rounded-full bg-[#E8F1FF] px-3 py-1 text-xs font-bold text-[#356DFF] dark:bg-slate-800 dark:text-slate-100">
+                      {rewardLabel}
+                    </p>
+                  ) : null}
                 </div>
               </div>
 
@@ -64,7 +77,14 @@ const CartItemsCard = ({
                 <span className="mr-2 inline-block text-[color:var(--color-text-secondary)] dark:text-slate-300 lg:hidden">
                   Price:
                 </span>
-                {formatCurrency(item.price)}
+                <div className="flex flex-col gap-1">
+                  <span>{formatCurrency(unitPrice)}</span>
+                  {hasSpinReward && originalUnitPrice > unitPrice ? (
+                    <span className="text-xs font-medium text-[color:var(--color-text-secondary)] line-through dark:text-slate-400">
+                      {formatCurrency(originalUnitPrice)}
+                    </span>
+                  ) : null}
+                </div>
               </div>
 
               <div className="flex items-center gap-3">
@@ -74,7 +94,7 @@ const CartItemsCard = ({
                 <div className="flex items-center rounded-full border border-[color:var(--color-border-subtle)] dark:border-slate-700">
                   <button
                     type="button"
-                    disabled={isDecreaseDisabled}
+                    disabled={isDecreaseDisabled || hasSpinReward}
                     onClick={() => onQuantityChange(item, Math.max(1, Number(item.quantity || 1) - 1))}
                     className="h-10 w-10 rounded-l-full text-lg font-bold text-[color:var(--color-text-primary)] transition hover:bg-slate-100 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent dark:text-slate-100 dark:hover:bg-slate-800 dark:disabled:hover:bg-transparent"
                     aria-label={`Decrease quantity for ${item.name}`}
@@ -86,6 +106,7 @@ const CartItemsCard = ({
                   </span>
                   <button
                     type="button"
+                    disabled={hasSpinReward}
                     onClick={() => onQuantityChange(item, Number(item.quantity || 0) + 1)}
                     className="h-10 w-10 cursor-pointer rounded-r-full text-lg font-bold text-[color:var(--color-text-primary)] transition hover:bg-slate-100 dark:text-slate-100 dark:hover:bg-slate-800"
                     aria-label={`Increase quantity for ${item.name}`}

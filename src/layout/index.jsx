@@ -15,14 +15,14 @@ const index = () => {
   }, [isSidebarCollapsed]);
 
   return (
-    <div className="nunito-font flex h-screen overflow-hidden">
+    <div className="nunito-font flex  overflow-hidden">
       <Sidebar
         isCollapsed={isSidebarCollapsed}
         onToggleCollapse={() => setIsSidebarCollapsed((prev) => !prev)}
       />
       <div className="layout-surface flex min-w-0 flex-1 flex-col bg-[#F5F6FA] h-screen overflow-hidden dark:bg-slate-950">
         <Header />
-        <div data-app-scroll-container="true" className="flex-1 overflow-y-auto">
+        <div data-app-scroll-container="true" className="flex-1 no-scrollbar overflow-y-auto">
           <div key={pathname} className="page-transition">
             <Outlet />
           </div>

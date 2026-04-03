@@ -25,6 +25,23 @@ const formatCurrency = (value) =>
     currency: "USD",
   }).format(value);
 
+const getCartItemUnitPrice = (item) => Number(item.price || 0);
+
+const getCartItemBasePrice = (item) =>
+  Number(item.originalPrice ?? item.price ?? 0);
+
+const getCartItemLineTotal = (item) =>
+  getCartItemUnitPrice(item) * Number(item.quantity || 0);
+
+const getCartSubtotal = (cartItems) =>
+  cartItems.reduce((total, item) => total + getCartItemLineTotal(item), 0);
+
+const getCartOriginalSubtotal = (cartItems) =>
+  cartItems.reduce(
+    (total, item) => total + getCartItemBasePrice(item) * Number(item.quantity || 0),
+    0,
+  );
+
 const buildOrderNumber = () =>
   `ORD-${Date.now().toString().slice(-8)}-${Math.floor(Math.random() * 90 + 10)}`;
 
@@ -92,6 +109,11 @@ export {
   FREE_SHIPPING_THRESHOLD,
   initialCheckoutForm,
   formatCurrency,
+  getCartItemUnitPrice,
+  getCartItemBasePrice,
+  getCartItemLineTotal,
+  getCartSubtotal,
+  getCartOriginalSubtotal,
   buildOrderNumber,
   getCheckoutValidationRules,
   getRewardDiscountDetails,

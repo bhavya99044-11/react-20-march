@@ -4,11 +4,11 @@ import IconComponent from "./IconComponent";
 import classNames from "classnames";
 
 const OptionLabel = ({ image, name }) => (
-  <div className="flex items-center">
+  <div className={classNames("flex items-center", image && "gap-3")}>
     {image ? (
       <img src={image} alt={name} className="h-[27px] w-[40px]  object-cover" />
     ) : null}
-    <span className="pl-3">{name}</span>
+    <span>{name}</span>
   </div>
 );
 
@@ -71,9 +71,9 @@ const Select = ({
         }),
         menu: (base) => ({
           ...base,
+          zIndex: 9999,
           marginTop: 6,
           minWidth: "max-content",
-          zIndex: 9999,
           backgroundColor: "var(--select-menu-bg)",
         }),
         menuPortal: (base) => ({
@@ -82,6 +82,7 @@ const Select = ({
         }),
         option: (base, state) => ({
           ...base,
+          zIndex:30,
           cursor: "pointer",
           backgroundColor: state.isFocused
             ? "var(--select-option-hover-bg)"

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import {
   clearCart,
   removeCartItem,
+  setCartItems,
   updateCartItemQuantity,
 } from "../features/cartSlice";
 import DeleteModal from "../components/common/DeleteModal";
@@ -22,16 +23,17 @@ import {
   FREE_SHIPPING_THRESHOLD,
   initialCheckoutForm,
   formatCurrency,
+  getCartSubtotal,
+  getCartOriginalSubtotal,
   buildOrderNumber,
   getCheckoutValidationRules,
   getRewardDiscountDetails,
 } from "../components/cart/cartUtils";
 import { api } from "../utils/api";
 import { fetchCurrentUser, getStoredSession } from "../utils/authSession";
-import { capitalizeWords, checkValidation } from "../utils/helpers";
+import { checkValidation } from "../utils/helpers";
 import { errorToast, successToast } from "../utils/toastMessage";
 import CheckOutCart from "../components/cart/CheckOutCart";
-import classNames from "classnames";
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -49,11 +51,9 @@ const Cart = () => {
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
 
-  const cartSubtotal = cartItems.reduce(
-    (total, item) =>
-      total + Number(item.price || 0) * Number(item.quantity || 0),
-    0,
-  );
+  const cartSubtotal = getCartSubtotal(cartItems);
+  const cartOriginalSubtotal = getCartOriginalSubtotal(cartItems);
+  const spinSavings = Math.max(cartOriginalSubtotal - cartSubtotal, 0);
   const totalQuantity = cartItems.reduce(
     (total, item) => total + Number(item.quantity || 0),
     0,
@@ -119,12 +119,54 @@ const Cart = () => {
     };
   }, []);
 
+  useEffect(() => {
+    let isMounted = true;
+
+    const syncSpinRewardCartItems = async () => {
+      try {
+        const currentUser = await fetchCurrentUser();
+
+        if (!isMounted) {
+          return;
+        }
+
+        const activeSpinReward = currentUser?.spinReward ?? null;
+        const activeSpinInstanceId = activeSpinReward?.spinInstanceId ?? null;
+        const nextCartItems = cartItems.filter((item) => {
+          if (!item.spinReward) {
+            return true;
+          }
+
+          return (
+            Boolean(activeSpinInstanceId) &&
+            item.spinReward.spinInstanceId === activeSpinInstanceId
+          );
+        });
+
+        if (nextCartItems.length !== cartItems.length) {
+          dispatch(setCartItems(nextCartItems));
+        }
+      } catch (error) {
+        console.error("Failed to validate spin rewards in cart:", error);
+      }
+    };
+
+    if (cartItems.some((item) => item.spinReward)) {
+      syncSpinRewardCartItems();
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [cartItems, dispatch]);
+
   const handleQuantityChange = (item, nextQuantity) => {
     dispatch(
       updateCartItemQuantity({
         id: item.id,
         selectedColor: item.selectedColor ?? null,
         selectedSize: item.selectedSize ?? null,
+        spinReward: item.spinReward ?? null,
         quantity: nextQuantity,
       }),
     );
@@ -148,17 +190,16 @@ const Cart = () => {
         id: itemToRemove.id,
         selectedColor: itemToRemove.selectedColor ?? null,
         selectedSize: itemToRemove.selectedSize ?? null,
+        spinReward: itemToRemove.spinReward ?? null,
       }),
     );
+
     setItemToRemove(null);
   };
 
   const handleCheckoutFieldChange = (event) => {
     const { name, value } = event.target;
-    let nextValue =
-      name === "fullName" || name === "cardName" || name === "city" || name === "state"
-        ? value.replace(/^\s+/, "")
-        : value;
+    let nextValue = value;      
 
     if (name === "cardNumber") {
       nextValue = nextValue
@@ -181,9 +222,7 @@ const Cart = () => {
       nextValue = nextValue.replace(/[^\d+\-() ]/g, "").slice(0, 18);
     }
 
-    if (name === "fullName" || name === "cardName" || name === "city" || name === "state") {
-      nextValue = capitalizeWords(nextValue);
-    }
+
 
     const nextPaymentMethod =
       name === "paymentMethod" ? nextValue : checkoutForm.paymentMethod;
@@ -406,6 +445,8 @@ const Cart = () => {
             cartItems={cartItems}
             totalQuantity={totalQuantity}
             cartSubtotal={cartSubtotal}
+            cartOriginalSubtotal={cartOriginalSubtotal}
+            spinSavings={spinSavings}
             shippingCost={shippingCost}
             discountAmount={discountAmount}
             taxAmount={taxAmount}

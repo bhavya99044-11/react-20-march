@@ -57,7 +57,7 @@ const Sidebar = ({ isCollapsed = false, onToggleCollapse }) => {
           )}
         </button>
       </div>
-
+          
       {SIDEBAR_SECTIONS.map((section, sectionIndex) => (
         <div
           key={section.key}

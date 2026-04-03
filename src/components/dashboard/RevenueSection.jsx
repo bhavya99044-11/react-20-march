@@ -25,7 +25,7 @@ const RevenueSection = ({ loading, monthOptions, month, onChange, data = revenue
           <Skeleton width={100} height={28} />
         ) : (
           <Select
-            className="text-sm border z-40 pr-[13px] pl-[8px] flex items-center max-h-[28px] border-[var(--orderlist-border-color)] rounded-[4px] bg-[#FCFDFD] dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100"
+            className="text-sm border  pr-[13px] pl-[8px] flex items-center max-h-[28px] border-[var(--orderlist-border-color)] rounded-[4px] bg-[#FCFDFD] dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100"
             options={monthOptions}
             value={month}
             onChange={onChange}

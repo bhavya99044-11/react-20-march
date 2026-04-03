@@ -4,6 +4,8 @@ const OrderSummaryCard = ({
   cartItems,
   totalQuantity,
   cartSubtotal,
+  cartOriginalSubtotal,
+  spinSavings,
   shippingCost,
   discountAmount,
   taxAmount,
@@ -38,6 +40,18 @@ const OrderSummaryCard = ({
           <span>Subtotal</span>
           <span>{formatCurrency(cartSubtotal)}</span>
         </div>
+        {spinSavings > 0 ? (
+          <div className="flex items-center justify-between text-[#16a34a] dark:text-green-300">
+            <span>Spin Reward Savings</span>
+            <span>-{formatCurrency(spinSavings)}</span>
+          </div>
+        ) : null}
+        {spinSavings > 0 ? (
+          <div className="flex items-center justify-between text-[color:var(--color-text-secondary)] dark:text-slate-300">
+            <span>Original Items Value</span>
+            <span>{formatCurrency(cartOriginalSubtotal)}</span>
+          </div>
+        ) : null}
         <div className="flex items-center justify-between text-[color:var(--color-text-secondary)] dark:text-slate-300">
           <span>Shipping</span>
           <span>{shippingCost === 0 ? "Free" : formatCurrency(shippingCost)}</span>

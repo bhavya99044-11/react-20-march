@@ -1,6 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { api } from "../utils/api";
-import { AUTH_SESSION_KEY } from "../utils/constants";
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   items: [],
@@ -8,23 +6,28 @@ const initialState = {
   syncStatus: "idle",
 };
 
+const getSpinRewardKey = (spinReward) =>
+  spinReward?.spinInstanceId ?? spinReward?.rewardId ?? null;
 
 const mergeCartItem = (state, payload) => {
   const {
     id,
     name,
     price,
+    originalPrice = price,
     image,
     quantity = 1,
     selectedColor = null,
     selectedSize = null,
+    spinReward = null,
   } = payload;
 
   const existingItem = state.items.find(
     (item) =>
       Number(item.id) === Number(id) &&
       item.selectedColor?.id === selectedColor?.id &&
-      item.selectedSize?.id === selectedSize?.id,
+      item.selectedSize?.id === selectedSize?.id &&
+      getSpinRewardKey(item.spinReward) === getSpinRewardKey(spinReward),
   );
 
   if (existingItem) {
@@ -36,17 +39,20 @@ const mergeCartItem = (state, payload) => {
     id,
     name,
     price,
+    originalPrice,
     image,
     quantity,
     selectedColor,
     selectedSize,
+    spinReward,
   });
 };
 
 const isSameVariant = (item, payload) =>
   Number(item.id) === Number(payload.id) &&
   item.selectedColor?.id === payload.selectedColor?.id &&
-  item.selectedSize?.id === payload.selectedSize?.id;
+  item.selectedSize?.id === payload.selectedSize?.id &&
+  getSpinRewardKey(item.spinReward) === getSpinRewardKey(payload.spinReward);
 
 const cartSlice = createSlice({
   name: "cart",

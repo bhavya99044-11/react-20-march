@@ -75,8 +75,8 @@
       "tagColor": "bg-blue-100 text-blue-600",
       "subject": "Enhance Your Brand Potential With Giant Advertising Blimps",
       "time": "4:13 PM",
-      "checked": false,
-      "starred": false,
+      "checked": true,
+      "starred": true,
       "unread": false
     },
     {
@@ -88,8 +88,8 @@
       "tagColor": "bg-blue-100 text-blue-600",
       "subject": "Enhance Your Brand Potential With Giant Advertising Blimps",
       "time": "4:13 PM",
-      "checked": false,
-      "starred": false,
+      "checked": true,
+      "starred": true,
       "unread": false
     },
     {
@@ -552,6 +552,20 @@
       "password": "boss99044",
       "undefined": "B",
       "cart": []
+    },
+    {
+      "id": "3ac4",
+      "name": "Sdf Sdf Sdf Sdf",
+      "email": "fdsds@gmail.com",
+      "password": "jassakhj",
+      "cart": []
+    },
+    {
+      "id": "1c79",
+      "name": "Asdasds",
+      "email": "asdasd@adas.com",
+      "password": "ksdlskld",
+      "cart": []
     }
   ],
   "productStock": [
@@ -806,6 +820,30 @@
       "validTill": "2026-04-09T06:56:00.000Z",
       "status": "Active",
       "typeId": "save-100"
+    },
+    {
+      "id": "9518",
+      "couponName": "DELIVERY3CXQ",
+      "rewardType": "Save 100",
+      "validTill": "2026-04-22T23:27:00.000Z",
+      "status": "Active",
+      "typeId": "save-100"
+    },
+    {
+      "id": "e778",
+      "couponName": "DELIVERYAU7T",
+      "rewardType": "Delivery Free",
+      "validTill": "2026-04-09T23:27:00.000Z",
+      "status": "Active",
+      "typeId": "delivery-free"
+    },
+    {
+      "id": "9a88",
+      "couponName": "SAVE50",
+      "rewardType": "Flash Half",
+      "validTill": "2026-04-09T23:30:00.000Z",
+      "status": "Active",
+      "typeId": "flash-half"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

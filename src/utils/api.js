@@ -11,7 +11,6 @@ api.interceptors.request.use(
     Object.assign(config.headers, {
       "content-type": "Application/json",
     });
-    console.log(config);
     // Do something before the request is sent
     return config;
   },

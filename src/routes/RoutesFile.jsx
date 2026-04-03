@@ -26,6 +26,7 @@ import AuthLayout from "../layout/AuthLayout";
 import UserProfile from "../pages/UserProfile";
 import Cart from "../pages/Cart";
 import Rewards from '../pages/Rewards'
+import SpinWheel from "../pages/Spin";
 
 const router = createBrowserRouter([
   {
@@ -134,6 +135,10 @@ const router = createBrowserRouter([
           {
             path:'/rewards',
             element:<Rewards/>
+          },
+                    {
+            path:'/spin-wheel',
+            element:<SpinWheel/>
           }
         ],
       },

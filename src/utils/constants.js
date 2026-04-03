@@ -17,6 +17,7 @@ import {
   MdLogout,
 } from "react-icons/md";
 import { LiaAwardSolid } from "react-icons/lia";
+import { FiGift } from "react-icons/fi";
 
 export const SIDEBAR_SECTIONS = [
   {
@@ -76,6 +77,12 @@ export const SIDEBAR_SECTIONS = [
         label: "To-Do",
         path: ["/to-do"],
         icon: MdCheckCircleOutline,
+      },
+      {
+        key: "spin-wheel",
+        label: "Spin Wheel",
+        path: ["/spin-wheel"],
+        icon: FiGift,
       },
       {
         key: "contact",

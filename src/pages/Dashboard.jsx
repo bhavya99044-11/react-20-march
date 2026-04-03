@@ -122,7 +122,7 @@ const Dashboard = () => {
   }, [salesDetailsMonthName]);
 
   return (
-    <div className="pt-[30px] flex flex-col pl-[31px] pr-[33px] pb-[30px] bg-theme-white min-h-screen dark:bg-slate-950 [--base-color:#e5e7eb] [--highlight-color:#f3f4f6] dark:[--base-color:#1f2937] dark:[--highlight-color:#334155]">
+    <div className="pt-[30px] no-scrollbar flex flex-col pl-[31px] pr-[33px] pb-[30px] bg-theme-white min-h-screen dark:bg-slate-950 [--base-color:#e5e7eb] [--highlight-color:#f3f4f6] dark:[--base-color:#1f2937] dark:[--highlight-color:#334155]">
       <h1 className="font-bold text-[29.5px] tracking-tight text-gray-900 dark:text-slate-100">
         {initialLoading ? <Skeleton width={160} /> : "Dashboard"}
       </h1>

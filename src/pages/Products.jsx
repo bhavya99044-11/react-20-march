@@ -30,7 +30,7 @@ const discountOptions = [
 ];
 
 const INITIAL_BRAND_COUNT = 4;
-const PRODUCTS_BATCH_SIZE = 9;
+const PRODUCTS_BATCH_SIZE = 200;
 const MIN_PRICE_GAP = 30;
 const categoryQueryMap = {
   men: "male",
@@ -55,8 +55,7 @@ const Products = () => {
   const [searchParams] = useSearchParams();
   const loadMoreRef = useRef(null);
   const hasRestoredPositionRef = useRef(false);
-
-  console.log(location)
+  const [scrollUp,setScrollUp] = useState(false);
   const minProductPrice = Math.min(...products.map((product) => product.price));
   const maxProductPrice = Math.max(...products.map((product) => product.price));
 
@@ -64,6 +63,17 @@ const Products = () => {
     min: minProductPrice,
     max: maxProductPrice,
   });
+
+  useEffect(()=>{
+    let lastScrollTop = 0;
+
+    window.addEventListener("scroll", function(){
+      let st = window.pageYOffset || document.documentElement.scrollTop;
+      let difference = st - lastScrollTop; // Positive = scrolling down, Negative = up
+      lastScrollTop = st <= 0 ? 0 : st;
+    }, false);
+  },[])
+
 
   useEffect(() => {
     let isMounted = true;
@@ -523,7 +533,7 @@ const Products = () => {
             </div>
           ) : null}
 
-          <div className="mt-5 grid grid-cols-1 justify-items-center gap-5 sm:grid-cols-2 sm:gap-6 xl:grid-cols-3 lg:gap-7">
+          <div   className="mt-5 grid grid-cols-1 justify-items-center gap-5 sm:grid-cols-2 sm:gap-6 xl:grid-cols-3 lg:gap-7">
             {visibleProducts.map((product) => (
               <div key={product.id} data-product-card-id={product.id}>
                 <ProductCard

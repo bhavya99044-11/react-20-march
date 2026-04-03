@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import classNames from "classnames";
 import Button from "../common/Button";
+import { useNavigate } from "react-router-dom";
 
 const ProductsBanner = ({
   slides = [
@@ -18,10 +19,11 @@ const ProductsBanner = ({
   const prevClass = `products-banner-prev-${id}`;
   const nextClass = `products-banner-next-${id}`;
   const swiperRef = useRef(null);
+  const navigate = useNavigate();
   return (
     <div
       className={classNames(
-        "relative bg-[#4880FF] rounded-xl py-8 sm:py-12 px-6 sm:px-10 lg:px-[130px] text-white overflow-hidden dark:bg-[#1d4ed8]",
+        "",
       )}
     >
       <Swiper
@@ -36,8 +38,16 @@ const ProductsBanner = ({
           swiperRef.current = swiper;
         }}
         className="relative"
-      >
-        {slides.map((slide, index) => (
+      >          <SwiperSlide key={1}>
+                  <div onClick={()=>navigate('/spin-wheel')} className="cursor-pointer">
+                   <img
+                    src='images/final-banner.png'
+                      alt="Spin Wheel Banner"
+                      style={{ width: '1212px', height: '394px' }}
+                    />
+                    </div>
+                </SwiperSlide>
+        {/* {slides.map((slide, index) => (
           <SwiperSlide key={index}>
             <p className="text-sm sm:text-base opacity-80 font-semibold leading-6 sm:leading-[30px] mb-2">
               {slide.dateRange}
@@ -58,7 +68,7 @@ const ProductsBanner = ({
               className="bg-[#FF8743] hover:bg-orange-600 w-32 sm:w-[156px] flex items-center font-bold py-2 rounded-[11px] transition"
             />
           </SwiperSlide>
-        ))}
+        ))} */}
       </Swiper>
 
       <div

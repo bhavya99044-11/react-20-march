@@ -2520,7 +2520,18 @@ const rawProducts = [
   }
 ];
 
-export const products = rawProducts.map((product, index) => {
+const extraProducts = Array.from({ length: 500 }, (_, i) => {
+  const baseProduct = rawProducts[i % rawProducts.length];
+
+  return {
+    ...JSON.parse(JSON.stringify(baseProduct)), // ✅ deep copy
+    id: rawProducts.length + i + 1, // ✅ unique numeric ID
+  };
+});
+
+const allProducts = [...rawProducts, ...extraProducts];
+
+export const products = allProducts.map((product, index) => {
   const imageStartIndex = (index * 3) % approvedProductImages.length;
 
   return {

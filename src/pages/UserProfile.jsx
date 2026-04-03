@@ -5,6 +5,12 @@ import { Button, DeleteModal } from "../components/common";
 import PurchasePlanModal from "../components/pricing/PurchasePlanModal";
 import { api } from "../utils/api";
 import { fetchCurrentUser, getCurrentUserEmail } from "../utils/authSession";
+import {
+  getRemainingSpins,
+  getUsedSpinsToday,
+  getUserDailySpinLimit,
+  isRewardSameDay,
+} from "../utils/spinReward";
 import { errorToast, successToast } from "../utils/toastMessage";
 import { FaRegEye } from "react-icons/fa";
 import { FaCheckCircle } from "react-icons/fa";
@@ -30,6 +36,23 @@ const UserProfile = () => {
   const [isUpgrading, setIsUpgrading] = useState(false);
   const [isCancelOpen, setIsCancelOpen] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
+
+  const activeSpinReward = useMemo(() => {
+    const spinReward = userProfile?.spinReward;
+    return spinReward && isRewardSameDay(spinReward) ? spinReward : null;
+  }, [userProfile]);
+  const dailySpinLimit = useMemo(
+    () => getUserDailySpinLimit(userProfile),
+    [userProfile],
+  );
+  const spinsUsedToday = useMemo(
+    () => getUsedSpinsToday(activeSpinReward),
+    [activeSpinReward],
+  );
+  const remainingSpinsToday = useMemo(
+    () => getRemainingSpins(userProfile, activeSpinReward),
+    [activeSpinReward, userProfile],
+  );
 
   const activePlan = useMemo(() => {
     const purchasedPlans = Array.isArray(userProfile?.purchasedPlans)
@@ -58,12 +81,29 @@ const UserProfile = () => {
     let isMounted = true;
     const currentEmail = getCurrentUserEmail();
 
+    const syncDailySpinReward = async (user) => {
+      if (!user?.id || !user?.spinReward) {
+        return user;
+      }
+
+      if (isRewardSameDay(user.spinReward)) {
+        return user;
+      }
+
+      const patchResponse = await api.patch(`/users/${user.id}`, {
+        spinReward: null,
+      });
+
+      return patchResponse.data;
+    };
+
     const loadUserProfile = async () => {
       try {
-        const [currentUser, plansResponse] = await Promise.all([
+        const [currentUserResponse, plansResponse] = await Promise.all([
           fetchCurrentUser(),
           api.get("/pricingPlans"),
         ]);
+        const currentUser = await syncDailySpinReward(currentUserResponse);
 
         if (isMounted) {
           setUserProfile(currentUser);
@@ -100,8 +140,23 @@ const UserProfile = () => {
 
   const refreshUserProfile = async () => {
     const nextUser = await fetchCurrentUser();
-    setUserProfile(nextUser);
-    return nextUser;
+
+    if (!nextUser?.id || !nextUser?.spinReward || isRewardSameDay(nextUser.spinReward)) {
+      setUserProfile(nextUser);
+      return nextUser;
+    }
+
+    const patchResponse = await api.patch(`/users/${nextUser.id}`, {
+      spinReward: null,
+    });
+
+    const sanitizedUser = patchResponse.data;
+    setUserProfile(sanitizedUser);
+    return sanitizedUser;
+  };
+
+  const handleGoToSpin = () => {
+    navigate("/spin-wheel");
   };
 
   const handleCloseUpgradeModal = () => {
@@ -207,6 +262,61 @@ const UserProfile = () => {
                   {loading ? "Loading..." : userProfile?.email || "N/A"}
                 </p>
               </div>
+            </div>
+          </div>
+
+          <div className="mt-6">
+            <div className="flex items-center justify-between gap-4">
+              <h2 className="text-xl font-bold text-[color:var(--orderlist-text-color)] dark:text-slate-100">
+                Daily Spin
+              </h2>
+              <button
+                type="button"
+                onClick={handleGoToSpin}
+                className="rounded-full bg-[#4880FF] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#356DFF]"
+              >
+                Open Spin
+              </button>
+            </div>
+
+            <div className="mt-4 rounded-2xl border border-[var(--color-border-subtle)] bg-slate-50 p-5 dark:border-slate-700 dark:bg-slate-800/60">
+              {loading ? (
+                <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">
+                  Loading daily spin status...
+                </p>
+              ) : activeSpinReward ? (
+                <>
+                  <p className="text-sm font-semibold text-[#356DFF] dark:text-slate-200">
+                    {spinsUsedToday}/{dailySpinLimit} spins used today • {remainingSpinsToday} left
+                  </p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[color:var(--color-text-secondary)] dark:text-slate-400">
+                    Today&apos;s reward
+                  </p>
+                  <p className="mt-2 text-lg font-bold text-[color:var(--orderlist-text-color)] dark:text-slate-100">
+                    {activeSpinReward.rewardLabel}
+                  </p>
+                  <p className="mt-2 text-sm text-[color:var(--color-text-secondary)] dark:text-slate-300">
+                    {activeSpinReward.appliedProductId
+                      ? `Applied to ${activeSpinReward.productName}.`
+                      : activeSpinReward.details}
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="text-sm font-semibold text-[#356DFF] dark:text-slate-200">
+                    {spinsUsedToday}/{dailySpinLimit} spins used today • {remainingSpinsToday} left
+                  </p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[color:var(--color-text-secondary)] dark:text-slate-400">
+                    Today&apos;s status
+                  </p>
+                  <p className="mt-2 text-lg font-bold text-[color:var(--orderlist-text-color)] dark:text-slate-100">
+                    Spin available
+                  </p>
+                  <p className="mt-2 text-sm text-[color:var(--color-text-secondary)] dark:text-slate-300">
+                    You have not used today&apos;s spin yet.
+                  </p>
+                </>
+              )}
             </div>
           </div>
 

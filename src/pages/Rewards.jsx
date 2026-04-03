@@ -673,7 +673,7 @@ const Rewards = () => {
                   <label className="mb-1 block text-sm font-semibold capitalize text-[color:var(--color-text-input)]">
                     Reward Type
                   </label>
-                  <div className="rounded-2xl h-12 border border-[color:var(--color-border-subtle)] px-4 py-[13px] dark:border-slate-700">
+                  <div className="rounded-2xl text-[color:var(--color-text-placeholder)] h-12 border border-[color:var(--color-border-subtle)] px-3 py-[13px] dark:border-slate-700">
                     <Select
                       options={rewardTypeOptions}
                       value={
