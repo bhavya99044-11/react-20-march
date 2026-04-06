@@ -292,12 +292,17 @@ export default function SpinWheel() {
     : 0;
   const hasUsedOfferToday = Boolean(statsReward?.appliedProductId);
   const displayReward = isSpinning ? statsReward : selectedReward ?? statsReward;
+  const appliedRewardProductId = selectedReward?.appliedProductId ?? null;
+  const canUseSelectedReward =
+    Boolean(selectedReward) &&
+    !hasUsedOfferToday &&
+    rewardSupportsProductSelection(selectedReward) &&
+    !appliedRewardProductId;
   const canSpinToday =
     !isProfileLoading &&
     Boolean(currentUser?.id) &&
     remainingSpinsToday > 0 &&
     !hasUsedOfferToday;
-  const appliedRewardProductId = selectedReward?.appliedProductId ?? null;
 
   const rewardedCartItem = cartItems.find(
     (item) =>
@@ -451,7 +456,6 @@ export default function SpinWheel() {
   const handleSelectProduct = (productId) => {
     if (
       hasUsedOfferToday ||
-      remainingSpinsToday <= 0 ||
       !rewardSupportsProductSelection(selectedReward) ||
       appliedRewardProductId
     ) {
@@ -466,7 +470,6 @@ export default function SpinWheel() {
   const handleAddRewardToCart = async (product) => {
     if (
       hasUsedOfferToday ||
-      remainingSpinsToday <= 0 ||
       !selectedReward ||
       !rewardSupportsProductSelection(selectedReward)
     ) {
@@ -644,12 +647,7 @@ export default function SpinWheel() {
               Boolean(appliedRewardProductId) && !isRewardAppliedHere;
             const rewardedPrice = getRewardedPrice(selectedReward, product.price);
             const savingAmount = Math.max(Number(product.price) - rewardedPrice, 0);
-            const canApplyReward =
-              Boolean(selectedReward) &&
-              !hasUsedOfferToday &&
-              remainingSpinsToday > 0 &&
-              rewardSupportsProductSelection(selectedReward) &&
-              !appliedRewardProductId;
+            const canApplyReward = canUseSelectedReward;
 
             return (
               <article

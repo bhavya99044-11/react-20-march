@@ -438,17 +438,18 @@
         }
       ],
       "spinReward": {
-        "spinInstanceId": "spin-1775451855979-qdekaoj7",
+        "spinInstanceId": "spin-1775453111261-bo1odjci",
         "rewardId": "spin-40",
         "rewardLabel": "40% Off",
         "rewardType": "discount-percent",
         "discountPercent": 40,
         "details": "Apply to one product only",
         "earnedOn": "2026-04-06",
-        "appliedProductId": null,
-        "spinsUsedToday": 4,
+        "appliedProductId": 3,
+        "spinsUsedToday": 3,
         "dailySpinLimit": 4,
-        "planId": "standard"
+        "planId": "standard",
+        "productName": "Apple Watch Series 5 Pro"
       }
     },
     {
@@ -532,14 +533,28 @@
       "avatar": "https://lh3.googleusercontent.com/a/ACg8ocIhoiSIt8NfpdYsInKRRDbgm9hfNYjcUUtjO7l-hQqMusdJzA=s96-c",
       "purchasedPlans": [
         {
-          "planId": "basic",
-          "name": "Basic",
-          "price": "14.99",
+          "planId": "premium",
+          "name": "Premium",
+          "price": "39.99",
           "billingLabel": "Monthly Charge",
-          "trialText": "Start Your 30 Day Free Trial",
-          "purchasedAt": "2026-04-01T13:57:19.416Z"
+          "trialText": "Unlimited Access From Day One",
+          "purchasedAt": "2026-04-06T05:20:11.012Z"
         }
-      ]
+      ],
+      "spinReward": {
+        "spinInstanceId": "spin-1775452817259-1egmbyf9",
+        "rewardId": "spin-75",
+        "rewardLabel": "75% Off",
+        "rewardType": "discount-percent",
+        "discountPercent": 75,
+        "details": "Lucky drop for one product",
+        "earnedOn": "2026-04-06",
+        "appliedProductId": 2,
+        "spinsUsedToday": 3,
+        "dailySpinLimit": 10,
+        "planId": "premium",
+        "productName": "Apple Watch Series 5"
+      }
     },
     {
       "id": "af3a",

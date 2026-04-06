@@ -69,6 +69,8 @@ const ProductCard = ({
                   <img
                     src={img}
                     alt={name}
+                    loading="lazy"
+                    decoding="async"
                     className={`h-[317px] object-contain ${centerImages ? "mx-auto" : ""}`}
                   />
                 </SwiperSlide>
@@ -108,6 +110,8 @@ const ProductCard = ({
             <img
               src={images[0]}
               alt={name}
+              loading="lazy"
+              decoding="async"
               className={`h-[317px] object-contain ${centerImages ? "mx-auto" : ""}`}
             />
           </div>

@@ -72,6 +72,9 @@ const Cart = () => {
   const shippingCost = adjustedShippingCost;
   const taxAmount = discountedSubtotal * TAX_RATE;
   const orderTotal = discountedSubtotal + shippingCost + taxAmount;
+  const showOrderConfirmation = Boolean(orderConfirmation);
+  const showCartState = !showOrderConfirmation;
+  const showOrderSummary = showCartState && !checkoutStarted;
 
   useEffect(() => {
     let isMounted = true;
@@ -180,21 +183,54 @@ const Cart = () => {
     setItemToRemove(null);
   };
 
-  const handleConfirmRemove = () => {
+  const handleConfirmRemove = async () => {
     if (!itemToRemove) {
       return;
     }
 
+    const removedItem = itemToRemove;
+
     dispatch(
       removeCartItem({
-        id: itemToRemove.id,
-        selectedColor: itemToRemove.selectedColor ?? null,
-        selectedSize: itemToRemove.selectedSize ?? null,
-        spinReward: itemToRemove.spinReward ?? null,
+        id: removedItem.id,
+        selectedColor: removedItem.selectedColor ?? null,
+        selectedSize: removedItem.selectedSize ?? null,
+        spinReward: removedItem.spinReward ?? null,
       }),
     );
 
     setItemToRemove(null);
+
+    if (!removedItem.spinReward?.spinInstanceId) {
+      return;
+    }
+
+    try {
+      const currentUser = await fetchCurrentUser();
+      const activeSpinReward = currentUser?.spinReward;
+
+      if (
+        !currentUser?.id ||
+        !activeSpinReward ||
+        activeSpinReward.spinInstanceId !== removedItem.spinReward.spinInstanceId ||
+        Number(activeSpinReward.appliedProductId) !== Number(removedItem.id)
+      ) {
+        return;
+      }
+
+      await api.patch(`/users/${currentUser.id}`, {
+        spinReward: {
+          ...activeSpinReward,
+          appliedProductId: null,
+          productName: "",
+        },
+      });
+
+      successToast("Reward unlocked. You can select another product.");
+    } catch (error) {
+      console.error("Failed to unlock removed spin reward:", error);
+      errorToast("Item removed, but reward unlock could not be synced.");
+    }
   };
 
   const handleCheckoutFieldChange = (event) => {
@@ -415,9 +451,9 @@ const Cart = () => {
         onViewOrders={() => navigate("/order-lists")}
       />
 
-      {cartItems.length === 0 ? (
+      {showCartState && cartItems.length === 0 ? (
         <EmptyCartState onContinueShopping={() => navigate("/products")} />
-      ) : (
+      ) : showCartState ? (
         <div className="mt-10 grid gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
           <div className="space-y-6">
             <CartItemsCard
@@ -441,30 +477,32 @@ const Cart = () => {
             ) : null}
           </div>
 
-          <OrderSummaryCard
-            cartItems={cartItems}
-            totalQuantity={totalQuantity}
-            cartSubtotal={cartSubtotal}
-            cartOriginalSubtotal={cartOriginalSubtotal}
-            spinSavings={spinSavings}
-            shippingCost={shippingCost}
-            discountAmount={discountAmount}
-            taxAmount={taxAmount}
-            orderTotal={orderTotal}
-            checkoutStarted={checkoutStarted}
-            formatCurrency={formatCurrency}
-            couponCode={couponCode}
-            couponFeedback={couponFeedback}
-            appliedCoupon={appliedCoupon}
-            isApplyingCoupon={isApplyingCoupon}
-            onCouponCodeChange={setCouponCode}
-            onApplyCoupon={handleApplyCoupon}
-            onRemoveCoupon={handleRemoveCoupon}
-            onStartCheckout={handleStartCheckout}
-            onContinueShopping={() => navigate("/products")}
-          />
+          {showOrderSummary ? (
+            <OrderSummaryCard
+              cartItems={cartItems}
+              totalQuantity={totalQuantity}
+              cartSubtotal={cartSubtotal}
+              cartOriginalSubtotal={cartOriginalSubtotal}
+              spinSavings={spinSavings}
+              shippingCost={shippingCost}
+              discountAmount={discountAmount}
+              taxAmount={taxAmount}
+              orderTotal={orderTotal}
+              checkoutStarted={checkoutStarted}
+              formatCurrency={formatCurrency}
+              couponCode={couponCode}
+              couponFeedback={couponFeedback}
+              appliedCoupon={appliedCoupon}
+              isApplyingCoupon={isApplyingCoupon}
+              onCouponCodeChange={setCouponCode}
+              onApplyCoupon={handleApplyCoupon}
+              onRemoveCoupon={handleRemoveCoupon}
+              onStartCheckout={handleStartCheckout}
+              onContinueShopping={() => navigate("/products")}
+            />
+          ) : null}
         </div>
-      )}
+      ) : null}
 
       <DeleteModal
         open={Boolean(itemToRemove)}

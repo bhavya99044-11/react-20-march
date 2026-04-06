@@ -15,7 +15,7 @@ const discountOptions = [
 ];
 
 const INITIAL_BRAND_COUNT = 4;
-const PRODUCTS_BATCH_SIZE = 200;
+const PRODUCTS_BATCH_SIZE = 48;
 const MIN_PRICE_GAP = 30;
 const categoryQueryMap = {
   men: "male",
