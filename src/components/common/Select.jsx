@@ -53,6 +53,9 @@ const Select = ({
       options={mappedOptions}
       value={selectedValue}
       isSearchable={false}
+      menuPlacement="auto"
+      menuPosition="fixed"
+      menuShouldScrollIntoView={false}
       menuPortalTarget={typeof document !== "undefined" ? document.body : null}
       onChange={handleChange}
       components={{ IndicatorSeparator: null, DropdownIndicator }}
@@ -71,14 +74,14 @@ const Select = ({
         }),
         menu: (base) => ({
           ...base,
-          zIndex: 9999,
+          zIndex: 30,
           marginTop: 6,
           minWidth: "max-content",
           backgroundColor: "var(--select-menu-bg)",
         }),
         menuPortal: (base) => ({
           ...base,
-          zIndex: 9999,
+          zIndex: 30,
         }),
         option: (base, state) => ({
           ...base,

@@ -52,6 +52,7 @@ const InboxList = ({
                 <button
                   type="button"
                   onClick={(event) => {
+                    event.stopPropagation();
                     onToggleStar?.(email.id);
                   }}
                   className={classNames("shrink-0 z-40 cursor-pointer ml-6")}

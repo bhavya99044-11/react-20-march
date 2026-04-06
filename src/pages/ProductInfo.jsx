@@ -79,10 +79,14 @@ const ProductInfo = () => {
   const imageHover = useRef(null);
 
   useEffect(() => {
-    setSelectedImage(0);
-    setQuantity(1);
-    setSelectedColor(colorDefault);
-    setOpenSection("materials");
+    const timeoutId = window.setTimeout(() => {
+      setSelectedImage(0);
+      setQuantity(1);
+      setSelectedColor(colorDefault);
+      setOpenSection("materials");
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
   }, [colorDefault]);
 
   useEffect(() => {
@@ -109,12 +113,22 @@ node.style.setProperty(
   `url(http://localhost:5173${node.dataset.image})`
 );      node.style.setProperty("--zoom-y", percentY + "%");
     });
-    node.addEventListener("mouseleave", (event) => {
+    node.addEventListener("mouseleave", () => {
       node.style.setProperty("--display", "0");
     });
   }, [imageHover]);
 
   const handleBackToProducts = () => {
+    if (location.state?.returnTo === "spin-reward") {
+      navigate("/spin-wheel", {
+        state: {
+          restoreRewardProductId: location.state?.rewardProductId ?? Number(id),
+          restoreScrollTop: location.state?.rewardScrollTop ?? 0,
+        },
+      });
+      return;
+    }
+
     navigate("/products", {
       state: {
         restoreProductId: location.state?.restoreProductId ?? Number(id),

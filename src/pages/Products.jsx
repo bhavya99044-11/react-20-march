@@ -7,21 +7,6 @@ import { ProductCard, ProductsBanner } from "../components/products";
 import { products } from "../data/products";
 import { api } from "../utils/api";
 
-const bannerSlides = [
-  {
-    dateRange: "September 12–22",
-    titleLines: ["Enjoy free home delivery in this summer"],
-    subtitle: "Designer Dresses - Pick from trendy Designer Dress.",
-    buttonText: "Get Started",
-  },
-  {
-    dateRange: "September 11–22",
-    titleLines: ["Enjoy free home delivery in this summer"],
-    subtitle: "Designer Dresses - Pick from trendy Designer Dress.",
-    buttonText: "Get Started",
-  },
-];
-
 const discountOptions = [
   { id: "10", label: "10% and above", minDiscount: 10 },
   { id: "20", label: "20% and above", minDiscount: 20 },
@@ -55,7 +40,6 @@ const Products = () => {
   const [searchParams] = useSearchParams();
   const loadMoreRef = useRef(null);
   const hasRestoredPositionRef = useRef(false);
-  const [scrollUp,setScrollUp] = useState(false);
   const minProductPrice = Math.min(...products.map((product) => product.price));
   const maxProductPrice = Math.max(...products.map((product) => product.price));
 
@@ -63,17 +47,6 @@ const Products = () => {
     min: minProductPrice,
     max: maxProductPrice,
   });
-
-  useEffect(()=>{
-    let lastScrollTop = 0;
-
-    window.addEventListener("scroll", function(){
-      let st = window.pageYOffset || document.documentElement.scrollTop;
-      let difference = st - lastScrollTop; // Positive = scrolling down, Negative = up
-      lastScrollTop = st <= 0 ? 0 : st;
-    }, false);
-  },[])
-
 
   useEffect(() => {
     let isMounted = true;
@@ -173,7 +146,11 @@ const Products = () => {
       * PRODUCTS_BATCH_SIZE;
 
     if (visibleCount < requiredVisibleCount) {
-      setVisibleCount(requiredVisibleCount);
+      const timeoutId = window.setTimeout(() => {
+        setVisibleCount(requiredVisibleCount);
+      }, 0);
+
+      return () => window.clearTimeout(timeoutId);
     }
   }, [filteredProducts, restoreProductId, visibleCount]);
 
@@ -182,7 +159,11 @@ const Products = () => {
       return;
     }
 
-    setVisibleCount(PRODUCTS_BATCH_SIZE);
+    const timeoutId = window.setTimeout(() => {
+      setVisibleCount(PRODUCTS_BATCH_SIZE);
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
   }, [filteredProducts, restoreProductId]);
 
   useEffect(() => {
@@ -208,19 +189,6 @@ const Products = () => {
         rootMargin: "180px 0px",
       },
     );
-
-    const observerData = new IntersectionObserver(
-      (entries)=>{
-        const [entry] =entries;
-
-        if(!entry?.isIntersecting){
-          return ;
-        }
-        setVisibleCount((current)=>
-          Math.min(current+PRODUCTS_BATCH_SIZE,filteredProducts.length)
-        )
-      }
-    )
 
     observer.observe(loadMoreNode);
 
@@ -263,13 +231,6 @@ const Products = () => {
         restoreScrollTop: scrollContainer?.scrollTop ?? 0,
       },
     });
-
-      navigate(`/products/${product.id}`,{
-        state:{
-          restoreProductId:product.id,
-          restoreScrollTop:scrollContainer?.scrollTop ?? 0 ,
-        }
-      })
   };
 
 
@@ -491,7 +452,7 @@ const Products = () => {
         </aside>
 
         <section className="min-w-0">
-          <ProductsBanner slides={bannerSlides} />
+          <ProductsBanner />
 
           {selectedGender ? (
             <div className="mt-5 flex items-center justify-between gap-3 rounded-[18px] border border-[#D8E7FF] bg-[#F4F8FF] px-4 py-3 dark:border-slate-700 dark:bg-slate-900/95">
@@ -533,9 +494,9 @@ const Products = () => {
             </div>
           ) : null}
 
-          <div   className="mt-5 grid grid-cols-1 justify-items-center gap-5 sm:grid-cols-2 sm:gap-6 xl:grid-cols-3 lg:gap-7">
+          <div className="mt-5 grid grid-cols-1 justify-items-center items-stretch gap-5 sm:grid-cols-2 sm:gap-6 xl:grid-cols-3 lg:gap-7">
             {visibleProducts.map((product) => (
-              <div key={product.id} data-product-card-id={product.id}>
+              <div key={product.id} data-product-card-id={product.id} className="w-full">
                 <ProductCard
                   name={product.name}
                   price={product.price}
@@ -591,3 +552,4 @@ const Products = () => {
 };
 
 export default Products;
+

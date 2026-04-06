@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, IconComponent, Input, LinkRef } from "@/components/common";
 import { useNavigate } from "react-router-dom";
-import { checkButtonDisable, checkValidation } from "../../utils/helpers";
+import { checkValidation } from "../../utils/helpers";
 import { forgotPasswordRules } from "../../utils/validation";
 
 const ForgotPassword = () => {
@@ -12,7 +12,6 @@ const ForgotPassword = () => {
   const navigate = useNavigate();
   const [error, setError] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSend, setIsSend] = useState(true);
   const [formData, setFormData] = useState(initialFormData);
 
   const onChangeValue = (e) => {
@@ -21,7 +20,6 @@ const ForgotPassword = () => {
         ...prev,
         [e.target.name]: e.target.value.replace(/^\s+/, ""),
       };
-      checkButtonDisable(updatedData, setIsSend);
       checkValidation(
         {
           [e.target.name]: [e.target.value.replace(/^\s+/, "")],
@@ -54,7 +52,6 @@ const ForgotPassword = () => {
       
       setFormData(initialFormData);
       setError({});
-      setIsSend(true);
       navigate("/login");
     } catch (e) {
       console.error(e);

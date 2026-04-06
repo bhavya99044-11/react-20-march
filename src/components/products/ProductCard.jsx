@@ -35,7 +35,7 @@ const ProductCard = ({
   };
   return (
     <div
-      className="bg-white hover:scale-105 pt-4 group duration-300 ease-in-out transition-transform rounded-xl shadow-sm w-[361px] cursor-pointer dark:bg-slate-900 dark:border dark:border-slate-800"
+      className="bg-white hover:scale-105 pt-4 group duration-300 ease-in-out transition-transform rounded-xl shadow-sm cursor-pointer dark:bg-slate-900 dark:border dark:border-slate-800 h-full flex flex-col"
       onClick={handleCardClick}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === " ") {
@@ -114,9 +114,9 @@ const ProductCard = ({
         )}
       </div>
 
-      <div className="mt-6 ml-6 pb-[23px] pr-4">
+      <div className="mt-6 ml-6 pb-[23px] pr-4 flex flex-col flex-1">
         <div className="flex justify-between items-center">
-          <h3 className="text-[18px] font-bold text-[color:var(--orderlist-text-color)] dark:text-slate-100">
+          <h3 className="text-[18px] font-bold text-[color:var(--orderlist-text-color)] dark:text-slate-100 truncate">
             {name}
           </h3>
           <div className="h-[44px] w-[44px] flex items-center justify-center rounded-full bg-[#F9F9F9] dark:bg-slate-800">
@@ -142,8 +142,8 @@ const ProductCard = ({
           </div>
         </div>
 
-        <div className="w-[200px] overflow-hidden">
-          <p className="text-blue-600  transition-transform ease-in-out duration-300  font-bold text-sm dark:text-blue-400">
+        <div className="w-full overflow-hidden">
+          <p className="text-blue-600 transition-transform ease-in-out duration-300 font-bold text-sm dark:text-blue-400 whitespace-nowrap overflow-hidden text-ellipsis">
             ${price.toFixed(2)}
           </p>
         </div>
@@ -161,7 +161,7 @@ const ProductCard = ({
           type="button"
           variant="custom"
           useColorClasses={false}
-          className="mt-3 text-sm bg-[#E2EAF8] font-[700] px-[22px] py-[5px] rounded-[12px] hover:bg-gray-300 transition dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+          className="mt-3 text-sm bg-[#E2EAF8] font-[700] px-[22px] py-[5px] rounded-[12px] hover:bg-gray-300 transition dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 mt-auto self-start"
         />
       </div>
     </div>

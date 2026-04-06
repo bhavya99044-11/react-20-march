@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FiEdit } from "react-icons/fi";
 import { DeleteModal, Input, Tooltip } from "../components/common";
 import { RiCloseLine, RiDeleteBin6Line } from "react-icons/ri";
@@ -31,6 +31,14 @@ const ProductStock = () => {
   const [editForm, setEditForm] = useState(initialEditForm);
   const [editError, setEditError] = useState({});
   const pageSize = 5;
+
+  const closeEditModal = useCallback(() => {
+    if (editLoading) return;
+    setEditOpen(false);
+    setSelectedProduct(null);
+    setEditForm(initialEditForm);
+    setEditError({});
+  }, [editLoading]);
 
   useEffect(() => {
     let isMounted = true;
@@ -74,7 +82,7 @@ const ProductStock = () => {
 
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
-  }, [editOpen, editLoading]);
+  }, [closeEditModal, editLoading, editOpen]);
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) =>
@@ -211,14 +219,6 @@ const ProductStock = () => {
     } finally {
       setDeleteLoading(false);
     }
-  };
-
-  const closeEditModal = () => {
-    if (editLoading) return;
-    setEditOpen(false);
-    setSelectedProduct(null);
-    setEditForm(initialEditForm);
-    setEditError({});
   };
 
   const closeDeleteModal = () => {

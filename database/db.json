@@ -438,18 +438,17 @@
         }
       ],
       "spinReward": {
-        "spinInstanceId": "spin-1775222063631-rwy7ag99",
-        "rewardId": "spin-free",
-        "rewardLabel": "Free Product",
-        "rewardType": "free-product",
-        "discountPercent": 100,
-        "details": "Choose one product for free",
-        "earnedOn": "2026-04-03",
-        "appliedProductId": 1,
-        "spinsUsedToday": 1,
+        "spinInstanceId": "spin-1775451855979-qdekaoj7",
+        "rewardId": "spin-40",
+        "rewardLabel": "40% Off",
+        "rewardType": "discount-percent",
+        "discountPercent": 40,
+        "details": "Apply to one product only",
+        "earnedOn": "2026-04-06",
+        "appliedProductId": null,
+        "spinsUsedToday": 4,
         "dailySpinLimit": 4,
-        "planId": "standard",
-        "productName": "Apple Watch Series 4"
+        "planId": "standard"
       }
     },
     {

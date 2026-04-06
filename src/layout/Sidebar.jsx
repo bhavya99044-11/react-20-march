@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { SIDEBAR_SECTIONS } from "@/utils/constants";
 import classNames from "classnames";
@@ -7,10 +7,8 @@ import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 const Sidebar = ({ isCollapsed = false, onToggleCollapse }) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const [activeItem, setActiveItem] = useState("dashboard");
 
   const handleItemClick = (item) => {
-    setActiveItem(item.key);
     if (item.path) {
       navigate(item.path[0]);
     }

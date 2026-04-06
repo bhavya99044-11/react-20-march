@@ -21,22 +21,27 @@ const DeleteModal = ({
 }) => {
   const [isVisible, setIsVisible] = useState(open);
   const [isClosing, setIsClosing] = useState(false);
-  const [deleteMessage,setDeleteMessage] = useState(message)
   useEffect(() => {
     if (open) {
-      setDeleteMessage(message)
-      setIsVisible(true);
-      setIsClosing(false);
-      return;
+      const openId = window.setTimeout(() => {
+        setIsVisible(true);
+        setIsClosing(false);
+      }, 0);
+      return () => window.clearTimeout(openId);
     }
 
     if (isVisible) {
-      setIsClosing(true);
-      const timeout = setTimeout(() => {
+      const closeStartId = window.setTimeout(() => {
+        setIsClosing(true);
+      }, 0);
+      const timeout = window.setTimeout(() => {
         setIsVisible(false);
         setIsClosing(false);
       }, CLOSE_ANIMATION_MS);
-      return () => clearTimeout(timeout);
+      return () => {
+        window.clearTimeout(closeStartId);
+        window.clearTimeout(timeout);
+      };
     }
   }, [open, isVisible]);
 
@@ -87,7 +92,7 @@ const DeleteModal = ({
           {title}
         </h3>
         <p className="mt-2 text-sm text-[color:var(--color-text-secondary)] dark:text-slate-400">
-          {deleteMessage}
+          {message}
         </p>
         <div className="mt-6 flex items-center justify-end gap-3">
           <Button

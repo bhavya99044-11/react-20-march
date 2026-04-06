@@ -5,7 +5,7 @@ import { useContext, useEffect, useMemo, useRef } from 'react'
 import { CalendarContext } from './CalendarContext'
 
 export function MonthCalender({ events = [] }) {
-  const {calendarData,setCalendarData} = useContext(CalendarContext);
+  const { setCalendarData } = useContext(CalendarContext);
   const calendarRef = useRef(null);
 
   const calendarEvents = useMemo(() => {

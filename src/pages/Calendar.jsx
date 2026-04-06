@@ -47,7 +47,7 @@ export default function CalendarPage() {
     try {
       const response = await api.post("/calendarEvents", payload);
       setEvents((prev) => [...prev, response.data]);
-    } catch (error) {
+    } catch {
       setEvents((prev) => [...prev, { id: Date.now(), ...payload }]);
     }
   };

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { IoIosPin } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { addToCart } from "../features/cartSlice";
 import { useWindowSize } from "react-use";
 import Confetti from "react-confetti";
@@ -110,6 +110,9 @@ const formatCurrency = (value) =>
     currency: "USD",
   }).format(value);
 
+const getAppScrollContainer = () =>
+  document.querySelector('[data-app-scroll-container="true"]');
+
 export default function SpinWheel() {
   const dragStateRef = useRef({
     pointerId: null,
@@ -119,6 +122,7 @@ export default function SpinWheel() {
   const rotationRef = useRef(0);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const cartItems = useSelector((state) => state.cart.items);
   const { width, height } = useWindowSize();
   const [rotation, setRotation] = useState(0);
@@ -136,10 +140,51 @@ export default function SpinWheel() {
     [],
   );
   const todayStamp = getTodayStamp();
+  const restoreRewardProductId = Number(
+    location.state?.restoreRewardProductId ?? 0,
+  );
+  const restoreRewardScrollTop = Number(location.state?.restoreScrollTop ?? 0);
 
   useEffect(() => {
     rotationRef.current = rotation;
   }, [rotation]);
+
+  useEffect(() => {
+    if (!restoreRewardProductId) {
+      return;
+    }
+
+    const scrollContainer = getAppScrollContainer();
+    const target = document.querySelector(
+      `[data-reward-product-id="${restoreRewardProductId}"]`,
+    );
+
+    if (!scrollContainer) {
+      return;
+    }
+
+    if (!target && restoreRewardScrollTop > 0) {
+      scrollContainer.scrollTo({
+        top: restoreRewardScrollTop,
+        behavior: "auto",
+      });
+      return;
+    }
+
+    if (!target) {
+      return;
+    }
+
+    requestAnimationFrame(() => {
+      const containerRect = scrollContainer.getBoundingClientRect();
+      const targetRect = target.getBoundingClientRect();
+      const offset = targetRect.top - containerRect.top + scrollContainer.scrollTop - 120;
+      scrollContainer.scrollTo({
+        top: Math.max(offset, 0),
+        behavior: "auto",
+      });
+    });
+  }, [restoreRewardProductId, restoreRewardScrollTop]);
 
   useEffect(() => {
     let isMounted = true;
@@ -235,12 +280,18 @@ export default function SpinWheel() {
     return `conic-gradient(from -90deg, ${slices})`;
   }, [segmentAngle]);
 
+  const statsReward = isRewardSameDay(selectedReward, todayStamp)
+    ? selectedReward
+    : isRewardSameDay(currentUser?.spinReward, todayStamp)
+      ? currentUser?.spinReward
+      : null;
   const dailySpinLimit = currentUser ? getUserDailySpinLimit(currentUser) : 0;
-  const spinsUsedToday = getUsedSpinsToday(selectedReward, todayStamp);
+  const spinsUsedToday = getUsedSpinsToday(statsReward, todayStamp);
   const remainingSpinsToday = currentUser
-    ? getRemainingSpins(currentUser, selectedReward, todayStamp)
+    ? getRemainingSpins(currentUser, statsReward, todayStamp)
     : 0;
-  const hasUsedOfferToday = Boolean(selectedReward?.appliedProductId);
+  const hasUsedOfferToday = Boolean(statsReward?.appliedProductId);
+  const displayReward = isSpinning ? statsReward : selectedReward ?? statsReward;
   const canSpinToday =
     !isProfileLoading &&
     Boolean(currentUser?.id) &&
@@ -453,6 +504,18 @@ export default function SpinWheel() {
     }
   };
 
+  const handleOpenRewardProduct = (product) => {
+    const scrollContainer = getAppScrollContainer();
+
+    navigate(`/products/${product.id}`, {
+      state: {
+        returnTo: "spin-reward",
+        rewardProductId: product.id,
+        rewardScrollTop: scrollContainer?.scrollTop ?? 0,
+      },
+    });
+  };
+
   return (
     <div className="mt-4  bg-gray-100 px-4 pb-8 sm:mt-6 sm:px-6 lg:mt-[30px] lg:px-[30px] dark:bg-slate-950 dark:text-slate-100 [--base-color:#e5e7eb] [--highlight-color:#f3f4f6] dark:[--base-color:#1f2937] dark:[--highlight-color:#334155]">
       {showConffeti && <Confetti
@@ -521,7 +584,7 @@ export default function SpinWheel() {
           <div className="rounded-[28px] w-[485px] border border-white/70 bg-white/80 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.08)] backdrop-blur dark:border-slate-800 dark:bg-slate-900/80">
             <span className="spin-eyebrow">Daily reward</span>
             <p className="mt-3 text-2xl font-extrabold text-[color:var(--color-text-primary)]">
-              {selectedReward?.rewardLabel ?? "No spin yet today"}
+              {displayReward?.rewardLabel ?? "No spin yet today"}
             </p>
             <p className="mt-2 text-sm font-semibold text-[#356DFF] dark:text-slate-200">
               {currentUser?.id
@@ -530,9 +593,9 @@ export default function SpinWheel() {
             </p>
             <p className="mt-2 text-sm text-[color:var(--color-text-secondary)]">
               {hasUsedOfferToday
-                ? `Today's offer is already locked to ${selectedReward?.productName}.`
-                : selectedReward
-                  ? selectedReward.details
+                ? `Today's offer is already locked to ${displayReward?.productName}.`
+                : displayReward
+                  ? displayReward.details
                   : "Spin the wheel to unlock one offer for a single product."}
             </p>
 
@@ -591,6 +654,7 @@ export default function SpinWheel() {
             return (
               <article
                 key={product.id}
+                data-reward-product-id={product.id}
                 className={`rounded-[26px] border p-4 shadow-sm transition ${
                   isSelected || isRewardAppliedHere
                     ? "border-[#4880FF] bg-[#F4F8FF] dark:border-[#4880FF] dark:bg-slate-800/90"
@@ -599,7 +663,7 @@ export default function SpinWheel() {
               >
                 <button
                   type="button"
-                  onClick={() => navigate(`/products/${product.id}`)}
+                  onClick={() => handleOpenRewardProduct(product)}
                   className="flex w-full cursor-pointer items-center justify-center rounded-[22px] bg-[#F5F8FD] p-4 dark:bg-slate-950"
                 >
                   <img
@@ -611,11 +675,11 @@ export default function SpinWheel() {
 
                 <div className="mt-4">
                   <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="text-xs font-bold uppercase tracking-[0.16em] text-[color:var(--color-text-secondary)]">
+                    <div className="min-w-0">
+                      <p className="text-xs font-bold uppercase tracking-[0.16em] text-[color:var(--color-text-secondary)] truncate">
                         {product.brand}
                       </p>
-                      <h3 className="mt-2 text-base font-extrabold text-[color:var(--color-text-primary)]">
+                      <h3 className="mt-2 text-base font-extrabold text-[color:var(--color-text-primary)] truncate">
                         {product.name}
                       </h3>
                     </div>
@@ -624,23 +688,21 @@ export default function SpinWheel() {
                     </span>
                   </div>
 
-                  <div className="mt-4 flex items-end justify-between gap-3">
-                    <div>
-                      <p className="text-lg font-extrabold text-[color:var(--color-text-primary)]">
-                        {formatCurrency(product.price)}
+                  <div className="mt-4">
+                    <p className="text-lg font-extrabold text-[color:var(--color-text-primary)] whitespace-nowrap overflow-hidden text-ellipsis">
+                      {formatCurrency(product.price)}
+                    </p>
+                    {selectedReward ? (
+                      <p className="mt-1 text-sm font-semibold text-[#16a34a] dark:text-green-300 whitespace-nowrap overflow-hidden text-ellipsis">
+                        Reward price: {formatCurrency(rewardedPrice)}
                       </p>
-                      {selectedReward ? (
-                        <p className="mt-1 text-sm font-semibold text-[#16a34a] dark:text-green-300">
-                          Reward price: {formatCurrency(rewardedPrice)}
-                        </p>
-                      ) : (
-                        <p className="mt-1 text-sm text-[color:var(--color-text-secondary)]">
-                          Spin to unlock today&apos;s price
-                        </p>
-                      )}
-                    </div>
+                    ) : (
+                      <p className="mt-1 text-sm text-[color:var(--color-text-secondary)]">
+                        Spin to unlock today&apos;s price
+                      </p>
+                    )}
                     {savingAmount > 0 && selectedReward ? (
-                      <span className="rounded-full bg-[#ECFDF3] px-3 py-1 text-xs font-bold text-[#15803D] dark:bg-green-500/10 dark:text-green-300">
+                      <span className="mt-2 inline-flex rounded-full bg-[#ECFDF3] px-3 py-1 text-xs font-bold text-[#15803D] dark:bg-green-500/10 dark:text-green-300">
                         Save {formatCurrency(savingAmount)}
                       </span>
                     ) : null}
@@ -649,7 +711,7 @@ export default function SpinWheel() {
                   <div className="mt-4 flex flex-col gap-2">
                     <button
                       type="button"
-                      onClick={() => navigate(`/products/${product.id}`)}
+                      onClick={() => handleOpenRewardProduct(product)}
                       className="w-full cursor-pointer rounded-full border border-[color:var(--color-border-subtle)] bg-white px-4 py-3 text-sm font-semibold text-[color:var(--color-text-primary)] transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
                     >
                       View Product

@@ -18,33 +18,39 @@ const useGoogleAuthReady = (isEnabled = true) => {
 
   useEffect(() => {
     if (!isEnabled) {
-      setIsGoogleReady(false);
-      return undefined;
-    }
-
-    if (isGoogleAuthReady()) {
-      setIsGoogleReady(true);
       return undefined;
     }
 
     const startedAt = Date.now();
 
-    const intervalId = window.setInterval(() => {
+    const checkReady = () => {
       if (isGoogleAuthReady()) {
         setIsGoogleReady(true);
+        return true;
+      }
+      return Date.now() - startedAt >= GOOGLE_READY_TIMEOUT;
+    };
+
+    const immediateId = window.setTimeout(() => {
+      if (checkReady()) {
+        return;
+      }
+    }, 0);
+
+    const intervalId = window.setInterval(() => {
+      if (checkReady()) {
         window.clearInterval(intervalId);
         return;
       }
-
-      if (Date.now() - startedAt >= GOOGLE_READY_TIMEOUT) {
-        window.clearInterval(intervalId);
-      }
     }, GOOGLE_READY_CHECK_INTERVAL);
 
-    return () => window.clearInterval(intervalId);
+    return () => {
+      window.clearTimeout(immediateId);
+      window.clearInterval(intervalId);
+    };
   }, [isEnabled]);
 
-  return isGoogleReady;
+  return isEnabled ? isGoogleReady : false;
 };
 
 export default useGoogleAuthReady;

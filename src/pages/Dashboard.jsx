@@ -38,16 +38,17 @@ const Dashboard = () => {
       } catch (error) {
         console.error(error);
       } finally {
-        if (!isActive) return;
-        const elapsed = Date.now() - startedAt;
-        const remaining = Math.max(MIN_SKELETON_MS - elapsed, 0);
-        if (remaining === 0) {
-          setLoadingSales(false);
-          return;
+        if (isActive) {
+          const elapsed = Date.now() - startedAt;
+          const remaining = Math.max(MIN_SKELETON_MS - elapsed, 0);
+          if (remaining === 0) {
+            setLoadingSales(false);
+          } else {
+            timerId = setTimeout(() => {
+              if (isActive) setLoadingSales(false);
+            }, remaining);
+          }
         }
-        timerId = setTimeout(() => {
-          if (isActive) setLoadingSales(false);
-        }, remaining);
       }
     };
     loadSalesData();
@@ -72,16 +73,17 @@ const Dashboard = () => {
       } catch (error) {
         console.error(error);
       } finally {
-        if (!isActive) return;
-        const elapsed = Date.now() - startedAt;
-        const remaining = Math.max(MIN_SKELETON_MS - elapsed, 0);
-        if (remaining === 0) {
-          setLoadingDeals(false);
-          return;
+        if (isActive) {
+          const elapsed = Date.now() - startedAt;
+          const remaining = Math.max(MIN_SKELETON_MS - elapsed, 0);
+          if (remaining === 0) {
+            setLoadingDeals(false);
+          } else {
+            timerId = setTimeout(() => {
+              if (isActive) setLoadingDeals(false);
+            }, remaining);
+          }
         }
-        timerId = setTimeout(() => {
-          if (isActive) setLoadingDeals(false);
-        }, remaining);
       }
     };
     loadDealsData();

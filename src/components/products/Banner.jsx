@@ -5,16 +5,7 @@ import classNames from "classnames";
 import Button from "../common/Button";
 import { useNavigate } from "react-router-dom";
 
-const ProductsBanner = ({
-  slides = [
-    {
-      dateRange: "September 12–22",
-      titleLines: "Enjoy free home  delivery in this summer",
-      subtitle: "Designer Dresses - Pick from trendy Designer Dress.",
-      buttonText: "Get Started",
-    },
-  ],
-}) => {
+const ProductsBanner = () => {
   const id = useId().replace(/[:]/g, "");
   const prevClass = `products-banner-prev-${id}`;
   const nextClass = `products-banner-next-${id}`;
@@ -96,3 +87,4 @@ const ProductsBanner = ({
 };
 
 export default ProductsBanner;
+

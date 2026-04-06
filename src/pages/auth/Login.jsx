@@ -6,7 +6,7 @@ import { AUTH_SESSION_KEY } from "@/utils/constants";
 import { loginRules } from "@/utils/validation";
 import { decodeGoogleCredential } from "../../utils/helpers";
 import { errorToast, successToast } from "@/utils/toastMessage";
-import { checkButtonDisable, checkValidation } from "@/utils/helpers";
+import { checkValidation } from "@/utils/helpers";
 import { Button, Checkbox, Input, LinkRef, PasswordInput } from "@/components/common";
 
 
@@ -19,7 +19,6 @@ const Login = () => {
     password: "",
   };
 
-  const [isLoginDisabled, setIsLoginDisabled] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
@@ -32,7 +31,6 @@ const Login = () => {
         ...prev,
         [e.target.name]: e.target.value.replace(/^\s+/, ""),
       };
-      checkButtonDisable(updatedData, setIsLoginDisabled);
       checkValidation(
         {
           [e.target.name]: [e.target.value.replace(/^\s+/, "")],
@@ -61,7 +59,6 @@ const Login = () => {
         });
         setRememberMe(Boolean(data?.rememberMe));
       }
-      setIsLoginDisabled(false);
     } catch (parseError) {
       console.error("Failed to parse stored auth session:", parseError);
     }

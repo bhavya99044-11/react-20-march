@@ -8,13 +8,9 @@ import {
 import { api } from "@/utils/api";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import { RiCloseLine } from "react-icons/ri";
-import { useNavigate } from "react-router-dom";
 const Inbox = () => {
 
-  const navigate = useNavigate();
-
   const [emails, setEmails] = useState([]);
-  const [emailLoading, setEmailLoading] = useState(false);
   const [activeId, setActiveId] = useState(null);
   const [activeFolder, setActiveFolder] = useState("Inbox");
   const [searchValue, setSearchValue] = useState("");
@@ -24,7 +20,6 @@ const Inbox = () => {
   const [deleteLoading] = useState(false);
   const [labelModalOpen, setLabelModalOpen] = useState(false);
   const [labelModalEmail, setLabelModalEmail] = useState(null);
-  const [labelKey, setLabelKey] = useState(null);
   const [labelModalValue, setLabelModalValue] = useState("");
   const [selectedLabels, setSelectedLabels] = useState([]);
   const isArchivedFolder = activeFolder === "Archived";
@@ -42,13 +37,15 @@ const Inbox = () => {
       );
     } catch (e) {
       console.error(e);
-    } finally {
-      setEmailLoading(false);
     }
   };
 
   useEffect(() => {
-    getEmailsData();
+    const timeoutId = window.setTimeout(() => {
+      getEmailsData();
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
   }, []);
 
   const folderCounts = useMemo(() => {
@@ -333,7 +330,11 @@ const Inbox = () => {
   }, [activeFolder, emails, searchValue, selectedLabels]);
 
   useEffect(() => {
-    setPage(1);
+    const timeoutId = window.setTimeout(() => {
+      setPage(1);
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
   }, [activeFolder, searchValue, selectedLabels]);
 
   const totalPages = Math.max(1, Math.ceil(visibleEmails.length / pageSize));
